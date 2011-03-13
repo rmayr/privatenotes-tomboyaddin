@@ -1,0 +1,23 @@
+<Combine fileversion="2.0" name="Tomboy" MakePkgConfig="False" MakeLibPC="True">
+  <Policies>
+    <ChangeLogPolicy UpdateMode="ProjectRoot" inheritsSet="Mono">
+      <MessageStyle LineAlign="0" />
+    </ChangeLogPolicy>
+    <TextStylePolicy FileWidth="80" TabWidth="8" TabsToSpaces="False" NoTabsAfterNonTabs="False" RemoveTrailingWhitespace="True" EolMarker="Native" />
+    <VersionControlPolicy inheritsSet="Mono" />
+  </Policies>
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry build="True" name="Tomboy" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry build="True" name="Tomboy" configuration="Release" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="Tomboy" single="True">
+    <Execute type="None" entry="Tomboy" />
+  </StartMode>
+  <Entries>
+    <Entry filename="Tomboy.mdp" />
+  </Entries>
+</Combine>
