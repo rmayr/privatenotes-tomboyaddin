@@ -177,64 +177,43 @@ namespace Tomboy.Sync
 			public virtual IDictionary<string, NoteUpdate> GetNoteUpdatesSince(int revision)
 			{
 				Dictionary<string, NoteUpdate> noteUpdates = new Dictionary<string, NoteUpdate>();
+				Dictionary<string, int> updates = new Dictionary<string, int>();
+				updates = GetNoteUpdatesIdsSince(revision);
 
-				if (IsValidXmlFile(manifestPath))
+				foreach (string id in updates.Keys)
 				{
-					// TODO: Permissions errors
-					using (FileStream fs = new FileStream(manifestPath, FileMode.Open))
+					int rev = updates[id];
+					if (noteUpdates.ContainsKey(id) == false)
 					{
-						Stream plainStream;
+						// Copy the file from the server to the temp directory
+						string revDir = GetRevisionDirPath(rev);
+						string serverNotePath = GetNotePath(revDir, id);
+						//string noteTempPath = Path.Combine(tempPath, id + ".note");
+						// DON'T ENCRYPT HERE because we are getting the already encrypted file from the server
+						//SecurityWrapper.CopyAndEncrypt(serverNotePath, noteTempPath, myKey);
+						//File.Copy(serverNotePath, noteTempPath, true);
+
+						// Get the title, contents, etc.
+						string noteTitle = string.Empty;
+						string noteXml = null;
+
 						{
+							// decrypt the note:
 							bool ok;
-							plainStream = SecurityWrapper.DecryptFromStream(manifestPath, fs, myKey, out ok);
-							if (!ok)
-								throw new Exception("ENCRYPTION ERROR!");
-						}
+							CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+							byte[] contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
+							noteXml = Util.FromBytes(contents);
 
-						XmlDocument doc = new XmlDocument();
-						doc.Load(plainStream);
-
-						string xpath =
-										string.Format("//note[@rev > {0}]", revision.ToString());
-						XmlNodeList noteNodes = doc.SelectNodes(xpath);
-						Logger.Debug("GetNoteUpdatesSince xpath returned {0} nodes", noteNodes.Count);
-						foreach (XmlNode node in noteNodes)
-						{
-							string id = node.SelectSingleNode("@id").InnerText;
-							int rev = Int32.Parse(node.SelectSingleNode("@rev").InnerText);
-							if (noteUpdates.ContainsKey(id) == false)
+							// solve nasty BOM problem -__-
+							int index = noteXml.IndexOf('<');
+							if (index > 0)
 							{
-								// Copy the file from the server to the temp directory
-								string revDir = GetRevisionDirPath(rev);
-								string serverNotePath = Path.Combine(revDir, id + ".note");
-								//string noteTempPath = Path.Combine(tempPath, id + ".note");
-								// DON'T ENCRYPT HERE because we are getting the already encrypted file from the server
-								//SecurityWrapper.CopyAndEncrypt(serverNotePath, noteTempPath, myKey);
-								//File.Copy(serverNotePath, noteTempPath, true);
-
-								// Get the title, contents, etc.
-								string noteTitle = string.Empty;
-								string noteXml = null;
-
-								{
-									// decrypt the note:
-									bool ok;
-									CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
-									byte[] contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
-									noteXml = Util.FromBytes(contents);
-
-									// solve nasty BOM problem -__-
-									int index = noteXml.IndexOf('<');
-									if (index > 0)
-									{
-										noteXml = noteXml.Substring(index, noteXml.Length - index);
-									}
-
-								}
-								NoteUpdate update = new NoteUpdate(noteXml, noteTitle, id, rev);
-								noteUpdates[id] = update;
+								noteXml = noteXml.Substring(index, noteXml.Length - index);
 							}
+
 						}
+						NoteUpdate update = new NoteUpdate(noteXml, noteTitle, id, rev);
+						noteUpdates[id] = update;
 					}
 				}
 
@@ -347,9 +326,24 @@ namespace Tomboy.Sync
 						}
 					}
 
-					#region createManifestFile
+#region createManifestFile
 					// Write out the new manifest file
-					MemoryStream plainBuf = new MemoryStream();
+					Dictionary<String, int> allNotes = new Dictionary<string, int>();
+					//List<NoteWithRev> allNotes = new List<NoteWithRev>();
+					foreach (XmlNode node in noteNodes)
+					{
+						string id = node.SelectSingleNode("@id").InnerText;
+						string rev = node.SelectSingleNode("@rev").InnerText;
+						allNotes.Add(id, Int32.Parse(rev));
+					}
+					// also, add all updated notes:
+					foreach (String id in updatedNotes)
+					{
+						allNotes.Add(id, newRevision);
+					}
+
+
+					/* ****** REMOVE THIS AS SOON AS WE KNOW THAT IT WORKS
 					XmlWriter xml = XmlWriter.Create(plainBuf, XmlEncoder.DocumentSettings);
 					try
 					{
@@ -388,15 +382,10 @@ namespace Tomboy.Sync
 
 						xml.WriteEndElement();
 						xml.WriteEndDocument();
-					}
-					finally
-					{
-						xml.Close();
-						// now store in encrypted version:
-						SecurityWrapper.SaveAsEncryptedFile(manifestFilePath, plainBuf.ToArray(), myKey);
-						// dispose of plain data
-						plainBuf.Dispose();
-					}
+					 */
+					bool manifestCreated = CreateManifestFile(manifestFilePath, newRevision, serverId, allNotes);
+					if (!manifestCreated)
+						throw new Exception("could not create manifest file, cannot recover from this error.");
 
 					AdjustPermissions(manifestFilePath);
 #endregion
@@ -404,7 +393,11 @@ namespace Tomboy.Sync
 					// only use this if we use the revision-folder-mode
 					if (!manifestFilePath.Equals(manifestPath))
 					{
-						#region DIR_VERSION
+#region DIR_VERSION
+						// WARNING! THIS VERSION IS NO LONGER SUPPORTED...
+						// SINCE WE DON'T NEED IT FOR OUR CURRENT WEBDAV SYNC
+						// IT IS PROBABLY OUT OF DATE! IF YOU WANT TO USE IT AGAIN
+						// MAKE SURE EVERYTHING WORKS
 						// Rename original /manifest.xml to /manifest.xml.old
 						string oldManifestPath = manifestPath + ".old";
 						if (File.Exists(manifestPath) == true)
@@ -465,7 +458,7 @@ namespace Tomboy.Sync
 														"files floating around.	Here's the error:\n" +
 														e.Message);
 						}
-						#endregion
+#endregion
 					}
 					else
 					{
@@ -478,7 +471,8 @@ namespace Tomboy.Sync
 						try
 						{
 							FileInfo manifestFilePathInfo = new FileInfo(manifestFilePath);
-							foreach (FileInfo file in manifestFilePathInfo.Directory.GetFiles())
+							List<FileInfo> allNoteFiles = GetAllNoteFiles(manifestFilePathInfo.Directory);
+							foreach (FileInfo file in allNoteFiles)
 							{
 								string fileGuid = Path.GetFileNameWithoutExtension(file.Name);
 								if (deletedNotes.Contains(fileGuid))
@@ -515,7 +509,7 @@ namespace Tomboy.Sync
 			}
 
 			// TODO: Return false if this is a bad time to cancel sync?
-			public bool CancelSyncTransaction()
+			public virtual bool CancelSyncTransaction()
 			{
 				lockTimeout.Cancel();
 				RemoveLockFile(lockPath);
@@ -693,8 +687,87 @@ namespace Tomboy.Sync
 				}
 			}
 
-			#region Private Methods
+			#region Private/Internal Methods
 
+			virtual internal String GetNotePath(String defaultbasepath, String noteid) 
+			{
+				return Path.Combine(defaultbasepath, noteid + ".note");
+			}
+			
+			virtual internal Dictionary<String, int> GetNoteUpdatesIdsSince(int revision)
+			{
+				return GetNoteRevisionsFromManifest(manifestPath, revision);
+			}
+
+			virtual internal Dictionary<String, int> GetNoteRevisionsFromManifest(String filePath, int revision)
+			{
+				Dictionary<String, int> updates = new Dictionary<String, int>();
+				if (IsValidXmlFile(filePath))
+				{
+					using (FileStream fs = new FileStream(filePath, FileMode.Open))
+					{
+						Stream plainStream;
+						{
+							bool ok;
+							plainStream = SecurityWrapper.DecryptFromStream(filePath, fs, myKey, out ok);
+							if (!ok)
+								throw new Exception("ENCRYPTION ERROR!");
+						}
+
+						XmlDocument doc = new XmlDocument();
+						doc.Load(plainStream);
+
+						string xpath =
+										string.Format("//note[@rev > {0}]", revision.ToString());
+						XmlNodeList noteNodes = doc.SelectNodes(xpath);
+						Logger.Debug("GetNoteUpdatesSince xpath returned {0} nodes", noteNodes.Count);
+
+						foreach (XmlNode node in noteNodes)
+						{
+							string id = node.SelectSingleNode("@id").InnerText;
+							int rev = Int32.Parse(node.SelectSingleNode("@rev").InnerText);
+							updates.Add(id, rev);
+						}
+
+					}
+				}
+				return updates;
+			}
+
+			internal Dictionary<String, int> GetNoteRevisionsFromManifest(String filePath)
+			{
+				Dictionary<String, int> noterevisions = new Dictionary<String, int>();
+				if (IsValidXmlFile(filePath))
+				{
+					using (FileStream fs = new FileStream(filePath, FileMode.Open))
+					{
+						Stream plainStream;
+						{
+							bool ok;
+							plainStream = SecurityWrapper.DecryptFromStream(filePath, fs, myKey, out ok);
+							if (!ok)
+								throw new Exception("ENCRYPTION ERROR!");
+						}
+
+						XmlDocument doc = new XmlDocument();
+						doc.Load(plainStream);
+
+						string xpath = "//note";
+						XmlNodeList noteNodes = doc.SelectNodes(xpath);
+						Logger.Debug("GetNoteUpdatesSince xpath returned {0} nodes", noteNodes.Count);
+
+						foreach (XmlNode node in noteNodes)
+						{
+							string id = node.SelectSingleNode("@id").InnerText;
+							int rev = Int32.Parse(node.SelectSingleNode("@rev").InnerText);
+							noterevisions.Add(id, rev);
+						}
+
+					}
+				}
+				return noterevisions;
+			}
+			
 			// NOTE: Assumes serverPath is set
 			virtual internal string GetRevisionDirPath(int rev)
 			{
@@ -782,7 +855,7 @@ namespace Tomboy.Sync
 			/// This is done by ensuring that an XmlDocument can be created from
 			/// its contents.
 			///</summary>
-			private bool IsValidXmlFile(string xmlFilePath)
+			internal bool IsValidXmlFile(string xmlFilePath)
 			{
 				// Check that file exists
 				if (!File.Exists(xmlFilePath))
@@ -839,6 +912,110 @@ namespace Tomboy.Sync
 					Logger.Warn("Error deleting the lock \"{0}\": {1}", lockPath, e.Message);
 				}
 			}
+
+			internal int GetRevisionFromManifestFile(String path)
+			{
+				int latestRev = -1;
+				if (IsValidXmlFile(path) == true)
+				{
+					using (FileStream fs = new FileStream(path, FileMode.Open))
+					{
+						bool ok;
+						Stream plainStream = SecurityWrapper.DecryptFromStream(path, fs, myKey, out ok);
+						if (!ok)
+							throw new Exception("ENCRYPTION ERROR!");
+
+						XmlDocument doc = new XmlDocument();
+						doc.Load(plainStream);
+						XmlNode syncNode = doc.SelectSingleNode("//sync");
+						string latestRevStr = syncNode.Attributes.GetNamedItem("revision").InnerText;
+						if (latestRevStr != null && latestRevStr != string.Empty)
+							latestRev = Int32.Parse(latestRevStr);
+					}
+				}
+				return latestRev;
+			}
+			
+			internal virtual List<FileInfo> GetAllNoteFiles(DirectoryInfo defaultPath) {
+				List<FileInfo> files = new List<FileInfo>();
+				files.AddRange(defaultPath.GetFiles());
+				return files;
+			}
+			
+			public struct NoteWithRev {
+				public NoteWithRev(String id, int rev)
+				{
+					this.noteId = id;
+					this.rev = rev;
+				}
+
+				public String noteId;
+				public int rev;
+			}
+			
+			virtual internal bool CreateManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
+			{
+				MemoryStream buffer = new MemoryStream();
+				bool success = false;
+				try
+				{
+					XmlWriter xml = XmlWriter.Create(buffer, XmlEncoder.DocumentSettings);
+					xml.WriteStartDocument();
+					xml.WriteStartElement(null, "sync", null);
+					xml.WriteAttributeString("revision", newRevision.ToString());
+					xml.WriteAttributeString("server-id", serverId);
+
+					foreach (String noteid in notes.Keys)
+					{
+						string id = noteid;
+						string rev = notes[noteid].ToString();
+
+						// Don't write out deleted notes
+						if (deletedNotes.Contains(id))
+							continue;
+
+						// Skip updated notes, we'll update them in a sec
+						if (updatedNotes.Contains(id))
+							continue;
+
+						xml.WriteStartElement(null, "note", null);
+						xml.WriteAttributeString("id", id);
+						xml.WriteAttributeString("rev", rev);
+						xml.WriteEndElement();
+					}
+
+					// Write out all the updated notes
+					foreach (string uuid in updatedNotes)
+					{
+						xml.WriteStartElement(null, "note", null);
+						xml.WriteAttributeString("id", uuid);
+						xml.WriteAttributeString("rev", newRevision.ToString());
+						xml.WriteEndElement();
+					}
+
+					xml.WriteEndElement();
+					xml.WriteEndDocument();
+
+				}
+				catch (Exception e)
+				{
+					Logger.Warn("error while creating manifest! " + e.Message, e);
+					success = false;
+				}
+				finally
+				{
+					// xml.Close();
+					// now store in encrypted version:
+					SecurityWrapper.SaveAsEncryptedFile(manifestFilePath, buffer.ToArray(), myKey);
+					// dispose of plain data
+					if (buffer != null)
+						buffer.Dispose();
+					success = true;
+				}
+
+				return success;
+			}
+			
 
 			#endregion // Private Methods
 

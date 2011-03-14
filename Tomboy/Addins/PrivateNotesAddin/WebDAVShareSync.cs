@@ -13,12 +13,32 @@ namespace Tomboy.PrivateNotes
 		private ShareProvider provider = null;
 		private Dictionary<String, DirectoryInfo> shareBuffer = null;
 		private String basePath = null;
+		private static WebDAVShareSync INSTANCE = null;
 
-		public WebDAVShareSync(ShareProvider shareProvider)
+		public static WebDAVShareSync GetInstance(ShareProvider shareProvider)
+		{
+			if (INSTANCE == null)
+			{
+				INSTANCE = new WebDAVShareSync(shareProvider);
+			}
+			else
+			{
+				INSTANCE.CleanUp();
+				INSTANCE.Init(shareProvider);
+			}
+
+			return INSTANCE;
+		}
+
+		private WebDAVShareSync(ShareProvider shareProvider)
 		{
 			if ((shareProvider as WebDavShareProvider) == null)
 				throw new Exception("shareProvider must be a WebDavShareProvider to be compatible with WebDAVShareSync");
+			Init(shareProvider);
+		}
 
+		private void Init(ShareProvider shareProvider)
+		{
 			provider = shareProvider;
 			servers = new Dictionary<string, WebDAVInterface>();
 			shareBuffer = new Dictionary<string, DirectoryInfo>();
@@ -27,7 +47,11 @@ namespace Tomboy.PrivateNotes
 
 		public void FetchAllShares()
 		{
+			CleanUp();
+
+			// always get shares fresh from the shareProvider
 			List<NoteShare> shares = provider.GetShares();
+
 			foreach (NoteShare share in shares)
 			{
 				if (servers.ContainsKey(share.shareTarget))
@@ -62,6 +86,11 @@ namespace Tomboy.PrivateNotes
 
 		}
 
+		public Dictionary<String, DirectoryInfo> GetShareCopies()
+		{
+			return shareBuffer;
+		}
+
 		public void UploadNewOnes()
 		{
 
@@ -87,7 +116,8 @@ namespace Tomboy.PrivateNotes
 			{
 				try
 				{
-					dav.RemoveLock();
+					// TODO how to know if it is still "our" lock, not from another client syncing!
+					//dav.RemoveLock();
 				} catch {
 					// ignored
 				}
