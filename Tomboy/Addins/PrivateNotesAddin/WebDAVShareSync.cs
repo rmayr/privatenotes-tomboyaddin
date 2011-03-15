@@ -9,9 +9,19 @@ namespace Tomboy.PrivateNotes
 
 	public class WebDAVShareSync
 	{
+		/// <summary>
+		/// servers by share.shareTarget (the webdav-url)
+		/// </summary>
 		private Dictionary<String, WebDAVInterface> servers = null;
 		private ShareProvider provider = null;
+		/// <summary>
+		/// store-paths (directories) by note id
+		/// </summary>
 		private Dictionary<String, DirectoryInfo> shareBuffer = null;
+		/// <summary>
+		/// share objects by note id
+		/// </summary>
+		private Dictionary<String, NoteShare> shareObjects = null;
 		private String basePath = null;
 		private static WebDAVShareSync INSTANCE = null;
 
@@ -43,6 +53,7 @@ namespace Tomboy.PrivateNotes
 			servers = new Dictionary<string, WebDAVInterface>();
 			shareBuffer = new Dictionary<string, DirectoryInfo>();
 			basePath = Path.Combine(Services.NativeApplication.CacheDirectory, "sharedSync");
+			shareObjects = new Dictionary<string, NoteShare>();
 		}
 
 		public void FetchAllShares()
@@ -54,6 +65,9 @@ namespace Tomboy.PrivateNotes
 
 			foreach (NoteShare share in shares)
 			{
+				// add to our internal store
+				shareObjects.Add(share.noteId, share);
+
 				if (servers.ContainsKey(share.shareTarget))
 				{
 					Logger.Info("already got connection object for server {0}", share.shareTarget);
@@ -91,9 +105,22 @@ namespace Tomboy.PrivateNotes
 			return shareBuffer;
 		}
 
-		public void UploadNewOnes()
+		/// <summary>
+		/// manifest files are automatically uploaded as well
+		/// </summary>
+		/// <param name="notes"></param>
+		public void UploadNewNote(String noteId)
 		{
-
+			if (shareBuffer.ContainsKey(noteId) && shareObjects.ContainsKey(noteId))
+			{
+				NoteShare shareObj = shareObjects[noteId];
+				WebDAVInterface dav = servers[shareObj.shareTarget];
+				dav.UploadFile(Path.Combine(shareBuffer[noteId].FullName, noteId + ".note"));
+				// TODO FIXME don't upload the manifest file multiple times!!!
+				dav.UploadFile(Path.Combine(shareBuffer[noteId].FullName, "manifest.xml"));
+			}
+			else
+				Logger.Warn("Note {0} is not part of the shared notes!", noteId);
 		}
 
 		public void CleanUp()
@@ -123,6 +150,8 @@ namespace Tomboy.PrivateNotes
 				}
 			}
 			servers.Clear();
+
+			shareObjects.Clear();
 		}
 
 	}

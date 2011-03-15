@@ -101,6 +101,14 @@ namespace Tomboy.PrivateNotes
 		/// </summary>
 		/// <param name="pathToNote"></param>
 		internal override void OnUploadFile(String pathToNote) {
+			if (pathToNote.EndsWith(".note")) {
+				String id = GetNoteIdFromFileName(pathToNote);
+				if (shareCopies.ContainsKey(id))
+				{
+					shareSync.UploadNewNote(id);
+				}
+			}
+
 			webdavserver.UploadFile(pathToNote);
 		}
 
@@ -228,9 +236,10 @@ namespace Tomboy.PrivateNotes
 				Dictionary<String, int> theNotes = new Dictionary<string, int>();
 				List<String> ids = additionalManifests[shareManifest];
 				foreach (String id in ids) {
-					theNotes.Add(id, theNotes[id]);
+					theNotes.Add(id, notes[id]);
 				}
 				// TODO FIXME FATAL this doesn't work, because base.CreateManifestFile puts ALL the updated notes in!!!!
+				// THIS SHOULD BE FIXED NOW!
 				base.CreateManifestFile(shareManifest, newRevision, serverid, theNotes);
 			}
 

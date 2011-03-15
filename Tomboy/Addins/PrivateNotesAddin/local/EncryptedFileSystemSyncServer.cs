@@ -95,6 +95,19 @@ namespace Tomboy.Sync
 				// nothing to do in local version
 			}
 
+			public String GetNoteIdFromFileName(String fileName)
+			{
+				String noteid = null;
+				if (fileName.EndsWith(".note"))
+				{
+					FileInfo file = new System.IO.FileInfo(fileName);
+					noteid = file.Name.Replace(".note", "");
+				}
+				else
+					Logger.Warn("filename not a note! {0}", fileName);
+				return noteid;
+			}
+
 			public virtual void UploadNotes(IList<Note> notes)
 			{
 				if (Directory.Exists(newRevisionPath) == false)
@@ -339,7 +352,11 @@ namespace Tomboy.Sync
 					// also, add all updated notes:
 					foreach (String id in updatedNotes)
 					{
-						allNotes.Add(id, newRevision);
+						// overwrite if already in there, else add
+						if (allNotes.ContainsKey(id))
+							allNotes[id] = newRevision;
+						else
+							allNotes.Add(id, newRevision);
 					}
 
 
@@ -974,9 +991,10 @@ namespace Tomboy.Sync
 						if (deletedNotes.Contains(id))
 							continue;
 
-						// Skip updated notes, we'll update them in a sec
-						if (updatedNotes.Contains(id))
-							continue;
+						// we don't to it like this anymore, now we have all updatedNotes already in the notes dictionary
+						//// Skip updated notes, we'll update them in a sec
+						//if (updatedNotes.Contains(id))
+						//  continue;
 
 						xml.WriteStartElement(null, "note", null);
 						xml.WriteAttributeString("id", id);
@@ -984,14 +1002,15 @@ namespace Tomboy.Sync
 						xml.WriteEndElement();
 					}
 
-					// Write out all the updated notes
-					foreach (string uuid in updatedNotes)
-					{
-						xml.WriteStartElement(null, "note", null);
-						xml.WriteAttributeString("id", uuid);
-						xml.WriteAttributeString("rev", newRevision.ToString());
-						xml.WriteEndElement();
-					}
+					// we don't to it like this anymore, now we have all updatedNotes already in the notes dictionary
+					//// Write out all the updated notes
+					//foreach (string uuid in updatedNotes)
+					//{
+					//  xml.WriteStartElement(null, "note", null);
+					//  xml.WriteAttributeString("id", uuid);
+					//  xml.WriteAttributeString("rev", newRevision.ToString());
+					//  xml.WriteEndElement();
+					//}
 
 					xml.WriteEndElement();
 					xml.WriteEndDocument();
