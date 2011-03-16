@@ -6,6 +6,42 @@ using System.IO;
 namespace Tomboy.PrivateNotes.Crypto
 {
 
+	class NullCryptoFormat : CryptoFormat
+	{
+
+		public bool WriteCompatibleFile(String _filename, byte[] _content, byte[] _key, byte[] _salt)
+		{
+			FileStream fout = File.OpenWrite(_filename);
+			fout.Write(_content, 0, _content.Length);
+			fout.Close();
+			return true;
+		}
+
+		public byte[] DecryptFromStream(String _filename, Stream fin, byte[] _key, out bool _wasOk)
+		{
+			int read = fin.ReadByte();
+			MemoryStream membuf = new MemoryStream();
+			while (read >= 0)
+			{
+				membuf.WriteByte((byte)read);
+				read = fin.ReadByte();
+			}
+			_wasOk = true;
+			return membuf.ToArray();
+		}
+
+		public byte[] DecryptFile(String _filename, byte[] _key, out bool _wasOk)
+		{
+			FileStream fin = File.OpenRead(_filename);
+			return DecryptFromStream(_filename, fin, _key, out _wasOk);
+		}
+
+		public int Version()
+		{
+			return 9;
+		}
+	}
+
 	class CryptoFileFormatRev1 : CryptoFormat
 	{
 

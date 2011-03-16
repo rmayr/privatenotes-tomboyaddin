@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
+using System.IO;
 
 namespace Tomboy.PrivateNotes
 {
@@ -32,6 +34,33 @@ namespace Tomboy.PrivateNotes
 		{
 			return sharedWith.Contains(with);
 		}
+
+		public void Serialize(XmlWriter writer)
+		{
+			writer.WriteStartElement(null, "noteshare", null);
+			writer.WriteAttributeString("id", noteId);
+			writer.WriteAttributeString("target", shareTarget);
+			foreach (String with in sharedWith)
+			{
+				writer.WriteStartElement(null, "with", null);
+				writer.WriteAttributeString("partner", with);
+				writer.WriteEndElement();
+			}
+			writer.WriteEndElement();
+		}
+
+		public static NoteShare Deserialize(XmlNode share)
+		{
+			String id = share.Attributes["id"].Value;
+			String target = share.Attributes["target"].Value;
+			List<String> with = new List<string>();
+			foreach (XmlNode n in share.ChildNodes)
+			{
+				with.Add(n.Attributes["partner"].Value);
+			}
+			return new NoteShare(id, with, target);
+		}
+		
 	}
 
 	public delegate void ShareAdded(String noteid, String with);
@@ -57,24 +86,45 @@ namespace Tomboy.PrivateNotes
 		List<NoteShare> GetShares();
 
 		bool IsNoteShared(String noteuid);
+
+		bool SaveShares();
 	}
 
 	class WebDavShareProvider : ShareProvider
 	{
 		private List<NoteShare> shares;
+		private String configFile = null;
 		public event ShareAdded OnShareAdded;
 		public event ShareRemoved OnShareRemoved;
 
 		public WebDavShareProvider()
 		{
+			configFile = Path.Combine(Services.NativeApplication.ConfigurationDirectory, "shares.xml");
 			shares = new List<NoteShare>();
-			// adds 1 default test share
-			foreach (Note note in Tomboy.DefaultNoteManager.Notes)
+			LoadFromConfig();
+			//// adds 1 default test share
+			//foreach (Note note in Tomboy.DefaultNoteManager.Notes)
+			//{
+			//  Logger.Info("got note {0}", note.Id);
+			//  AddShare(note.Id, "felix");
+			//  break;
+			//}
+		}
+
+		public bool SaveShares()
+		{
+			XmlWriter writer = XmlWriter.Create(configFile, XmlEncoder.DocumentSettings);
+			writer.WriteStartDocument();
+			writer.WriteStartElement("shares");
+			foreach (NoteShare share in shares)
 			{
-				Logger.Info("got note {0}", note.Id);
-				AddShare(note.Id, "felix");
-				break;
+				share.Serialize(writer);
 			}
+			writer.WriteEndElement();
+			writer.WriteEndDocument();
+			writer.Flush();
+			writer.Close();
+			return true;
 		}
 
 		public bool AddShare(String noteuid, String shareWith)
@@ -84,13 +134,14 @@ namespace Tomboy.PrivateNotes
 			bool shared = (share != null);
 
 			bool wasAdded = false;
-			String sharePath = "http://testuser3:test@localhost/webdav/testuser3";
+			String sharePath = "http://testuser3:test@testhost/webdav/testuser3";
 
 			if (!shared)
 			{
 				// not yet shared, request new webdav space to put share
 				share = new NoteShare(noteuid, shareWith, sharePath);
 				shares.Add(share);
+				SaveShares();
 				if (OnShareAdded != null)
 					OnShareAdded(noteuid, shareWith);
 				wasAdded = true;
@@ -106,6 +157,7 @@ namespace Tomboy.PrivateNotes
 				else
 				{
 					share.sharedWith.Add(shareWith);
+					SaveShares();
 					if (OnShareAdded != null)
 						OnShareAdded(noteuid, shareWith);
 					wasAdded = true;
@@ -130,6 +182,7 @@ namespace Tomboy.PrivateNotes
 			}
 			if (removed)
 			{
+				SaveShares();
 				if (OnShareRemoved != null)
 				{
 					OnShareRemoved(noteuid, shareWith);
@@ -145,6 +198,7 @@ namespace Tomboy.PrivateNotes
 			if (share != null)
 			{
 				shares.Remove(share);
+				SaveShares();
 				removed = true;
 				foreach (String sharedwith in share.sharedWith)
 				{
@@ -175,5 +229,18 @@ namespace Tomboy.PrivateNotes
 			}
 			return null;
 		}
+
+		private void LoadFromConfig()
+		{
+			if (!File.Exists(configFile))
+				return;
+			XmlDocument xml = new XmlDocument();
+			xml.Load(configFile);
+			XmlNodeList nodes = xml.GetElementsByTagName("noteshare");
+			foreach (XmlNode n in nodes)
+				shares.Add(NoteShare.Deserialize(n));
+			xml = null; // is there no .close() .dispose()?
+		}
+
 	}
 }

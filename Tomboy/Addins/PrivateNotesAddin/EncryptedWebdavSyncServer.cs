@@ -101,15 +101,22 @@ namespace Tomboy.PrivateNotes
 		/// </summary>
 		/// <param name="pathToNote"></param>
 		internal override void OnUploadFile(String pathToNote) {
+			bool uploaded = false;
 			if (pathToNote.EndsWith(".note")) {
 				String id = GetNoteIdFromFileName(pathToNote);
 				if (shareCopies.ContainsKey(id))
 				{
+					// TODO FIXME SEVERE: this is juts a hack, because if we didn't get the note from the server, 
+					// it isn't in the correct directory yet! check how it works for the normal sync and to it like this for shared
+					// notes also!
+					File.Copy(Path.Combine(cachePath, id + ".note"), Path.Combine(shareCopies[id].FullName, id + ".note"), true);
 					shareSync.UploadNewNote(id);
+					uploaded = true;
 				}
 			}
 
-			webdavserver.UploadFile(pathToNote);
+			if (!uploaded)
+				webdavserver.UploadFile(pathToNote);
 		}
 
 		/// <summary>
@@ -201,7 +208,25 @@ namespace Tomboy.PrivateNotes
 					Dictionary<String, int> addme = GetNoteRevisionsFromManifest(path, revision);
 					foreach (String key in addme.Keys)
 					{
-						updates.Add(key, addme[key]);
+						if (!shareCopies.ContainsKey(key))
+						{
+							// o_O this is a shared note we totally didn't know about?! it was somehow
+							// uploaded into that dir + added to the manifest
+							// not sure yet how to handle this...
+							Logger.Warn("new shared note was discovered! don't know how to handle this!"+
+							"Automatic adding if notes is not yet supported, because i think it's problematic during sync... maybe?");
+						}
+						else
+						{
+							// it's ok, it's a shared note we know about
+							if (updates.ContainsKey(key))
+							{
+								if (updates[key] < addme[key]) // overwrite if the one from the shared folder is newer
+									updates[key] = addme[key];
+							}
+							else
+								updates.Add(key, addme[key]);
+						}
 					}
 				}
 			}

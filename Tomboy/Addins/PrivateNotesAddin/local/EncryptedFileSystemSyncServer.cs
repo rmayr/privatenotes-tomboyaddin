@@ -500,6 +500,7 @@ namespace Tomboy.Sync
 
 								if (updatedNotes.Contains(fileGuid))
 								{
+									Logger.Info("uploading " + fileGuid);
 									OnUploadFile(file.FullName);
 								}
 							}
@@ -972,11 +973,11 @@ namespace Tomboy.Sync
 			
 			virtual internal bool CreateManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
 			{
-				MemoryStream buffer = new MemoryStream();
 				bool success = false;
+				MemoryStream buffer = new MemoryStream();
+				XmlWriter xml = XmlWriter.Create(buffer, XmlEncoder.DocumentSettings);
 				try
 				{
-					XmlWriter xml = XmlWriter.Create(buffer, XmlEncoder.DocumentSettings);
 					xml.WriteStartDocument();
 					xml.WriteStartElement(null, "sync", null);
 					xml.WriteAttributeString("revision", newRevision.ToString());
@@ -1023,7 +1024,7 @@ namespace Tomboy.Sync
 				}
 				finally
 				{
-					// xml.Close();
+					xml.Close();
 					// now store in encrypted version:
 					SecurityWrapper.SaveAsEncryptedFile(manifestFilePath, buffer.ToArray(), myKey);
 					// dispose of plain data

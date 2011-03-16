@@ -61,7 +61,8 @@ namespace Tomboy.PrivateNotes.Crypto
 			}
 		}
 
-		private CryptoFormat defaultFormat = new CryptoFileFormatRev1();
+		//private CryptoFormat defaultFormat = new CryptoFileFormatRev1();
+		private CryptoFormat defaultFormat = new NullCryptoFormat();
 
 		/// <summary>
 		/// getting the default crypto format

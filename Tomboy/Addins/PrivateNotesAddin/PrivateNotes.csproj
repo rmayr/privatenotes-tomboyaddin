@@ -93,4 +93,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy "D:\PAUL\Hagenberg\Projekt\SVN\TomboyProject\bin\Debug\PrivateNotes.dll" "C:\xampp\xampp\webdav\PrivateNotes.dll"
+copy "D:\PAUL\Hagenberg\Projekt\SVN\TomboyProject\bin\Debug\PrivateNotes.dll" "C:\xampp\xampp\htdocs\PrivateNotes.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

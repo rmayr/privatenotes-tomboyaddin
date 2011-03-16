@@ -115,7 +115,8 @@ namespace Tomboy.PrivateNotes
 			{
 				NoteShare shareObj = shareObjects[noteId];
 				WebDAVInterface dav = servers[shareObj.shareTarget];
-				dav.UploadFile(Path.Combine(shareBuffer[noteId].FullName, noteId + ".note"));
+				String noteFilePath = Path.Combine(shareBuffer[noteId].FullName, noteId + ".note");
+				dav.UploadFile(noteFilePath);
 				// TODO FIXME don't upload the manifest file multiple times!!!
 				dav.UploadFile(Path.Combine(shareBuffer[noteId].FullName, "manifest.xml"));
 			}

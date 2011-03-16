@@ -572,7 +572,7 @@ namespace Tomboy.PrivateNotes
 
         /// XXX WTF somehow if this is active, it doesn't work on linux?!
 #if WIN32
-        httpWebRequest.PreAuthenticate = true;
+        //httpWebRequest.PreAuthenticate = true;
 #endif
         /// END WTF
       }
