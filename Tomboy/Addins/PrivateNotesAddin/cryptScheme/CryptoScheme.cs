@@ -11,7 +11,7 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		public bool WriteCompatibleFile(String _filename, byte[] _content, byte[] _key, byte[] _salt)
 		{
-			FileStream fout = File.OpenWrite(_filename);
+			FileStream fout = File.Create(_filename);
 			fout.Write(_content, 0, _content.Length);
 			fout.Close();
 			return true;

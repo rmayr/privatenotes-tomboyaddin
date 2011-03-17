@@ -157,6 +157,9 @@ namespace Tomboy.Sync
 			{
 				List<string> noteUUIDs = new List<string>();
 
+				Dictionary<string, int> updates = GetNoteUpdatesIdsSince(-1);
+				noteUUIDs.AddRange(updates.Keys);
+				/* // THIS IS THE OLD VERSION, DON'T USE THIS
 				if (IsValidXmlFile(manifestPath))
 				{
 					// TODO: Permission errors
@@ -178,7 +181,7 @@ namespace Tomboy.Sync
 						}
 					}
 				}
-
+				*/
 				return noteUUIDs;
 			}
 

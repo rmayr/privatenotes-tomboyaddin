@@ -9,6 +9,7 @@ namespace Tomboy.PrivateNotes
 	{
 		Gtk.MenuItem shareItem;
 		Gtk.MenuItem unshareItem;
+		Gtk.MenuItem importSharedNoteItem;
 
 		public override void Initialize()
 		{
@@ -45,6 +46,15 @@ namespace Tomboy.PrivateNotes
 				Gtk.AccelFlags.Visible);
 			unshareItem.Show();
 			AddPluginMenuItem(unshareItem);
+
+			importSharedNoteItem = new Gtk.MenuItem(
+				Catalog.GetString("Import shared Note"));
+			importSharedNoteItem.Activated += OnImportActivated;
+			importSharedNoteItem.AddAccelerator("activate", Window.AccelGroup,
+				(uint)Gdk.Key.i, Gdk.ModifierType.ControlMask,
+				Gtk.AccelFlags.Visible);
+			importSharedNoteItem.Show();
+			AddPluginMenuItem(importSharedNoteItem);
 
 			EncryptedWebdavSyncServiceAddin.shareProvider.OnShareAdded += ShareAdded;
 			EncryptedWebdavSyncServiceAddin.shareProvider.OnShareRemoved += ShareRemoved;
@@ -114,6 +124,16 @@ namespace Tomboy.PrivateNotes
 			// DUMMY PARENT
 			Gtk.Widget wid = new Gtk.Label();
 			GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
+		}
+
+		void OnImportActivated(object sender, EventArgs args)
+		{
+			// TODO: create a separate nice gui where we can specify this, for testing purposes the password-entry gui is enough
+			PasswordEntry pwe = new PasswordEntry();
+			String sharepath = "";// pwe.getPassword();
+			Logger.Info("sharepath add request: {0}", sharepath);
+			//EncryptedWebdavSyncServiceAddin.shareProvider.AddShare
+			
 		}
 
 	}
