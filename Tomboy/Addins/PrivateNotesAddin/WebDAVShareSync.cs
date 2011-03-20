@@ -74,12 +74,14 @@ namespace Tomboy.PrivateNotes
 				}
 				else
 				{
-					Uri url = new Uri(share.shareTarget);
-					string[] userInfo = url.UserInfo.Split(new char[] { ':' }, 2);
-					String user = (userInfo.Length==2)?(userInfo[0]):("");
-					String password = (userInfo.Length==2)?(userInfo[1]):("");
-					String server = url.Scheme + "://" + url.Authority + ":" + url.Port;
-					servers.Add(share.shareTarget, new WebDAVInterface(server, url.LocalPath, user, password, false));
+					//Uri url = new Uri(share.shareTarget);
+					//string[] userInfo = url.UserInfo.Split(new char[] { ':' }, 2);
+					//String user = (userInfo.Length==2)?(userInfo[0]):("");
+					//String password = (userInfo.Length==2)?(userInfo[1]):("");
+					//String server = url.Scheme + "://" + url.Authority + ":" + url.Port;
+					String user, password, server, serverbasepath;
+					ParseFromLink(share.shareTarget, out user, out password, out server, out serverbasepath);
+					servers.Add(share.shareTarget, new WebDAVInterface(server, serverbasepath, user, password, false));
 				}
 			}
 
@@ -96,6 +98,29 @@ namespace Tomboy.PrivateNotes
 				Directory.CreateDirectory(path);
 				shareBuffer.Add(share.noteId, new DirectoryInfo(path));
 				dav.DownloadNotes(path);
+			}
+
+		}
+
+		public void ImportFromWebdav(String path)
+		{
+			String user, pw, server, serverbase;
+			ParseFromLink(path, out user, out pw, out server, out serverbase);
+			WebDAVInterface wdi = new WebDAVInterface(server, serverbase, user, pw, false);
+
+			if (wdi.CheckForLockFile())
+			{
+				throw new Exception("TODO handle lockfile correctly!");
+			}
+			// TODO create/put lock file
+			String randomName = System.Guid.NewGuid().ToString();
+			String localpath = Path.Combine(basePath, "import_" + randomName);
+			Directory.CreateDirectory(localpath);
+			wdi.DownloadNotes(localpath);
+			DirectoryInfo di = new DirectoryInfo(localpath);
+			FileInfo[] files = di.GetFiles("*.note");
+			foreach (FileInfo fi in files) {
+				shareBuffer.Add(fi.Name.Replace(".note", ""), di);
 			}
 
 		}
@@ -153,6 +178,16 @@ namespace Tomboy.PrivateNotes
 			servers.Clear();
 
 			shareObjects.Clear();
+		}
+
+		public static bool ParseFromLink(String link, out String user, out String password, out String server, out String basePath) {
+			Uri url = new Uri(link);
+			string[] userInfo = url.UserInfo.Split(new char[] { ':' }, 2);
+			user = (userInfo.Length==2)?(userInfo[0]):("");
+			password = (userInfo.Length==2)?(userInfo[1]):("");
+			server = url.Scheme + "://" + url.Authority + ":" + url.Port;
+			basePath = url.LocalPath;
+			return true;
 		}
 
 	}

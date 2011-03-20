@@ -128,12 +128,20 @@ namespace Tomboy.PrivateNotes
 
 		void OnImportActivated(object sender, EventArgs args)
 		{
-			// TODO: create a separate nice gui where we can specify this, for testing purposes the password-entry gui is enough
-			PasswordEntry pwe = new PasswordEntry();
-			String sharepath = "";// pwe.getPassword();
-			Logger.Info("sharepath add request: {0}", sharepath);
-			//EncryptedWebdavSyncServiceAddin.shareProvider.AddShare
-			
+			TextInput ti = new TextInput("enter share path:", "http://someone:secret@example.com/myShare/", "http://.+", new inputDone(OnShareItemPathEntered));
+		}
+
+		void OnShareItemPathEntered(bool ok, String sharepath)
+		{
+			if (ok)
+			{
+				Logger.Info("sharepath add request: {0}", sharepath);
+				EncryptedWebdavSyncServiceAddin.shareProvider.ImportShare(sharepath);
+			}
+			else
+			{
+				// nothing
+			}
 		}
 
 	}

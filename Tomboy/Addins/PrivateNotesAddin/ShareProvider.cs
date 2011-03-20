@@ -74,6 +74,13 @@ namespace Tomboy.PrivateNotes
 
 		bool AddShare(String noteuid, String shareWith);
 
+		/// <summary>
+		/// add a share via a path/location that sb has sent you55
+		/// </summary>
+		/// <param name="share"></param>
+		/// <returns></returns>
+		bool ImportShare(String share);
+
 		bool RemoveShare(String noteuid, String shareWith);
 
 		/// <summary>
@@ -102,13 +109,6 @@ namespace Tomboy.PrivateNotes
 			configFile = Path.Combine(Services.NativeApplication.ConfigurationDirectory, "shares.xml");
 			shares = new List<NoteShare>();
 			LoadFromConfig();
-			//// adds 1 default test share
-			//foreach (Note note in Tomboy.DefaultNoteManager.Notes)
-			//{
-			//  Logger.Info("got note {0}", note.Id);
-			//  AddShare(note.Id, "felix");
-			//  break;
-			//}
 		}
 
 		public bool SaveShares()
@@ -165,6 +165,24 @@ namespace Tomboy.PrivateNotes
 			}
 
 			return wasAdded;
+		}
+
+		public bool ImportShare(String share)
+		{
+			// download the stuff, then we should try to sync it...
+
+			WebDAVShareSync sync = WebDAVShareSync.GetInstance(this);
+			sync.ImportFromWebdav(share);
+			Dictionary<String, DirectoryInfo> imported = sync.GetShareCopies();
+
+			// add all notes
+			foreach (String id in imported.Keys)
+			{
+				NoteShare s = new NoteShare(id, "felix", share);
+				shares.Add(s);
+			}
+			SaveShares();
+			return true;
 		}
 
 		public bool RemoveShare(String noteuid, String shareWith)
