@@ -58,14 +58,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TextInput.cs" />
+    <Compile Include="gui\ItemSelector.cs" />
+    <Compile Include="gui\TextInput.cs" />
     <Compile Include="CryptoLayer.cs" />
     <Compile Include="cryptScheme\CryptoScheme.cs" />
     <Compile Include="EncryptedWebdavSyncServer.cs" />
     <Compile Include="local\EncryptedFileSystemSyncServer.cs" />
     <Compile Include="local\SecurityWrapper.cs" />
     <Compile Include="EncryptedWebdavSyncServiceAddin.cs" />
-    <Compile Include="PasswordEntry.cs" />
+    <Compile Include="gui\PasswordEntry.cs" />
     <Compile Include="AddinPreferences.cs" />
     <Compile Include="AddinPreferencesFactory.cs" />
     <Compile Include="Program.cs" />

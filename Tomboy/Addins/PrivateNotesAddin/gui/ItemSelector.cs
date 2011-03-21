@@ -6,22 +6,15 @@ using Mono.Unix;
 
 namespace Tomboy.PrivateNotes
 {
-	public delegate void inputDone(bool ok, String value);
 
 	/// <summary>
-	/// utility class that is able to display a password-entry
-	/// dialog, while the sync process is running.
-	/// not that straightforward, because we are running in a separate
-	/// thread (the sync-thread) and not the gui thread, so we have to 
-	/// take care of that
+	/// utility class that is able to display a item selection dialog
 	/// </summary>
-	public class TextInput : Gtk.Dialog
+	public class ItemSelector : Gtk.Dialog
 	{
-		AutoResetEvent autoReset;
-		Gtk.Entry text;
-		Gtk.Label match_label;
+		Gtk.ComboBoxEntry itemsComboBox;
+		List<String> allItems;
 		inputDone onOk;
-		System.Text.RegularExpressions.Regex regex = null;
 
 		/// <summary>
 		/// 
@@ -30,31 +23,19 @@ namespace Tomboy.PrivateNotes
 		/// <param name="defaultvalue"></param>
 		/// <param name="regexmatch">if != null, input will only be accepted if it matches the regex</param>
 		/// <param name="onFinished">callback function when input is done</param>
-		public TextInput(String message, String defaultvalue, String regexmatch, inputDone onFinished)
-		{
-			if (regexmatch != null)
-				regex = new System.Text.RegularExpressions.Regex(regexmatch);
-			
+		public ItemSelector(String message, List<String> items, inputDone onFinished)
+		{			
 			onOk = onFinished;
-			autoReset = new AutoResetEvent(false);
-			Title = Catalog.GetString("Input");
+			allItems = items;
+			Title = Catalog.GetString("Selector");
 			Gtk.VBox box = new Gtk.VBox(false, 6);
 
 			box.PackStart(new Gtk.Label(Catalog.GetString(message)), true, true, 6);
 
-			text = new Gtk.Entry();
-			text.Text = defaultvalue;
-			box.PackStart(text);
+			itemsComboBox = new Gtk.ComboBoxEntry(allItems.ToArray());
 
-			text.Changed += TextChanged;
-
-			if (regex != null)
-			{
-				match_label = new Gtk.Label();
-				match_label.Markup = Catalog.GetString("input ok");
-				box.PackStart(match_label);
-			}
-
+			box.PackStart(itemsComboBox);
+			itemsComboBox.Changed += new EventHandler(itemsComboBox_Changed);
 
 			Gtk.Button button = (Gtk.Button)AddButton(Gtk.Stock.Ok, Gtk.ResponseType.Ok);
 			button.CanDefault = true;
@@ -86,6 +67,36 @@ namespace Tomboy.PrivateNotes
 			Gtk.Application.Invoke(RunInUiThread);
 		}
 
+		bool isChanging = false;
+		String lastText = "";
+		void itemsComboBox_Changed(object sender, EventArgs e)
+		{
+			if (isChanging)
+				return;
+			isChanging = true;
+			String text = itemsComboBox.Entry.Text;
+			if (text.Equals(lastText))
+			{
+				isChanging = false;
+				return;
+			}
+			lastText = text;
+			List<String> matches = allItems.FindAll(delegate(String s) { return s.Contains(text); });
+
+			// quick and VERY VERY DIRTY way of doing it
+			int count = itemsComboBox.Model.IterNChildren();
+			for (int i = 0; i < count; i++)
+				itemsComboBox.RemoveText(0);
+			foreach (String s in matches)
+				itemsComboBox.AppendText(s);
+			
+			// TODO: this stops the entry process, so you can't continue typing...
+			itemsComboBox.Popup();
+			//itemsComboBox.PopupShown = true;
+			Logger.Info(itemsComboBox.Entry.Text);
+			isChanging = false;
+		}
+
 		/// <summary>
 		/// used to show the dialog via the UI-Thread
 		/// </summary>
@@ -98,14 +109,9 @@ namespace Tomboy.PrivateNotes
 
 		public void TextChanged(object sender, EventArgs args)
 		{
-			if (regex != null)
+			if (false)
 			{
-				bool valueOk = regex.IsMatch(text.Text);
-				if (valueOk) {
-					match_label.Markup = Catalog.GetString("input ok");
-				} else {
-					match_label.Markup = Catalog.GetString("wrong input");
-				}
+	
 			}				
 		}
 
@@ -117,17 +123,13 @@ namespace Tomboy.PrivateNotes
 		/// <param name="args"></param>
 		public void OnAction(object o, Gtk.AccelActivateArgs args)
 		{
-			bool isOk = false;
-			if (regex == null)
-				isOk = true;
-			else
-				isOk = regex.IsMatch(text.Text);
+			bool isOk = true;
 
 
 			if (isOk)
 			{
 				// action
-				onOk(true, text.Text);
+				onOk(true, itemsComboBox.Entry.Text);
 				Hide();
 				Destroy();
 			}

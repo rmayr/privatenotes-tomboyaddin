@@ -1,6 +1,7 @@
 ﻿using Tomboy.Sync;
 using System;
 using Mono.Unix;
+using System.Collections.Generic;
 
 namespace Tomboy.PrivateNotes
 {
@@ -94,26 +95,18 @@ namespace Tomboy.PrivateNotes
 
 		void OnShareItemActivated(object sender, EventArgs args)
 		{
-			//string text = DateTime.Now.ToString(date_format);
-			//Gtk.TextIter cursor = Buffer.GetIterAtMark(Buffer.InsertMark);
-			//Buffer.InsertWithTagsByName(ref cursor, text, "datetime");
 			Logger.Info("menu item clicked!");
-			bool added = EncryptedWebdavSyncServiceAddin.shareProvider.AddShare(Note.Id, "felix");
-			string message = Catalog.GetString("Error: Note not shared.");
-			if (added)
-			{
-				message = Catalog.GetString("Note is now shared...");
-			}
-			// DUMMY PARENT
-			Gtk.Widget wid = new Gtk.Label();
-			GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
+			List<String> people = new List<String>();
+			people.Add("Felix");
+			people.Add("Steve");
+			people.Add("Dave");
+
+			ItemSelector selector = new ItemSelector("Choose contact to share note with:", people, new inputDone(OnPeopleForShareChosen));
+
 		}
 
 		void OnUnshareItemActivated(object sender, EventArgs args)
 		{
-			//string text = DateTime.Now.ToString(date_format);
-			//Gtk.TextIter cursor = Buffer.GetIterAtMark(Buffer.InsertMark);
-			//Buffer.InsertWithTagsByName(ref cursor, text, "datetime");
 			Logger.Info("unshare menu item clicked!");
 			bool removed = EncryptedWebdavSyncServiceAddin.shareProvider.RemoveShare(Note.Id);
 			string message = Catalog.GetString("Error: Could not be unshared.");
@@ -137,6 +130,27 @@ namespace Tomboy.PrivateNotes
 			{
 				Logger.Info("sharepath add request: {0}", sharepath);
 				EncryptedWebdavSyncServiceAddin.shareProvider.ImportShare(sharepath);
+			}
+			else
+			{
+				// nothing
+			}
+		}
+
+		void OnPeopleForShareChosen(bool ok, String selection)
+		{
+			if (ok)
+			{
+				Logger.Info("person selected: {0}", selection);
+				bool added = EncryptedWebdavSyncServiceAddin.shareProvider.AddShare(Note.Id, selection);
+				string message = Catalog.GetString("Error: Note not shared.");
+				if (added)
+				{
+					message = Catalog.GetString("Note is now shared...");
+				}
+				// DUMMY PARENT
+				Gtk.Widget wid = new Gtk.Label();
+				GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
 			}
 			else
 			{
