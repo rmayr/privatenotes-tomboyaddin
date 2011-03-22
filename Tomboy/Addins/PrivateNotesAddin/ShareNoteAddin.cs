@@ -2,6 +2,7 @@
 using System;
 using Mono.Unix;
 using System.Collections.Generic;
+using Tomboy.PrivateNotes.Adress;
 
 namespace Tomboy.PrivateNotes
 {
@@ -97,9 +98,18 @@ namespace Tomboy.PrivateNotes
 		{
 			Logger.Info("menu item clicked!");
 			List<String> people = new List<String>();
-			people.Add("Felix");
-			people.Add("Steve");
-			people.Add("Dave");
+			//people.Add("Felix");
+			//people.Add("Steve");
+			//people.Add("Dave");
+
+			AdressBook ab = AdressBookFactory.Instance().GetDefault();
+			// TODO we shouldn't do this every time!!!
+			ab.Load();
+			List<AdressBookEntry> entries = ab.getEntries();
+			foreach (AdressBookEntry abe in entries)
+			{
+				people.Add(abe.name + " " + abe.mail + " - " + abe.id);
+			}
 
 			ItemSelector selector = new ItemSelector("Choose contact to share note with:", people, new inputDone(OnPeopleForShareChosen));
 

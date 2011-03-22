@@ -71,6 +71,7 @@ namespace Tomboy.PrivateNotes
 		String lastText = "";
 		void itemsComboBox_Changed(object sender, EventArgs e)
 		{
+			// prevents recursive call if we change the text-value in here
 			if (isChanging)
 				return;
 			isChanging = true;
@@ -80,8 +81,8 @@ namespace Tomboy.PrivateNotes
 				isChanging = false;
 				return;
 			}
-			lastText = text;
-			List<String> matches = allItems.FindAll(delegate(String s) { return s.Contains(text); });
+			lastText = text.ToLower(); // to make a case insensitive search
+			List<String> matches = allItems.FindAll(delegate(String s) { return s.ToLower().Contains(text); });
 
 			// quick and VERY VERY DIRTY way of doing it
 			int count = itemsComboBox.Model.IterNChildren();
@@ -91,9 +92,10 @@ namespace Tomboy.PrivateNotes
 				itemsComboBox.AppendText(s);
 			
 			// TODO: this stops the entry process, so you can't continue typing...
-			itemsComboBox.Popup();
-			//itemsComboBox.PopupShown = true;
-			Logger.Info(itemsComboBox.Entry.Text);
+			// but it would be nice to see the possibilities, haven't found any doc
+			// which describes how this can be done in gtk
+			//itemsComboBox.Popup();
+
 			isChanging = false;
 		}
 

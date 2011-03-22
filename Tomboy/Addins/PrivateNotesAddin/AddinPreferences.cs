@@ -19,6 +19,7 @@ namespace Tomboy.PrivateNotes
 		public const string SYNC_PRIVATENOTES_SERVERPASS = "/apps/tomboy/sync/private_notes/server_password";
 		public const string SYNC_PRIVATENOTES_SERVERCHECKSSLCERT = "/apps/tomboy/sync/private_notes/server_checkcert";
 
+		public const string SYNC_PRIVATENOTES_SHARE_GPG = "/apps/tomboy/sync/private_notes/share_gpg";
 
 		// match-label texts
 		public const string MATCH_TEXT = "<markup><span foreground=\"green\">match</span></markup>";

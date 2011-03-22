@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cryptScheme\AddressBook.cs" />
     <Compile Include="gui\ItemSelector.cs" />
     <Compile Include="gui\TextInput.cs" />
     <Compile Include="CryptoLayer.cs" />
