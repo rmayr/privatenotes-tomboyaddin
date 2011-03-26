@@ -30,7 +30,15 @@ namespace Tomboy.Sync
 			byte[] key = AESUtil.CalculateSaltedHash(_password, out salt);
 
 			CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			if (!ccf.PreHashedPasswordSupported())
+			{
+				// reset the key to the plain password
+				key = _password;
+			}
+
 			ccf.WriteCompatibleFile(_toFile, membuf.ToArray(), key, salt);
+				
+			
 		}
 
 		public static void SaveAsEncryptedFile(String _fileName, byte[] _data, byte[] _password)
@@ -39,6 +47,11 @@ namespace Tomboy.Sync
 
 			byte[] salt;
 			byte[] key = AESUtil.CalculateSaltedHash(_password, out salt);
+			if (!ccf.PreHashedPasswordSupported())
+			{
+				// reset the key to the plain password
+				key = _password;
+			}
 			ccf.WriteCompatibleFile(_fileName, _data, key, salt);
 		}
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using Tomboy.PrivateNotes.Adress;
 
 namespace Tomboy.PrivateNotes.Crypto
 {
@@ -43,6 +44,36 @@ namespace Tomboy.PrivateNotes.Crypto
 		/// </summary>
 		/// <returns>version number as int</returns>
 		int Version();
+
+		/// <summary>
+		/// tells you if you can use the write method in the normal way (where the _key param is already the salted password)
+		/// it might be that some encryption schemes don't support that!
+		/// </summary>
+		/// <returns></returns>
+		bool PreHashedPasswordSupported();
+	}
+
+	public interface ShareCryptoFormat : CryptoFormat
+	{
+		/// <summary>
+		/// Writes the given contents encrypted with the given key to disk. The target is specified by the filename
+		/// </summary>
+		/// <param name="_filename">target file</param>
+		/// <param name="_content">contents that will be encrypted</param>
+		/// <param name="_recipients">a list of the people for whom to encrypt the file</param>
+		/// <returns>true if successful</returns>
+		bool WriteCompatibleFile(AdressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients);
+
+
+		/// <summary>
+		/// decrypts data from a file. same as DecryptFromStream, but the encrypted data is taken from a file
+		/// </summary>
+		/// <param name="_filename">the file to read from</param>
+		/// <param name="_recipients">if supported, all the recipients for whom this file is encrypted are read out</param>
+		/// <param name="_wasOk">true if everything was ok</param>
+		/// <returns>the decrypted data</returns>
+		byte[] DecryptFile(AdressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk);
+
 	}
 
 	/// <summary>
@@ -62,7 +93,8 @@ namespace Tomboy.PrivateNotes.Crypto
 		}
 
 		//private CryptoFormat defaultFormat = new CryptoFileFormatRev1();
-		private CryptoFormat defaultFormat = new NullCryptoFormat();
+		//private CryptoFormat defaultFormat = new NullCryptoFormat();
+		private CryptoFormat defaultFormat = new GpgCryptoFormat();
 
 		/// <summary>
 		/// getting the default crypto format

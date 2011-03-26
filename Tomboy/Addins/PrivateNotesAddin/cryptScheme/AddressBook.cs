@@ -63,8 +63,6 @@ namespace Tomboy.PrivateNotes.Adress
 		{
 			entries = new List<AdressBookEntry>();
 
-
-
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = gpgExe;
 			proc.StartInfo.Arguments = GPG_LIST;
@@ -72,7 +70,6 @@ namespace Tomboy.PrivateNotes.Adress
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.RedirectStandardOutput = true;
 			proc.Start();
-			//StringBuilder sb = new StringBuilder(1000);
 			String data = proc.StandardOutput.ReadToEnd();
 			
 			// parse output!

@@ -2,12 +2,24 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Tomboy.PrivateNotes.Adress;
 
 namespace Tomboy.PrivateNotes.Crypto
 {
 
+	/// <summary>
+	/// a crypto format which does no encryption at all. This is _ONLY_ for debuggin purposes!
+	/// </summary>
 	class NullCryptoFormat : CryptoFormat
 	{
+		/// <summary>
+		/// for nullcryptoformat it doesn't matter, since we don't use the password anyway
+		/// </summary>
+		/// <returns></returns>
+		public bool PreHashedPasswordSupported()
+		{
+			return true;
+		}
 
 		public bool WriteCompatibleFile(String _filename, byte[] _content, byte[] _key, byte[] _salt)
 		{
@@ -42,6 +54,169 @@ namespace Tomboy.PrivateNotes.Crypto
 		}
 	}
 
+	/// <summary>
+	/// a crypto format which uses the gpg utility (program) for encryption and decryption
+	/// </summary>
+	class GpgCryptoFormat : ShareCryptoFormat
+	{
+		static String gpgExe = null;
+
+		public GpgCryptoFormat()
+		{
+			// only needed once
+			if (gpgExe == null)
+			{
+				gpgExe = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SHARE_GPG) as String;
+				if (gpgExe == null)
+				{
+					throw new InvalidOperationException("gpg not configured yet!");
+				}
+			}
+		}
+
+		public bool PreHashedPasswordSupported()
+		{
+			return false;
+		}
+
+
+		public bool WriteCompatibleFile(String _filename, byte[] _content, byte[] _key, byte[] _salt)
+		{
+			// TODO this MUST be written to a temporary directory!	
+			// TODO include the filename!
+			String tempFileName = _filename + ".clear";
+			FileStream fout = File.Create(tempFileName);
+			fout.Write(_content, 0, _content.Length);
+			fout.Close();
+			
+			System.Diagnostics.Process proc = new System.Diagnostics.Process();
+			proc.StartInfo.FileName = gpgExe;
+			proc.StartInfo.Arguments = "--batch --symmetric --passphrase " + Util.FromBytes(_key) + " --output " + _filename + " " + tempFileName ;
+			proc.StartInfo.UseShellExecute = false;
+			proc.StartInfo.CreateNoWindow = true;
+			proc.StartInfo.RedirectStandardOutput = true;
+			proc.Start();
+			String data = proc.StandardOutput.ReadToEnd();
+			Logger.Info(data);
+
+			File.Delete(tempFileName);
+
+			return true;
+		}
+
+		public byte[] DecryptFromStream(String _filename, Stream fin, byte[] _key, out bool _wasOk)
+		{
+			// TODO create temp filename here!
+			String tempfile = "C:/mybuffer.enc";
+			File.Delete(tempfile);
+			FileStream fout = File.Create(tempfile);
+			int bt = fin.ReadByte();
+			while (bt >= 0)
+			{
+				fout.WriteByte((byte)bt);
+				bt = fin.ReadByte();
+			}
+			fout.Close();
+
+			// ERROR FIXME: this would normally not work, because the filename is different now!!!
+			byte[] decrypted = DecryptFile(tempfile, _key, out _wasOk);
+			
+			File.Delete(tempfile);
+
+			return decrypted;
+		}
+
+		public byte[] DecryptFile(String _filename, byte[] _key, out bool _wasOk)
+		{
+			// TODO create temp filename here
+			String tempfile = "C:/mybuffer.txt";
+			File.Delete(tempfile);
+
+			System.Diagnostics.Process proc = new System.Diagnostics.Process();
+			proc.StartInfo.FileName = gpgExe;
+			proc.StartInfo.Arguments = "--batch -d --passphrase " + Util.FromBytes(_key) + " --output " + tempfile + " " + _filename;
+			proc.StartInfo.UseShellExecute = false;
+			proc.StartInfo.CreateNoWindow = true;
+			proc.StartInfo.RedirectStandardOutput = true;
+			proc.Start();
+			String data = proc.StandardOutput.ReadToEnd();
+			Logger.Info(data);
+
+			BufferedStream fin = new BufferedStream(File.OpenRead(tempfile));
+			long len = fin.Length;
+			if (len > Int32.MaxValue)
+			{
+				File.Delete(tempfile);
+				throw new Exception("huge files not supported!!!");
+			}
+			byte[] buffer = new byte[len];
+			int read = fin.Read(buffer, 0, (int)len);
+			fin.Close();
+
+			File.Delete(tempfile);
+
+			if (read != len)
+			{
+				throw new Exception("not the whole file was read!");
+			}
+
+			_wasOk = true;
+			return buffer;
+		}
+
+
+
+		public bool WriteCompatibleFile(AdressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients)
+		{
+			// TODO this MUST be written to a temporary directory!	
+			// TODO include the filename!
+			String tempFileName = _filename + ".clear";
+			FileStream fout = File.Create(tempFileName);
+			fout.Write(_content, 0, _content.Length);
+			fout.Close();
+
+			// build the commandline arguments
+			StringBuilder args = new StringBuilder();
+			args.Append("--batch");
+			foreach (String r in _recipients)
+			{
+				args.Append(" -r ");
+				args.Append(r);
+			}
+			args.Append(" --output ");
+			args.Append(_filename);
+			args.Append(" ");
+			args.Append(tempFileName);
+
+			System.Diagnostics.Process proc = new System.Diagnostics.Process();
+			proc.StartInfo.FileName = gpgExe;
+			proc.StartInfo.Arguments = args.ToString();
+			proc.StartInfo.UseShellExecute = false;
+			proc.StartInfo.CreateNoWindow = true;
+			proc.StartInfo.RedirectStandardOutput = true;
+			proc.Start();
+			String data = proc.StandardOutput.ReadToEnd();
+			Logger.Info(data);
+
+			File.Delete(tempFileName);
+
+			return true;
+		}
+
+		public byte[] DecryptFile(AdressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk)
+		{
+			// TODO NEXT
+		}
+
+
+		public int Version()
+		{
+			return 10;
+		}
+
+	}
+
+
 	class CryptoFileFormatRev1 : CryptoFormat
 	{
 
@@ -50,6 +225,11 @@ namespace Tomboy.PrivateNotes.Crypto
 		public int Version()
 		{
 			return CRYPTO_VERSION;
+		}
+
+		public bool PreHashedPasswordSupported()
+		{
+			return true;
 		}
 
 		/// <summary>
@@ -216,6 +396,11 @@ namespace Tomboy.PrivateNotes.Crypto
 		public int Version()
 		{
 			return CRYPTO_VERSION;
+		}
+
+		public bool PreHashedPasswordSupported()
+		{
+			return true;
 		}
 
 		/// <summary>

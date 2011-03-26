@@ -81,7 +81,8 @@ namespace Tomboy.PrivateNotes
 				isChanging = false;
 				return;
 			}
-			lastText = text.ToLower(); // to make a case insensitive search
+			lastText = text;
+			text = text.ToLower();// to make a case insensitive search
 			List<String> matches = allItems.FindAll(delegate(String s) { return s.ToLower().Contains(text); });
 
 			// quick and VERY VERY DIRTY way of doing it

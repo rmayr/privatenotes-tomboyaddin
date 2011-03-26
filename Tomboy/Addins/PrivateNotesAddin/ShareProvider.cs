@@ -178,6 +178,7 @@ namespace Tomboy.PrivateNotes
 			// add all notes
 			foreach (String id in imported.Keys)
 			{
+				// TODO: figure out with whom the notes are shared
 				NoteShare s = new NoteShare(id, "felix", share);
 				shares.Add(s);
 			}

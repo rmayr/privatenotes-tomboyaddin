@@ -74,11 +74,6 @@ namespace Tomboy.PrivateNotes
 				}
 				else
 				{
-					//Uri url = new Uri(share.shareTarget);
-					//string[] userInfo = url.UserInfo.Split(new char[] { ':' }, 2);
-					//String user = (userInfo.Length==2)?(userInfo[0]):("");
-					//String password = (userInfo.Length==2)?(userInfo[1]):("");
-					//String server = url.Scheme + "://" + url.Authority + ":" + url.Port;
 					String user, password, server, serverbasepath;
 					ParseFromLink(share.shareTarget, out user, out password, out server, out serverbasepath);
 					servers.Add(share.shareTarget, new WebDAVInterface(server, serverbasepath, user, password, false));
