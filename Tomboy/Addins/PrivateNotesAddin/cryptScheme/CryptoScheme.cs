@@ -205,7 +205,52 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		public byte[] DecryptFile(AdressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk)
 		{
-			// TODO NEXT
+			// TODO use temp file
+			String tempFileName = _filename + ".decrypted";
+
+			StringBuilder args = new StringBuilder("-d ");
+			args.Append("--output ");
+			args.Append(tempFileName);
+			args.Append(" ");
+			args.Append(_filename);
+
+			System.Diagnostics.Process proc = new System.Diagnostics.Process();
+			proc.StartInfo.FileName = gpgExe;
+			proc.StartInfo.Arguments = args.ToString();
+			proc.StartInfo.UseShellExecute = false;
+			proc.StartInfo.CreateNoWindow = true;
+			proc.StartInfo.RedirectStandardOutput = true;
+			proc.Start();
+			String data = proc.StandardOutput.ReadToEnd();
+			Logger.Info(data);
+
+			_recipients = new List<String>();
+
+			BufferedStream fin = new BufferedStream(File.OpenRead(tempFileName));
+			long len = fin.Length;
+			if (len > Int32.MaxValue)
+			{
+				File.Delete(tempFileName);
+				throw new Exception("huge files not supported!!!");
+			}
+			byte[] buffer = new byte[len];
+			int read = fin.Read(buffer, 0, (int)len);
+			fin.Close();
+
+			File.Delete(tempFileName);
+
+			if (read != len)
+			{
+				_wasOk = false;
+				return null;
+			}
+
+			// TODO: parse recipients!
+			_recipients.Add("not implemented yet");
+
+			_wasOk = true;
+			return buffer;
+
 		}
 
 
