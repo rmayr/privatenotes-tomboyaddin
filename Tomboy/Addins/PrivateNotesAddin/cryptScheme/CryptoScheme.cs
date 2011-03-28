@@ -60,6 +60,7 @@ namespace Tomboy.PrivateNotes.Crypto
 	class GpgCryptoFormat : ShareCryptoFormat
 	{
 		static String gpgExe = null;
+		static String tempDir = null;
 
 		public GpgCryptoFormat()
 		{
@@ -72,6 +73,11 @@ namespace Tomboy.PrivateNotes.Crypto
 					throw new InvalidOperationException("gpg not configured yet!");
 				}
 			}
+			if (tempDir == null)
+			{
+				tempDir = Path.Combine(Services.NativeApplication.CacheDirectory, "gpg_" + System.Guid.NewGuid().ToString());
+				Directory.CreateDirectory(tempDir);
+			}
 		}
 
 		public bool PreHashedPasswordSupported()
@@ -82,9 +88,7 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		public bool WriteCompatibleFile(String _filename, byte[] _content, byte[] _key, byte[] _salt)
 		{
-			// TODO this MUST be written to a temporary directory!	
-			// TODO include the filename!
-			String tempFileName = _filename + ".clear";
+			String tempFileName = Path.Combine(tempDir, _filename + ".clear");
 			FileStream fout = File.Create(tempFileName);
 			fout.Write(_content, 0, _content.Length);
 			fout.Close();
@@ -106,8 +110,7 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		public byte[] DecryptFromStream(String _filename, Stream fin, byte[] _key, out bool _wasOk)
 		{
-			// TODO create temp filename here!
-			String tempfile = "C:/mybuffer.enc";
+			String tempfile = Path.Combine(tempDir, _filename + ".enc");
 			File.Delete(tempfile);
 			FileStream fout = File.Create(tempfile);
 			int bt = fin.ReadByte();
@@ -128,8 +131,7 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		public byte[] DecryptFile(String _filename, byte[] _key, out bool _wasOk)
 		{
-			// TODO create temp filename here
-			String tempfile = "C:/mybuffer.txt";
+			String tempfile = Path.Combine(tempDir, _filename + ".dec");
 			File.Delete(tempfile);
 
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
@@ -168,9 +170,8 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		public bool WriteCompatibleFile(AdressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients)
 		{
-			// TODO this MUST be written to a temporary directory!	
 			// TODO include the filename!
-			String tempFileName = _filename + ".clear";
+			String tempFileName = Path.Combine(tempDir, _filename + ".clear");
 			FileStream fout = File.Create(tempFileName);
 			fout.Write(_content, 0, _content.Length);
 			fout.Close();

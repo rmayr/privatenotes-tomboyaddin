@@ -7,7 +7,57 @@ using System.IO;
 namespace Tomboy.PrivateNotes
 {
 
-	public class WebDAVShareSync
+	/// <summary>
+	/// an interface which implementations provide the connection to the actual share storages
+	/// such as webdav or filesystem folder etc
+	/// these objects should be used during the sync process to communicate with the shared storages
+	/// </summary>
+	public interface ShareSync
+	{
+
+		void FetchAllShares();
+
+		/// <summary>
+		/// returns a dictionary of all shares, the key is the note id
+		/// the value a directoryinfo object of where the note is stored
+		/// </summary>
+		/// <returns></returns>
+		Dictionary<String, DirectoryInfo> GetShareCopies();
+
+		/// <summary>
+		/// upload a new note which was shared
+		/// </summary>
+		/// <param name="noteId"></param>
+		void UploadNewNote(String noteId);
+
+		/// <summary>
+		/// import a new note (add a new share from somebody else), identified by this url
+		/// for a webdav share for example, this should include the full path with username and password.
+		/// </summary>
+		/// <param name="address"></param>
+		void Import(String address);
+
+		/// <summary>
+		/// cleaning up at the end
+		/// </summary>
+		void CleanUp();
+	}
+
+	public class ShareSyncFactory
+	{
+		public static ShareSync GetShareSyncForProvider(ShareProvider _provider)
+		{
+			if (_provider is WebDavShareProvider)
+			{
+				return WebDAVShareSync.GetInstance(_provider);
+			} else {
+				Logger.Warn("no sharesync for provider of type " + _provider.GetType().Name);
+				throw new NotImplementedException("no sharesync for provider of type " + _provider.GetType().Name);
+			}
+		}
+	}
+
+	public class WebDAVShareSync : ShareSync
 	{
 		/// <summary>
 		/// servers by share.shareTarget (the webdav-url)
@@ -97,7 +147,7 @@ namespace Tomboy.PrivateNotes
 
 		}
 
-		public void ImportFromWebdav(String path)
+		public void Import(String path)
 		{
 			String user, pw, server, serverbase;
 			ParseFromLink(path, out user, out pw, out server, out serverbase);

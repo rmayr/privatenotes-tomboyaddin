@@ -77,7 +77,7 @@
     <Compile Include="Util.cs" />
     <Compile Include="WebDAVClient.cs" />
     <Compile Include="WebDAVInterface.cs" />
-    <Compile Include="WebDAVShareSync.cs" />
+    <Compile Include="ShareSync.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="PrivateNotes.addin.xml" />

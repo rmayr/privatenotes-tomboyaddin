@@ -12,6 +12,9 @@ namespace Tomboy.Sync
 		public class EncryptedFileSystemSyncServer : SyncServer
 		{
 			private byte[] myKey;
+			// for synchronization with shared storages
+			internal ShareSync shareSync;
+			internal Dictionary<String, DirectoryInfo> shareCopies = null;
 
 			private List<string> updatedNotes;
 			private List<string> deletedNotes;
@@ -81,6 +84,18 @@ namespace Tomboy.Sync
 			virtual internal void SetupWorkDirectory(object initParam)
 			{
 				// nothing to do in local version
+				GetFromShares();
+			}
+
+			/// <summary>
+			/// downloads all notes from the shares
+			/// </summary>
+			private void GetFromShares()
+			{
+				ShareProvider provider = EncryptedWebdavSyncServiceAddin.shareProvider;
+				shareSync = ShareSyncFactory.GetShareSyncForProvider(provider);
+
+				shareSync.FetchAllShares();
 			}
 
 			virtual internal void OnManifestFileCreated(String pathToManifestFile) {
@@ -91,10 +106,30 @@ namespace Tomboy.Sync
 				// nothing to do in local version
 			}
 
-			virtual internal void OnUploadFile(String pathToNote) {
-				// nothing to do in local version
+			virtual internal bool OnUploadFile(String pathToNote) {
+				// if its a shared note, foreward this call to the shareSync
+
+				if (pathToNote.EndsWith(".note"))
+				{
+					String id = GetNoteIdFromFileName(pathToNote);
+					if (shareCopies.ContainsKey(id))
+					{
+						// TODO FIXME SEVERE: this is juts a hack, because if we didn't get the note from the server, 
+						// it isn't in the correct directory yet! check how it works for the normal sync and to it like this for shared
+						// notes also!
+						File.Copy(Path.Combine(cachePath, id + ".note"), Path.Combine(shareCopies[id].FullName, id + ".note"), true);
+						shareSync.UploadNewNote(id);
+						return true;
+					}
+				}
+				return false;
 			}
 
+			/// <summary>
+			/// utility method which parses the note id from the filename
+			/// </summary>
+			/// <param name="fileName"></param>
+			/// <returns></returns>
 			public String GetNoteIdFromFileName(String fileName)
 			{
 				String noteid = null;
@@ -534,6 +569,13 @@ namespace Tomboy.Sync
 			{
 				lockTimeout.Cancel();
 				RemoveLockFile(lockPath);
+				
+				// clean up sync share
+				if (shareSync != null)
+				{
+					shareSync.CleanUp();
+				}
+
 				return true;
 			}
 
@@ -543,22 +585,16 @@ namespace Tomboy.Sync
 				{
 					int latestRev = -1;
 					int latestRevDir = -1;
-					if (IsValidXmlFile(manifestPath) == true)
-					{
-						using (FileStream fs = new FileStream(manifestPath, FileMode.Open))
-						{
-							bool ok;
-							Stream plainStream = SecurityWrapper.DecryptFromStream(manifestPath, fs, myKey, out ok);
-							if (!ok)
-								throw new Exception("ENCRYPTION ERROR!");
+					latestRev = GetRevisionFromManifestFile(manifestPath);
 
-							XmlDocument doc = new XmlDocument();
-							doc.Load(plainStream);
-							XmlNode syncNode = doc.SelectSingleNode("//sync");
-							string latestRevStr = syncNode.Attributes.GetNamedItem("revision").InnerText;
-							if (latestRevStr != null && latestRevStr != string.Empty)
-								latestRev = Int32.Parse(latestRevStr);
-						}
+					// now check the shared notes
+					shareCopies = shareSync.GetShareCopies();
+					foreach (DirectoryInfo di in shareCopies.Values)
+					{
+						int revision = GetRevisionFromManifestFile(Path.Combine(di.FullName, "manifest.xml"));
+
+						if (revision > latestRev)
+							latestRev = revision;
 					}
 
 					bool foundValidManifest = false;
@@ -710,14 +746,59 @@ namespace Tomboy.Sync
 
 			#region Private/Internal Methods
 
-			virtual internal String GetNotePath(String defaultbasepath, String noteid) 
+			internal String GetNotePath(String defaultbasepath, String noteid) 
 			{
-				return Path.Combine(defaultbasepath, noteid + ".note");
+				if (shareCopies == null)
+					throw new Exception("invalid state! you cannot call this until you have requested the shares from the share-provider!");
+				if (shareCopies.ContainsKey(noteid))
+				{
+					// return shared note path
+					return Path.Combine(shareCopies[noteid].FullName, noteid + ".note");
+				}
+				else
+				{
+					return Path.Combine(defaultbasepath, noteid + ".note");
+				}
 			}
 			
 			virtual internal Dictionary<String, int> GetNoteUpdatesIdsSince(int revision)
 			{
-				return GetNoteRevisionsFromManifest(manifestPath, revision);
+				Dictionary<String, int> updates = GetNoteRevisionsFromManifest(manifestPath, revision);
+				List<String> processedFiles = new List<string>();
+				foreach (DirectoryInfo dir in shareCopies.Values)
+				{
+					String path = Path.Combine(dir.FullName, "manifest.xml");
+					if (!processedFiles.Contains(path))
+					{
+						// only processed if not already done
+						processedFiles.Add(path);
+						Dictionary<String, int> addme = GetNoteRevisionsFromManifest(path, revision);
+						foreach (String key in addme.Keys)
+						{
+							if (!shareCopies.ContainsKey(key))
+							{
+								// o_O this is a shared note we totally didn't know about?! it was somehow
+								// uploaded into that dir + added to the manifest
+								// not sure yet how to handle this...
+								Logger.Warn("new shared note was discovered! don't know how to handle this!" +
+								"Automatic adding if notes is not yet supported, because i think it's problematic during sync... maybe?");
+							}
+							else
+							{
+								// it's ok, it's a shared note we know about
+								if (updates.ContainsKey(key))
+								{
+									if (updates[key] < addme[key]) // overwrite if the one from the shared folder is newer
+										updates[key] = addme[key];
+								}
+								else
+									updates.Add(key, addme[key]);
+							}
+						}
+					}
+				}
+
+				return updates;
 			}
 
 			virtual internal Dictionary<String, int> GetNoteRevisionsFromManifest(String filePath, int revision)
@@ -973,8 +1054,49 @@ namespace Tomboy.Sync
 				public String noteId;
 				public int rev;
 			}
-			
-			virtual internal bool CreateManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
+
+			internal bool CreateManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
+			{
+				// the key is the path of the manifest file
+				// the value is a list of notes which have to be written to there
+				Dictionary<String, List<String>> additionalManifests = new Dictionary<string, List<string>>();
+				// check which of these notes are shared ones
+				foreach (String note in notes.Keys)
+				{
+					if (shareCopies.ContainsKey(note))
+					{
+						// a shared note, create a manifest file for it!
+						DirectoryInfo di = shareCopies[note];
+						String shareManifestPath = Path.Combine(di.FullName, "manifest.xml");
+						if (!additionalManifests.ContainsKey(shareManifestPath))
+						{
+							additionalManifests.Add(shareManifestPath, new List<string>());
+						}
+						List<string> itsNotes = additionalManifests[shareManifestPath];
+						itsNotes.Add(note);
+					}
+				}
+
+				// now create the additional manifests:
+				foreach (String shareManifest in additionalManifests.Keys)
+				{
+					Dictionary<String, int> theNotes = new Dictionary<string, int>();
+					List<String> ids = additionalManifests[shareManifest];
+					foreach (String id in ids)
+					{
+						theNotes.Add(id, notes[id]);
+					}
+					// TODO FIXME FATAL this doesn't work, because base.CreateManifestFile puts ALL the updated notes in!!!!
+					// THIS SHOULD BE FIXED NOW!
+					WriteManifestFile(shareManifest, newRevision, serverid, theNotes);
+				}
+
+				// XXX: currently we only return the status of the "normal" manifest.. maybe that's bad :S
+				// now the "normal" thing
+				return WriteManifestFile(manifestFilePath, newRevision, serverid, notes);
+			}
+
+			internal bool WriteManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
 			{
 				bool success = false;
 				MemoryStream buffer = new MemoryStream();

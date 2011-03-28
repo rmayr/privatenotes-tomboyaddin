@@ -171,8 +171,8 @@ namespace Tomboy.PrivateNotes
 		{
 			// download the stuff, then we should try to sync it...
 
-			WebDAVShareSync sync = WebDAVShareSync.GetInstance(this);
-			sync.ImportFromWebdav(share);
+			ShareSync sync = WebDAVShareSync.GetInstance(this);
+			sync.Import(share);
 			Dictionary<String, DirectoryInfo> imported = sync.GetShareCopies();
 
 			// add all notes

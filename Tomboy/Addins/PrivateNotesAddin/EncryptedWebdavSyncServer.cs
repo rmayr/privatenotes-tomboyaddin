@@ -16,10 +16,6 @@ namespace Tomboy.PrivateNotes
 		/// the object that is used to communicate via webdav
 		/// </summary>
 		private WebDAVInterface webdavserver;
-
-		private WebDAVShareSync shareSync;
-
-		private Dictionary<String, DirectoryInfo> shareCopies = null;
 		
 		public EncryptedWebdavSyncServer(String _tempDir, byte[] _key, WebDAVInterface _webDav)
 			: base(_tempDir, _key, _webDav)
@@ -72,8 +68,6 @@ namespace Tomboy.PrivateNotes
 			Logger.Debug("downloading notes");
 			webdavserver.DownloadNotes(serverPath);
 
-			GetFromShares();
-
 			Logger.Debug("workdir setup done");
 		}
 
@@ -100,23 +94,13 @@ namespace Tomboy.PrivateNotes
 		/// executed when a file should get updated to the server
 		/// </summary>
 		/// <param name="pathToNote"></param>
-		internal override void OnUploadFile(String pathToNote) {
-			bool uploaded = false;
-			if (pathToNote.EndsWith(".note")) {
-				String id = GetNoteIdFromFileName(pathToNote);
-				if (shareCopies.ContainsKey(id))
-				{
-					// TODO FIXME SEVERE: this is juts a hack, because if we didn't get the note from the server, 
-					// it isn't in the correct directory yet! check how it works for the normal sync and to it like this for shared
-					// notes also!
-					File.Copy(Path.Combine(cachePath, id + ".note"), Path.Combine(shareCopies[id].FullName, id + ".note"), true);
-					shareSync.UploadNewNote(id);
-					uploaded = true;
-				}
-			}
+		internal override bool OnUploadFile(String pathToNote) {
+			bool uploaded = base.OnUploadFile(pathToNote);
 
 			if (!uploaded)
 				webdavserver.UploadFile(pathToNote);
+
+			return true;
 		}
 
 		/// <summary>
@@ -140,137 +124,20 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
-		private void GetFromShares()
-		{
-			ShareProvider provider = EncryptedWebdavSyncServiceAddin.shareProvider;
-			shareSync = WebDAVShareSync.GetInstance(provider);
-
-			shareSync.FetchAllShares();
-		}
-
 		public override bool CancelSyncTransaction() {
 			bool success = base.CancelSyncTransaction();
 
-			// clean up sync share
-			if (shareSync != null)
+			if (webdavserver != null)
 			{
-				shareSync.CleanUp();
+				// TODO currently we don't know if the lockfile belongs to us!
+				// this should be somehow be made available and if we are sure
+				// we have to delete it
+				bool lockFileIsOurs = false;
+				if (lockFileIsOurs)
+					webdavserver.RemoveLock();
 			}
+
 			return success;
-		}
-
-		public override int LatestRevision
-		{
-			get
-			{
-				int latestRev = -1;
-				latestRev = GetRevisionFromManifestFile(manifestPath);
-
-				// now check the shared notes
-				shareCopies = shareSync.GetShareCopies();
-				foreach (DirectoryInfo di in shareCopies.Values)
-				{
-					int revision = GetRevisionFromManifestFile(Path.Combine(di.FullName, "manifest.xml"));
-					
-					if (revision > latestRev)
-						latestRev = revision;
-				}
-
-				return latestRev;
-			}
-		}
-
-		internal override string GetNotePath(string defaultbasepath, string noteid)
-		{
-			if (shareCopies == null)
-				throw new Exception("invalid state! you cannot call this until you have requested the shares from the share-provider!");
-			if (shareCopies.ContainsKey(noteid))
-			{
-				// return shared note path
-				return Path.Combine(shareCopies[noteid].FullName, noteid + ".note");
-			}
-			else
-			{
-				return base.GetNotePath(defaultbasepath, noteid);
-			}
-		}
-
-		internal override Dictionary<String, int> GetNoteUpdatesIdsSince(int revision)
-		{
-			Dictionary<String, int> updates = base.GetNoteUpdatesIdsSince(revision);
-			List<String> processedFiles = new List<string>();
-			foreach (DirectoryInfo dir in shareCopies.Values)
-			{
-				String path = Path.Combine(dir.FullName, "manifest.xml");
-				if (!processedFiles.Contains(path)) {
-					// only processed if not already done
-					processedFiles.Add(path);
-					Dictionary<String, int> addme = GetNoteRevisionsFromManifest(path, revision);
-					foreach (String key in addme.Keys)
-					{
-						if (!shareCopies.ContainsKey(key))
-						{
-							// o_O this is a shared note we totally didn't know about?! it was somehow
-							// uploaded into that dir + added to the manifest
-							// not sure yet how to handle this...
-							Logger.Warn("new shared note was discovered! don't know how to handle this!"+
-							"Automatic adding if notes is not yet supported, because i think it's problematic during sync... maybe?");
-						}
-						else
-						{
-							// it's ok, it's a shared note we know about
-							if (updates.ContainsKey(key))
-							{
-								if (updates[key] < addme[key]) // overwrite if the one from the shared folder is newer
-									updates[key] = addme[key];
-							}
-							else
-								updates.Add(key, addme[key]);
-						}
-					}
-				}
-			}
-
-			return updates;
-		}
-
-		internal override bool CreateManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
-		{
-			// the key is the path of the manifest file
-			// the value is a list of notes which have to be written to there
-			Dictionary<String, List<String>> additionalManifests = new Dictionary<string, List<string>>();
-			// check which of these notes are shared ones
-			foreach (String note in notes.Keys)
-			{
-				if (shareCopies.ContainsKey(note)) {
-					// a shared note, create a manifest file for it!
-					DirectoryInfo di = shareCopies[note];
-					String shareManifestPath = Path.Combine(di.FullName, "manifest.xml");
-					if (!additionalManifests.ContainsKey(shareManifestPath))
-					{
-						additionalManifests.Add(shareManifestPath, new List<string>());
-					}
-					List<string> itsNotes = additionalManifests[shareManifestPath];
-					itsNotes.Add(note);
-				}
-			}
-
-			// now create the additional manifests:
-			foreach (String shareManifest in additionalManifests.Keys)
-			{
-				Dictionary<String, int> theNotes = new Dictionary<string, int>();
-				List<String> ids = additionalManifests[shareManifest];
-				foreach (String id in ids) {
-					theNotes.Add(id, notes[id]);
-				}
-				// TODO FIXME FATAL this doesn't work, because base.CreateManifestFile puts ALL the updated notes in!!!!
-				// THIS SHOULD BE FIXED NOW!
-				base.CreateManifestFile(shareManifest, newRevision, serverid, theNotes);
-			}
-
-			// XXX: currently we only return the status of the "normal" manifest.. maybe that's bad :S
-			// now the "normal" thing
-			return base.CreateManifestFile(manifestFilePath, newRevision, serverid, notes);
 		}
 
 	}
