@@ -140,8 +140,12 @@ namespace Tomboy.Sync
 					{
 						string serverNotePath = Path.Combine(newRevisionPath, Path.GetFileName(note.FilePath));
 						if (shareCopies.ContainsKey(note.Id))
+						{
 							shareSync.EncryptForShare(note.FilePath, serverNotePath);
-							 // TODO we should do a shared encryption here!!!
+							// TODO: is this necessary? should it be stored only in the folder where we move it now?
+							// .... figure it out
+							File.Copy(serverNotePath, Path.Combine(shareCopies[note.Id].FullName, new FileInfo(serverNotePath).Name));
+						} 
 						else
 							SecurityWrapper.CopyAndEncrypt(note.FilePath, serverNotePath, myKey);
 
