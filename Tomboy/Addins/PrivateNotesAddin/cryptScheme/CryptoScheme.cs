@@ -95,13 +95,20 @@ namespace Tomboy.PrivateNotes.Crypto
 			
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = gpgExe;
-			proc.StartInfo.Arguments = "--batch --symmetric --passphrase " + Util.FromBytes(_key) + " --output " + _filename + " " + tempFileName ;
+			proc.StartInfo.Arguments = "--batch --symmetric --passphrase " + Util.FromBytes(_key) + " --output \"" + _filename + "\" \"" + tempFileName + '"';
 			proc.StartInfo.UseShellExecute = false;
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.RedirectStandardOutput = true;
+			proc.StartInfo.RedirectStandardError = true;
 			proc.Start();
 			String data = proc.StandardOutput.ReadToEnd();
+			String errdata = proc.StandardError.ReadToEnd();
 			Logger.Info(data);
+			if (!String.IsNullOrEmpty(errdata))
+			{
+				Logger.Info("ERRORS:");
+				Logger.Info(errdata);
+			}
 
 			File.Delete(tempFileName);
 
@@ -136,13 +143,22 @@ namespace Tomboy.PrivateNotes.Crypto
 
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = gpgExe;
-			proc.StartInfo.Arguments = "--batch -d --passphrase " + Util.FromBytes(_key) + " --output " + tempfile + " " + _filename;
+			proc.StartInfo.Arguments = "--batch -d --passphrase " + Util.FromBytes(_key) + " --output \"" + tempfile + "\" \"" + _filename + "\"";
 			proc.StartInfo.UseShellExecute = false;
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.RedirectStandardOutput = true;
+			proc.StartInfo.RedirectStandardError = true;
 			proc.Start();
 			String data = proc.StandardOutput.ReadToEnd();
+			String errdata = proc.StandardError.ReadToEnd();
 			Logger.Info(data);
+			if (!String.IsNullOrEmpty(errdata)) {
+				Logger.Info("ERRORS:");
+				Logger.Info(errdata);
+			}
+			proc.WaitForExit();
+			if (proc.ExitCode != 0)
+				throw new Exception("openPgp invocation exception: " + errdata);
 
 			BufferedStream fin = new BufferedStream(File.OpenRead(tempfile));
 			long len = fin.Length;
@@ -178,16 +194,27 @@ namespace Tomboy.PrivateNotes.Crypto
 
 			// build the commandline arguments
 			StringBuilder args = new StringBuilder();
-			args.Append("--batch");
+			args.Append("--batch -e"); // batch encrypt
 			foreach (String r in _recipients)
 			{
+				String userid = r;
+				if (userid.Contains("/"))
+				{
+					// use only the id at the end, example:
+					// "Somebody <test@asdf.com>  - 2048R/B1645EE8"
+					// transformed to "B1645EE8" otherwise gpg doesn't recognize it
+					userid = userid.Substring(userid.LastIndexOf('/') + 1);
+				}
+
 				args.Append(" -r ");
-				args.Append(r);
+				args.Append(userid);
+				args.Append('"');
 			}
-			args.Append(" --output ");
+			args.Append(" --output \"");
 			args.Append(_filename);
-			args.Append(" ");
+			args.Append("\" \"");
 			args.Append(tempFileName);
+			args.Append('"');
 
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = gpgExe;
@@ -195,9 +222,16 @@ namespace Tomboy.PrivateNotes.Crypto
 			proc.StartInfo.UseShellExecute = false;
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.RedirectStandardOutput = true;
+			proc.StartInfo.RedirectStandardError = true;
 			proc.Start();
 			String data = proc.StandardOutput.ReadToEnd();
+			String errdata = proc.StandardError.ReadToEnd();
 			Logger.Info(data);
+			if (!String.IsNullOrEmpty(errdata))
+			{
+				Logger.Info("ERRORS:");
+				Logger.Info(errdata);
+			}
 
 			File.Delete(tempFileName);
 
@@ -210,10 +244,11 @@ namespace Tomboy.PrivateNotes.Crypto
 			String tempFileName = _filename + ".decrypted";
 
 			StringBuilder args = new StringBuilder("-d ");
-			args.Append("--output ");
+			args.Append("--output \"");
 			args.Append(tempFileName);
-			args.Append(" ");
+			args.Append("\" \"");
 			args.Append(_filename);
+			args.Append('"');
 
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = gpgExe;
@@ -221,9 +256,16 @@ namespace Tomboy.PrivateNotes.Crypto
 			proc.StartInfo.UseShellExecute = false;
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.RedirectStandardOutput = true;
+			proc.StartInfo.RedirectStandardError = true;
 			proc.Start();
 			String data = proc.StandardOutput.ReadToEnd();
+			String errdata = proc.StandardError.ReadToEnd();
 			Logger.Info(data);
+			if (!String.IsNullOrEmpty(errdata))
+			{
+				Logger.Info("ERRORS:");
+				Logger.Info(errdata);
+			}
 
 			_recipients = new List<String>();
 

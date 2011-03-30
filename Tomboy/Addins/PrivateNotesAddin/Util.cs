@@ -29,6 +29,24 @@ namespace Tomboy.PrivateNotes
     }
 
 		/// <summary>
+		/// utility method which parses the note id from the filename
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
+		public static String GetNoteIdFromFileName(String fileName)
+		{
+			String noteid = null;
+			if (fileName.EndsWith(".note"))
+			{
+				FileInfo file = new System.IO.FileInfo(fileName);
+				noteid = file.Name.Replace(".note", "");
+			}
+			else
+				Logger.Warn("filename not a note! {0}", fileName);
+			return noteid;
+		}
+
+		/// <summary>
 		/// deletes all files in a directory (not sub-directories!)
 		/// </summary>
 		/// <param name="_path"></param>

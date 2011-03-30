@@ -98,9 +98,6 @@ namespace Tomboy.PrivateNotes
 		{
 			Logger.Info("menu item clicked!");
 			List<String> people = new List<String>();
-			//people.Add("Felix");
-			//people.Add("Steve");
-			//people.Add("Dave");
 
 			AdressBook ab = AdressBookFactory.Instance().GetDefault();
 			// TODO we shouldn't do this every time!!!

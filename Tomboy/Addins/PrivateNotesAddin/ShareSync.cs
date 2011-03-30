@@ -38,6 +38,13 @@ namespace Tomboy.PrivateNotes
 		void Import(String address);
 
 		/// <summary>
+		/// encrypts a note (the local copy) for uploading to the share (for the people
+		/// with whom it is shared with)
+		/// </summary>
+		/// <param name="noteId"></param>
+		void EncryptForShare(String fromFile, String toFile);
+
+		/// <summary>
 		/// cleaning up at the end
 		/// </summary>
 		void CleanUp();
@@ -192,6 +199,22 @@ namespace Tomboy.PrivateNotes
 			}
 			else
 				Logger.Warn("Note {0} is not part of the shared notes!", noteId);
+		}
+
+
+		public void EncryptForShare(String fromFile, String toFile)
+		{
+			String noteId = Util.GetNoteIdFromFileName(fromFile);
+			if (shareObjects.ContainsKey(noteId))
+			{
+				NoteShare share = shareObjects[noteId];
+				SecurityWrapper.CopyAndEncryptShared(fromFile, toFile, new byte[0], share.sharedWith);
+			}
+			else
+			{
+				Logger.Warn("requested to encrypt note {0} which isn't shared!", noteId);
+				throw new Exception(String.Format("requested to encrypt note {0} which isn't shared!", noteId));
+			}
 		}
 
 		public void CleanUp()

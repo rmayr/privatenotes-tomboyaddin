@@ -111,7 +111,7 @@ namespace Tomboy.Sync
 
 				if (pathToNote.EndsWith(".note"))
 				{
-					String id = GetNoteIdFromFileName(pathToNote);
+					String id = Util.GetNoteIdFromFileName(pathToNote);
 					if (shareCopies.ContainsKey(id))
 					{
 						// TODO FIXME SEVERE: this is juts a hack, because if we didn't get the note from the server, 
@@ -123,24 +123,6 @@ namespace Tomboy.Sync
 					}
 				}
 				return false;
-			}
-
-			/// <summary>
-			/// utility method which parses the note id from the filename
-			/// </summary>
-			/// <param name="fileName"></param>
-			/// <returns></returns>
-			public String GetNoteIdFromFileName(String fileName)
-			{
-				String noteid = null;
-				if (fileName.EndsWith(".note"))
-				{
-					FileInfo file = new System.IO.FileInfo(fileName);
-					noteid = file.Name.Replace(".note", "");
-				}
-				else
-					Logger.Warn("filename not a note! {0}", fileName);
-				return noteid;
 			}
 
 			public virtual void UploadNotes(IList<Note> notes)
@@ -157,7 +139,12 @@ namespace Tomboy.Sync
 					try
 					{
 						string serverNotePath = Path.Combine(newRevisionPath, Path.GetFileName(note.FilePath));
-						SecurityWrapper.CopyAndEncrypt(note.FilePath, serverNotePath, myKey);
+						if (shareCopies.ContainsKey(note.Id))
+							shareSync.EncryptForShare(note.FilePath, serverNotePath);
+							 // TODO we should do a shared encryption here!!!
+						else
+							SecurityWrapper.CopyAndEncrypt(note.FilePath, serverNotePath, myKey);
+
 						//File.Copy(note.FilePath, serverNotePath, true);
 
 						// upload to webdav takes place in commit-function
