@@ -150,8 +150,6 @@ namespace Tomboy.PrivateNotes.Crypto
 			return buffer;
 		}
 
-
-
 		public bool WriteCompatibleFile(AdressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients)
 		{
 			// TODO include the filename!

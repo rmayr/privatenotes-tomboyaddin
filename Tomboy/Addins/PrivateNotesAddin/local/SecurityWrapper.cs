@@ -133,6 +133,31 @@ namespace Tomboy.Sync
 			return new MemoryStream(data);
 		}
 
+		public static byte[] DecryptFromFile(String _inputFile, Stream _s, byte[] _key, out bool _wasOk)
+		{
+			CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			byte[] data = ccf.DecryptFromStream(_inputFile, _s, _key, out _wasOk);
+			if (!_wasOk)
+				return null;
+
+			return data;
+		}
+
+		public static byte[] DecryptFromSharedFile(String _file, out bool _wasOk)
+		{
+			ShareCryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat() as ShareCryptoFormat;
+			if (ccf == null)
+			{
+				Logger.Warn("wrong encryption format!");
+				throw new Exception("For sharing, the crypto format has to be a ShareCryptoFormat instance!");
+			}
+			List<String> recipients = new List<string>();
+			byte[] contents = ccf.DecryptFile(AdressBookFactory.Instance().GetDefault(), _file, out recipients, out _wasOk);
+			if (!_wasOk)
+				return null;
+			return contents;
+		}
+
 #endregion
 	}
 }

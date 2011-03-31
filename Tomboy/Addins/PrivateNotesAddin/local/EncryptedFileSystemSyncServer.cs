@@ -144,7 +144,7 @@ namespace Tomboy.Sync
 							shareSync.EncryptForShare(note.FilePath, serverNotePath);
 							// TODO: is this necessary? should it be stored only in the folder where we move it now?
 							// .... figure it out
-							File.Copy(serverNotePath, Path.Combine(shareCopies[note.Id].FullName, new FileInfo(serverNotePath).Name));
+							File.Copy(serverNotePath, Path.Combine(shareCopies[note.Id].FullName, new FileInfo(serverNotePath).Name), true);
 						} 
 						else
 							SecurityWrapper.CopyAndEncrypt(note.FilePath, serverNotePath, myKey);
@@ -242,8 +242,19 @@ namespace Tomboy.Sync
 						{
 							// decrypt the note:
 							bool ok;
-							CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
-							byte[] contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
+							byte[] contents = null;
+							if (shareCopies.ContainsKey(id))
+							{
+								// use shared decrypt
+								contents = SecurityWrapper.DecryptFromSharedFile(serverNotePath, out ok);
+							} else {
+								// normal decrypt
+								using (FileStream fin = File.Open(manifestPath, FileMode.Open)) {
+									contents = SecurityWrapper.DecryptFromFile(manifestPath, fin, myKey, out ok);
+									//CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+									//contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
+								}
+							}
 							noteXml = Util.FromBytes(contents);
 
 							// solve nasty BOM problem -__-
@@ -1141,7 +1152,11 @@ namespace Tomboy.Sync
 				finally
 				{
 					xml.Close();
+					
+					if (File.Exists(manifestFilePath))
+						File.Delete(manifestFilePath);
 					// now store in encrypted version:
+					// TODO: we have to also use asym. encryption here if this is a shared manifest
 					SecurityWrapper.SaveAsEncryptedFile(manifestFilePath, buffer.ToArray(), myKey);
 					// dispose of plain data
 					if (buffer != null)
