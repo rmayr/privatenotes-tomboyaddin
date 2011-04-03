@@ -51,7 +51,7 @@ namespace Tomboy.Sync
 			}
 
 			// use shared method
-			ccf.WriteCompatibleFile(AdressBookFactory.Instance().GetDefault(), _toFile, membuf.ToArray(), _recipients);
+			ccf.WriteCompatibleFile(AddressBookFactory.Instance().GetDefault(), _toFile, membuf.ToArray(), _recipients);
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace Tomboy.Sync
 				// reset the key to the plain password
 				key = _password;
 			}
-			ccf.WriteCompatibleFile(AdressBookFactory.Instance().GetDefault(), _fileName, _data, _recipients);
+			ccf.WriteCompatibleFile(AddressBookFactory.Instance().GetDefault(), _fileName, _data, _recipients);
 		}
 
 #endregion
@@ -151,8 +151,8 @@ namespace Tomboy.Sync
 				Logger.Warn("wrong encryption format!");
 				throw new Exception("For sharing, the crypto format has to be a ShareCryptoFormat instance!");
 			}
-			List<String> recipients = new List<string>();
-			byte[] contents = ccf.DecryptFile(AdressBookFactory.Instance().GetDefault(), _file, out recipients, out _wasOk);
+			List<String> ignored = new List<string>();
+			byte[] contents = ccf.DecryptFile(AddressBookFactory.Instance().GetDefault(), _file, out ignored, out _wasOk);
 			if (!_wasOk)
 				return null;
 			return contents;

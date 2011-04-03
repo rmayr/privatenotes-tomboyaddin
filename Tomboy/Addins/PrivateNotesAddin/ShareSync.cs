@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using Mono.Unix;
 using System.IO;
+using System.Xml;
+using Tomboy.PrivateNotes.Adress;
 
 namespace Tomboy.PrivateNotes
 {
@@ -41,8 +43,28 @@ namespace Tomboy.PrivateNotes
 		/// encrypts a note (the local copy) for uploading to the share (for the people
 		/// with whom it is shared with)
 		/// </summary>
+		/// <param name="noteId">the recipients of this note are taken</param>
+		/// <param name="fromFile">data from this file is encrypted</param>
+		/// <param name="toFile">data is written to this file</param>
+		void EncryptForShare(String noteId, String fromFile, String toFile);
+
+		/// <summary>
+		/// same as other version, just that data is read from data array
+		/// </summary>
 		/// <param name="noteId"></param>
-		void EncryptForShare(String fromFile, String toFile);
+		/// <param name="data"></param>
+		/// <param name="toFile"></param>
+		void EncryptForShare(String noteId, byte[] data, String toFile);
+
+		/// <summary>
+		/// gets a list of people with whom this file (note) is shared
+		/// this ONLY works when there is an appropriate manifest-file in the
+		/// same directory!
+		/// </summary>
+		/// <param name="fromFile"></param>
+		/// <param name="sharedwith"></param>
+		/// <returns>true if operation was successful</returns>
+		bool GetSharePartners(String fromFile, out List<String> sharedwith);
 
 		/// <summary>
 		/// cleaning up at the end
@@ -201,10 +223,8 @@ namespace Tomboy.PrivateNotes
 				Logger.Warn("Note {0} is not part of the shared notes!", noteId);
 		}
 
-
-		public void EncryptForShare(String fromFile, String toFile)
+		public void EncryptForShare(String noteId, String fromFile, String toFile)
 		{
-			String noteId = Util.GetNoteIdFromFileName(fromFile);
 			if (shareObjects.ContainsKey(noteId))
 			{
 				NoteShare share = shareObjects[noteId];
@@ -215,6 +235,66 @@ namespace Tomboy.PrivateNotes
 				Logger.Warn("requested to encrypt note {0} which isn't shared!", noteId);
 				throw new Exception(String.Format("requested to encrypt note {0} which isn't shared!", noteId));
 			}
+		}
+
+		public void EncryptForShare(String noteId, byte[] data, String toFile)
+		{
+			if (shareObjects.ContainsKey(noteId))
+			{
+				NoteShare share = shareObjects[noteId];
+				SecurityWrapper.SaveAsSharedEncryptedFile(toFile, data, new byte[0], share.sharedWith);
+			}
+			else
+			{
+				Logger.Warn("requested to encrypt note {0} which isn't shared!", noteId);
+				throw new Exception(String.Format("requested to encrypt note {0} which isn't shared!", noteId));
+			}
+		}
+
+		public bool GetSharePartners(String fromFile, out List<String> sharedwith)
+		{
+			bool ok = false;
+			String dir = Path.GetDirectoryName(fromFile);
+			String manifestPath = Path.Combine(dir, "manifest.xml");
+			byte[] data = SecurityWrapper.DecryptFromSharedFile(manifestPath, out ok);
+			if (!ok)
+				throw new Exception("ENCRYPTION ERROR!");
+
+			List<String> remoteSharers = new List<string>();
+			using (Stream plainStream = new MemoryStream(data))
+			{	
+				XmlDocument doc = new XmlDocument();
+				doc.Load(plainStream);
+				XmlNodeList nodes = doc.SelectNodes("//with");
+				foreach (XmlNode n in nodes)
+				{
+					String sharePartner = n.Attributes["partner"].Value;
+					remoteSharers.Add(sharePartner);
+				}
+			}
+
+			// now lookup the people by fingerprint:
+			List<AddressBookEntry> entries = AddressBookFactory.Instance().GetDefault().GetEntries();
+			Dictionary<String, String> fingerPrintToIdMapper = new Dictionary<string, string>();
+			foreach (AddressBookEntry entry in entries)
+			{
+				string[] elements = entry.id.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+				String fprint = elements[1].Trim();
+				if (!fingerPrintToIdMapper.ContainsKey(fprint))
+					fingerPrintToIdMapper.Add(fprint, entry.id);
+			}
+
+			sharedwith = new List<string>();
+			foreach (String sharer in remoteSharers)
+			{
+				if (!fingerPrintToIdMapper.ContainsKey(sharer))
+				{
+					throw new Exception(String.Format("can't import this share, because we don't have a key we need, fingerprint {0}", sharer));
+				}
+				sharedwith.Add(fingerPrintToIdMapper[sharer]);
+			}
+
+			return ok;
 		}
 
 		public void CleanUp()

@@ -62,7 +62,7 @@ namespace Tomboy.PrivateNotes.Crypto
 		/// <param name="_content">contents that will be encrypted</param>
 		/// <param name="_recipients">a list of the people for whom to encrypt the file</param>
 		/// <returns>true if successful</returns>
-		bool WriteCompatibleFile(AdressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients);
+		bool WriteCompatibleFile(AddressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients);
 
 
 		/// <summary>
@@ -72,7 +72,7 @@ namespace Tomboy.PrivateNotes.Crypto
 		/// <param name="_recipients">if supported, all the recipients for whom this file is encrypted are read out</param>
 		/// <param name="_wasOk">true if everything was ok</param>
 		/// <returns>the decrypted data</returns>
-		byte[] DecryptFile(AdressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk);
+		byte[] DecryptFile(AddressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk);
 
 	}
 

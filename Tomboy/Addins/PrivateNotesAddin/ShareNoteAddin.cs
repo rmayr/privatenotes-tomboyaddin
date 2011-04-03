@@ -24,8 +24,9 @@ namespace Tomboy.PrivateNotes
 			if (unshareItem != null)
 				unshareItem.Activated -= OnUnshareItemActivated;
 
-			EncryptedWebdavSyncServiceAddin.shareProvider.OnShareAdded -= ShareAdded;
-			EncryptedWebdavSyncServiceAddin.shareProvider.OnShareRemoved -= ShareRemoved;
+			ShareProvider provider = ShareProviderFactory.GetShareProvider();
+			provider.OnShareAdded -= ShareAdded;
+			provider.OnShareRemoved -= ShareRemoved;
 		}
 
 		public override void OnNoteOpened()
@@ -58,8 +59,9 @@ namespace Tomboy.PrivateNotes
 			importSharedNoteItem.Show();
 			AddPluginMenuItem(importSharedNoteItem);
 
-			EncryptedWebdavSyncServiceAddin.shareProvider.OnShareAdded += ShareAdded;
-			EncryptedWebdavSyncServiceAddin.shareProvider.OnShareRemoved += ShareRemoved;
+			ShareProvider provider = ShareProviderFactory.GetShareProvider();
+			provider.OnShareAdded += ShareAdded;
+			provider.OnShareRemoved += ShareRemoved;
 
 			CheckUnshareOption();
 
@@ -88,7 +90,7 @@ namespace Tomboy.PrivateNotes
 		private void CheckUnshareOption()
 		{
 			// if no longer shared at all
-			if (!EncryptedWebdavSyncServiceAddin.shareProvider.IsNoteShared(Note.Id))
+			if (!ShareProviderFactory.GetShareProvider().IsNoteShared(Note.Id))
 			{
 				unshareItem.Sensitive = false;
 			}
@@ -99,23 +101,23 @@ namespace Tomboy.PrivateNotes
 			Logger.Info("menu item clicked!");
 			List<String> people = new List<String>();
 
-			AdressBook ab = AdressBookFactory.Instance().GetDefault();
+			AddressBook ab = AddressBookFactory.Instance().GetDefault();
 			// TODO we shouldn't do this every time!!!
 			ab.Load();
-			List<AdressBookEntry> entries = ab.getEntries();
-			foreach (AdressBookEntry abe in entries)
+			List<AddressBookEntry> entries = ab.GetEntries();
+			foreach (AddressBookEntry abe in entries)
 			{
 				people.Add(abe.name + " " + abe.mail + " - " + abe.id);
 			}
 
-			ItemSelector selector = new ItemSelector("Choose contact to share note with:", people, new inputDone(OnPeopleForShareChosen));
+			ItemSelector selector = new ItemSelector("Choose contact to share note with (type to search):", people, new inputDone(OnPeopleForShareChosen));
 
 		}
 
 		void OnUnshareItemActivated(object sender, EventArgs args)
 		{
 			Logger.Info("unshare menu item clicked!");
-			bool removed = EncryptedWebdavSyncServiceAddin.shareProvider.RemoveShare(Note.Id);
+			bool removed = ShareProviderFactory.GetShareProvider().RemoveShare(Note.Id);
 			string message = Catalog.GetString("Error: Could not be unshared.");
 			if (removed)
 			{
@@ -128,7 +130,7 @@ namespace Tomboy.PrivateNotes
 
 		void OnImportActivated(object sender, EventArgs args)
 		{
-			TextInput ti = new TextInput("enter share path:", "http://someone:secret@example.com/myShare/", "http://.+", new inputDone(OnShareItemPathEntered));
+			TextInput ti = new TextInput("enter share path:", "http://someone:secret@example.com/myShare/", "http(s)?://.+", new inputDone(OnShareItemPathEntered));
 		}
 
 		void OnShareItemPathEntered(bool ok, String sharepath)
@@ -136,11 +138,30 @@ namespace Tomboy.PrivateNotes
 			if (ok)
 			{
 				Logger.Info("sharepath add request: {0}", sharepath);
-				EncryptedWebdavSyncServiceAddin.shareProvider.ImportShare(sharepath);
+				try
+				{
+					bool success = ShareProviderFactory.GetShareProvider().ImportShare(sharepath);
+
+					// DUMMY PARENT
+					Gtk.Widget wid = new Gtk.Label();
+					String message = Catalog.GetString("Notes successfully imported. Please execute note synchronization to get the new notes.");
+					if (!success)
+						message = Catalog.GetString("Import failed. Could not get the note(s) from the specified location.");
+					GtkUtil.ShowHintWindow(wid, Catalog.GetString("Import"), message);
+				}
+				catch (Exception _e)
+				{
+					Logger.Warn("could not import share", _e);
+					// DUMMY PARENT
+					Gtk.Widget wid = new Gtk.Label();
+					String message = Catalog.GetString("Could not import note because of the following error:\n");
+					message += _e.Message;
+					GtkUtil.ShowHintWindow(wid, Catalog.GetString("Import"), message);
+				}
 			}
 			else
 			{
-				// nothing
+				// nothing, user cancelled
 			}
 		}
 
@@ -149,7 +170,7 @@ namespace Tomboy.PrivateNotes
 			if (ok)
 			{
 				Logger.Info("person selected: {0}", selection);
-				bool added = EncryptedWebdavSyncServiceAddin.shareProvider.AddShare(Note.Id, selection);
+				bool added = ShareProviderFactory.GetShareProvider().AddShare(Note.Id, selection);
 				string message = Catalog.GetString("Error: Note not shared.");
 				if (added)
 				{

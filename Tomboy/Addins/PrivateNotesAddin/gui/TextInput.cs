@@ -39,6 +39,7 @@ namespace Tomboy.PrivateNotes
 
 			text = new Gtk.Entry();
 			text.Text = defaultvalue;
+			text.SetSizeRequest(300, 25);
 			box.PackStart(text);
 
 			text.Changed += TextChanged;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.IO;
+using Tomboy.PrivateNotes.Adress;
 
 namespace Tomboy.PrivateNotes
 {
@@ -92,9 +93,23 @@ namespace Tomboy.PrivateNotes
 
 		List<NoteShare> GetShares();
 
+		NoteShare GetNoteShare(String noteid);
+
 		bool IsNoteShared(String noteuid);
 
 		bool SaveShares();
+	}
+
+	public class ShareProviderFactory
+	{
+		static WebDavShareProvider provider = null;
+		public static ShareProvider GetShareProvider()
+		{
+			if (provider == null) {
+				provider = new WebDavShareProvider();
+			}
+			return provider;
+		}
 	}
 
 	class WebDavShareProvider : ShareProvider
@@ -140,6 +155,9 @@ namespace Tomboy.PrivateNotes
 			{
 				// not yet shared, request new webdav space to put share
 				share = new NoteShare(noteuid, shareWith, sharePath);
+				// now also add ourself! (because it makes no sense to not share it
+				// with us, because then we couldn't decrypt our own files)
+				share.sharedWith.Add(AddressBookFactory.Instance().GetDefault().GetOwnAddress().id);
 				shares.Add(share);
 				SaveShares();
 				if (OnShareAdded != null)
@@ -178,9 +196,32 @@ namespace Tomboy.PrivateNotes
 			// add all notes
 			foreach (String id in imported.Keys)
 			{
-				// TODO: figure out with whom the notes are shared
-				NoteShare s = new NoteShare(id, "felix", share);
-				shares.Add(s);
+				// figure out with whom the notes are shared
+				String filePath = Path.Combine(imported[id].FullName, id + ".note");
+				List<String> sharers = new List<string>();
+
+				if (sync.GetSharePartners(filePath, out sharers))
+				{
+					// TODO check sharers
+					if (IsNoteShared(id))
+					{
+						// update the share-people with the one from the import
+						NoteShare s = GetNoteShare(id);
+						s.sharedWith.Clear();
+						s.sharedWith.AddRange(sharers);
+					}
+					else
+					{
+						NoteShare s = new NoteShare(id, sharers, share);
+						shares.Add(s);
+					}
+				}
+				else
+				{
+					// some error
+					Logger.Warn("some error while trying to get share partners for file {0}", filePath);
+					return false;
+				}
 			}
 			SaveShares();
 			return true;
@@ -234,19 +275,19 @@ namespace Tomboy.PrivateNotes
 			return shares;
 		}
 
+		public NoteShare GetNoteShare(String noteid)
+		{
+			foreach (NoteShare s in shares)
+			{
+				if (s.noteId.Equals(noteid))
+					return s;
+			}
+			return null;
+		}
+
 		public bool IsNoteShared(String noteId)
 		{
 			return GetNoteShare(noteId) != null;
-		}
-
-		public NoteShare GetNoteShare(String noteId)
-		{
-			foreach (NoteShare share in shares)
-			{
-				if (share.noteId.Equals(noteId))
-					return share;
-			}
-			return null;
 		}
 
 		private void LoadFromConfig()

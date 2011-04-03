@@ -11,6 +11,8 @@ namespace Tomboy.Sync
 {
 		public class EncryptedFileSystemSyncServer : SyncServer
 		{
+			public static ShareProvider shareProvider = null;
+
 			private byte[] myKey;
 			// for synchronization with shared storages
 			internal ShareSync shareSync;
@@ -36,6 +38,7 @@ namespace Tomboy.Sync
 
 			public EncryptedFileSystemSyncServer(string localSyncPath, byte[] _password, object _initParam)
 			{
+				shareProvider = new WebDavShareProvider();
 
 				myKey = _password;
 				serverPath = localSyncPath;
@@ -92,7 +95,8 @@ namespace Tomboy.Sync
 			/// </summary>
 			private void GetFromShares()
 			{
-				ShareProvider provider = EncryptedWebdavSyncServiceAddin.shareProvider;
+
+				ShareProvider provider = ShareProviderFactory.GetShareProvider();
 				shareSync = ShareSyncFactory.GetShareSyncForProvider(provider);
 
 				shareSync.FetchAllShares();
@@ -141,7 +145,7 @@ namespace Tomboy.Sync
 						string serverNotePath = Path.Combine(newRevisionPath, Path.GetFileName(note.FilePath));
 						if (shareCopies.ContainsKey(note.Id))
 						{
-							shareSync.EncryptForShare(note.FilePath, serverNotePath);
+							shareSync.EncryptForShare(note.Id, note.FilePath, serverNotePath);
 							// TODO: is this necessary? should it be stored only in the folder where we move it now?
 							// .... figure it out
 							File.Copy(serverNotePath, Path.Combine(shareCopies[note.Id].FullName, new FileInfo(serverNotePath).Name), true);
@@ -587,13 +591,13 @@ namespace Tomboy.Sync
 				{
 					int latestRev = -1;
 					int latestRevDir = -1;
-					latestRev = GetRevisionFromManifestFile(manifestPath);
+					latestRev = GetRevisionFromManifestFile(false, manifestPath);
 
 					// now check the shared notes
 					shareCopies = shareSync.GetShareCopies();
 					foreach (DirectoryInfo di in shareCopies.Values)
 					{
-						int revision = GetRevisionFromManifestFile(Path.Combine(di.FullName, "manifest.xml"));
+						int revision = GetRevisionFromManifestFile(true, Path.Combine(di.FullName, "manifest.xml"));
 
 						if (revision > latestRev)
 							latestRev = revision;
@@ -765,7 +769,7 @@ namespace Tomboy.Sync
 			
 			virtual internal Dictionary<String, int> GetNoteUpdatesIdsSince(int revision)
 			{
-				Dictionary<String, int> updates = GetNoteRevisionsFromManifest(manifestPath, revision);
+				Dictionary<String, int> updates = GetNoteRevisionsFromManifest(false, manifestPath, revision);
 				List<String> processedFiles = new List<string>();
 				foreach (DirectoryInfo dir in shareCopies.Values)
 				{
@@ -774,7 +778,7 @@ namespace Tomboy.Sync
 					{
 						// only processed if not already done
 						processedFiles.Add(path);
-						Dictionary<String, int> addme = GetNoteRevisionsFromManifest(path, revision);
+						Dictionary<String, int> addme = GetNoteRevisionsFromManifest(true, path, revision);
 						foreach (String key in addme.Keys)
 						{
 							if (!shareCopies.ContainsKey(key))
@@ -803,37 +807,38 @@ namespace Tomboy.Sync
 				return updates;
 			}
 
-			virtual internal Dictionary<String, int> GetNoteRevisionsFromManifest(String filePath, int revision)
+			virtual internal Dictionary<String, int> GetNoteRevisionsFromManifest(bool shared, String filePath, int revision)
 			{
 				Dictionary<String, int> updates = new Dictionary<String, int>();
-				if (IsValidXmlFile(filePath))
+				// disabled because of shared& normal encryption // if (IsValidXmlFile(filePath))
 				{
-					using (FileStream fs = new FileStream(filePath, FileMode.Open))
-					{
-						Stream plainStream;
+					Stream plainStream = null;
+					bool ok = false;
+					if (!shared) {
+						using (FileStream fs = new FileStream(filePath, FileMode.Open))
 						{
-							bool ok;
 							plainStream = SecurityWrapper.DecryptFromStream(filePath, fs, myKey, out ok);
-							if (!ok)
-								throw new Exception("ENCRYPTION ERROR!");
 						}
-
-						XmlDocument doc = new XmlDocument();
-						doc.Load(plainStream);
-
-						string xpath =
-										string.Format("//note[@rev > {0}]", revision.ToString());
-						XmlNodeList noteNodes = doc.SelectNodes(xpath);
-						Logger.Debug("GetNoteUpdatesSince xpath returned {0} nodes", noteNodes.Count);
-
-						foreach (XmlNode node in noteNodes)
-						{
-							string id = node.SelectSingleNode("@id").InnerText;
-							int rev = Int32.Parse(node.SelectSingleNode("@rev").InnerText);
-							updates.Add(id, rev);
-						}
-
+					} else {
+						plainStream = new MemoryStream(SecurityWrapper.DecryptFromSharedFile(filePath, out ok));
 					}
+					if (!ok)
+						throw new	Exception("ENCRYPTION ERROR!");
+
+					XmlDocument doc = new XmlDocument();
+					doc.Load(plainStream);
+
+					string xpath =
+									string.Format("//note[@rev > {0}]", revision.ToString());
+					XmlNodeList noteNodes = doc.SelectNodes(xpath);
+					Logger.Debug("GetNoteUpdatesSince xpath returned {0} nodes", noteNodes.Count);
+
+					foreach (XmlNode node in noteNodes)
+					{
+						string id = node.SelectSingleNode("@id").InnerText;
+						int rev = Int32.Parse(node.SelectSingleNode("@rev").InnerText);
+						updates.Add(id, rev);
+					}	
 				}
 				return updates;
 			}
@@ -1017,25 +1022,35 @@ namespace Tomboy.Sync
 				}
 			}
 
-			internal int GetRevisionFromManifestFile(String path)
+			internal int GetRevisionFromManifestFile(bool shared, String path)
 			{
 				int latestRev = -1;
-				if (IsValidXmlFile(path) == true)
+				// disabled check because we would have to deal with 2 different kinds of encryptions//if (IsValidXmlFile(path) == true)
 				{
-					using (FileStream fs = new FileStream(path, FileMode.Open))
+					Stream plainStream = null;
+					bool ok;
+					if (!shared)
 					{
-						bool ok;
-						Stream plainStream = SecurityWrapper.DecryptFromStream(path, fs, myKey, out ok);
-						if (!ok)
-							throw new Exception("ENCRYPTION ERROR!");
-
-						XmlDocument doc = new XmlDocument();
-						doc.Load(plainStream);
-						XmlNode syncNode = doc.SelectSingleNode("//sync");
-						string latestRevStr = syncNode.Attributes.GetNamedItem("revision").InnerText;
-						if (latestRevStr != null && latestRevStr != string.Empty)
-							latestRev = Int32.Parse(latestRevStr);
+						using (FileStream fs = new FileStream(path, FileMode.Open))
+						{
+							plainStream = SecurityWrapper.DecryptFromStream(path, fs, myKey, out ok);
+						}
 					}
+					else
+					{
+						// shared
+						plainStream = new MemoryStream(SecurityWrapper.DecryptFromSharedFile(path, out ok));
+					}
+
+					if (!ok)
+						throw new Exception("ENCRYPTION ERROR!");
+
+					XmlDocument doc = new XmlDocument();
+					doc.Load(plainStream);
+					XmlNode syncNode = doc.SelectSingleNode("//sync");
+					string latestRevStr = syncNode.Attributes.GetNamedItem("revision").InnerText;
+					if (latestRevStr != null && latestRevStr != string.Empty)
+						latestRev = Int32.Parse(latestRevStr);
 				}
 				return latestRev;
 			}
@@ -1090,16 +1105,17 @@ namespace Tomboy.Sync
 					}
 					// TODO FIXME FATAL this doesn't work, because base.CreateManifestFile puts ALL the updated notes in!!!!
 					// THIS SHOULD BE FIXED NOW!
-					WriteManifestFile(shareManifest, newRevision, serverid, theNotes);
+					WriteManifestFile(true, shareManifest, newRevision, serverid, theNotes);
 				}
 
 				// XXX: currently we only return the status of the "normal" manifest.. maybe that's bad :S
 				// now the "normal" thing
-				return WriteManifestFile(manifestFilePath, newRevision, serverid, notes);
+				return WriteManifestFile(false, manifestFilePath, newRevision, serverid, notes);
 			}
 
-			internal bool WriteManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
+			internal bool WriteManifestFile(bool shared, String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
 			{
+				String sharedId = null;
 				bool success = false;
 				MemoryStream buffer = new MemoryStream();
 				XmlWriter xml = XmlWriter.Create(buffer, XmlEncoder.DocumentSettings);
@@ -1114,6 +1130,12 @@ namespace Tomboy.Sync
 					{
 						string id = noteid;
 						string rev = notes[noteid].ToString();
+
+						// check if this is a shared manifest
+						if (shared && sharedId == null && shareCopies.ContainsKey(noteid))
+						{
+							sharedId = noteid;
+						}
 
 						// Don't write out deleted notes
 						if (deletedNotes.Contains(id))
@@ -1140,6 +1162,25 @@ namespace Tomboy.Sync
 					//  xml.WriteEndElement();
 					//}
 
+					if (shared && sharedId != null)
+					{
+						// write share stuff:
+						xml.WriteStartElement(null, "shared", null);
+						ShareProvider provider = ShareProviderFactory.GetShareProvider();
+						NoteShare share = provider.GetNoteShare(sharedId);
+						foreach (String with in share.sharedWith)
+						{
+							String partner = with;
+							if (partner.Contains(" - "))
+								partner = partner.Substring(partner.LastIndexOf(" - ") + 3).Trim();
+
+							xml.WriteStartElement(null, "with", null);
+							xml.WriteAttributeString("partner", partner);
+							xml.WriteEndElement();
+						}
+						xml.WriteEndElement();
+					}
+
 					xml.WriteEndElement();
 					xml.WriteEndDocument();
 
@@ -1156,8 +1197,15 @@ namespace Tomboy.Sync
 					if (File.Exists(manifestFilePath))
 						File.Delete(manifestFilePath);
 					// now store in encrypted version:
-					// TODO: we have to also use asym. encryption here if this is a shared manifest
-					SecurityWrapper.SaveAsEncryptedFile(manifestFilePath, buffer.ToArray(), myKey);
+					if (sharedId != null)
+					{
+						// this is a shared manifest
+						shareSync.EncryptForShare(sharedId, buffer.ToArray(), manifestFilePath);
+					}
+					else
+					{
+						SecurityWrapper.SaveAsEncryptedFile(manifestFilePath, buffer.ToArray(), myKey);
+					}
 					// dispose of plain data
 					if (buffer != null)
 						buffer.Dispose();

@@ -10,7 +10,7 @@ namespace Tomboy.PrivateNotes.Crypto
 	/// <summary>
 	/// a crypto format which does no encryption at all. This is _ONLY_ for debuggin purposes!
 	/// </summary>
-	class NullCryptoFormat : CryptoFormat
+	class NullCryptoFormat : ShareCryptoFormat
 	{
 		/// <summary>
 		/// for nullcryptoformat it doesn't matter, since we don't use the password anyway
@@ -19,6 +19,19 @@ namespace Tomboy.PrivateNotes.Crypto
 		public bool PreHashedPasswordSupported()
 		{
 			return true;
+		}
+
+		public bool WriteCompatibleFile(AddressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients)
+		{
+			_recipients = new List<string>();
+			return WriteCompatibleFile(_filename, _content, new byte[0], new byte[0]);
+		}
+
+
+		public byte[] DecryptFile(AddressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk)
+		{
+			_recipients = new List<string>();
+			return DecryptFile(_filename, new byte[0], out _wasOk);
 		}
 
 		public bool WriteCompatibleFile(String _filename, byte[] _content, byte[] _key, byte[] _salt)
@@ -44,8 +57,9 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		public byte[] DecryptFile(String _filename, byte[] _key, out bool _wasOk)
 		{
-			FileStream fin = File.OpenRead(_filename);
-			return DecryptFromStream(_filename, fin, _key, out _wasOk);
+			using (FileStream fin = File.OpenRead(_filename)) {
+				return DecryptFromStream(_filename, fin, _key, out _wasOk);
+			}
 		}
 
 		public int Version()
@@ -150,7 +164,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			return buffer;
 		}
 
-		public bool WriteCompatibleFile(AdressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients)
+		public bool WriteCompatibleFile(AddressBook _adressProvider, String _filename, byte[] _content, List<String> _recipients)
 		{
 			// TODO include the filename!
 			String tempFileName = Path.Combine(tempDir, _filename + ".clear");
@@ -170,6 +184,8 @@ namespace Tomboy.PrivateNotes.Crypto
 					// "Somebody <test@asdf.com>  - 2048R/B1645EE8"
 					// transformed to "B1645EE8" otherwise gpg doesn't recognize it
 					userid = userid.Substring(userid.LastIndexOf('/') + 1);
+					if (userid.Contains(" "))
+						userid = userid.Substring(0, userid.IndexOf(' '));
 				}
 
 				args.Append(" -r \"");
@@ -189,7 +205,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			return true;
 		}
 
-		public byte[] DecryptFile(AdressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk)
+		public byte[] DecryptFile(AddressBook _adressProvider, String _filename, out List<String> _recipients, out bool _wasOk)
 		{
 			// TODO use temp file
 			String tempFileName = _filename + ".decrypted";

@@ -33,6 +33,7 @@ namespace Tomboy.PrivateNotes
 			box.PackStart(new Gtk.Label(Catalog.GetString(message)), true, true, 6);
 
 			itemsComboBox = new Gtk.ComboBoxEntry(allItems.ToArray());
+			itemsComboBox.SetSizeRequest(300, 25);
 
 			box.PackStart(itemsComboBox);
 			itemsComboBox.Changed += new EventHandler(itemsComboBox_Changed);

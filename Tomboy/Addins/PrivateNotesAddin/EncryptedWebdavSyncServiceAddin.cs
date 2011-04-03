@@ -57,15 +57,12 @@ namespace Tomboy.Sync
 
 		private bool initialized = false;
 
-		public static ShareProvider shareProvider = null;
-
 		/// <summary>
 		/// Called as soon as Tomboy needs to do anything with the service
 		/// </summary>
 		public override void Initialize ()
 		{
 			initialized = true;
-			shareProvider = new WebDavShareProvider();
 		}
 
 		public override void Shutdown ()
