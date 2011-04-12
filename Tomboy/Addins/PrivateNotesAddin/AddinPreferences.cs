@@ -25,6 +25,7 @@ namespace Tomboy.PrivateNotes
 		public const string MATCH_TEXT = "<markup><span foreground=\"green\">match</span></markup>";
 		public const string MATCH_NOT_TEXT = "<span foreground=\"red\">don't match</span>";
 
+		public const string NOTESHARE_URL_PREFIX = "note://tomboyshare/";
 
 		// gui elements
 

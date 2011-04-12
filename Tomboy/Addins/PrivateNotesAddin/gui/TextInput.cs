@@ -98,9 +98,9 @@ namespace Tomboy.PrivateNotes
 			{
 				bool valueOk = regex.IsMatch(text.Text);
 				if (valueOk) {
-					match_label.Markup = Catalog.GetString("input ok");
+					match_label.Markup = Catalog.GetString("<markup><span foreground=\"green\">input ok</span></markup>");
 				} else {
-					match_label.Markup = Catalog.GetString("wrong input");
+					match_label.Markup = Catalog.GetString("<markup><span foreground=\"red\">wrong input</span></markup>");
 				}
 			}				
 		}

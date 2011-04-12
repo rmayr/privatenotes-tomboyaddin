@@ -12,6 +12,7 @@ namespace Tomboy.PrivateNotes
 		Gtk.MenuItem shareItem;
 		Gtk.MenuItem unshareItem;
 		Gtk.MenuItem importSharedNoteItem;
+		Gtk.MenuItem copyShareLinkItem;
 
 		public override void Initialize()
 		{
@@ -59,16 +60,20 @@ namespace Tomboy.PrivateNotes
 			importSharedNoteItem.Show();
 			AddPluginMenuItem(importSharedNoteItem);
 
+			copyShareLinkItem = new Gtk.MenuItem(
+				Catalog.GetString("Copy share-link"));
+			copyShareLinkItem.Activated += OnCopyShareLink;
+			copyShareLinkItem.AddAccelerator("activate", Window.AccelGroup,
+				(uint)Gdk.Key.s, Gdk.ModifierType.ControlMask,
+				Gtk.AccelFlags.Visible);
+			copyShareLinkItem.Show();
+			AddPluginMenuItem(copyShareLinkItem);
+
 			ShareProvider provider = ShareProviderFactory.GetShareProvider();
 			provider.OnShareAdded += ShareAdded;
 			provider.OnShareRemoved += ShareRemoved;
 
 			CheckUnshareOption();
-
-			// Get the format from GConf and subscribe to changes
-			//date_format = (string)Preferences.Get(
-			//	Preferences.INSERT_TIMESTAMP_FORMAT);
-			//Preferences.SettingChanged += OnFormatSettingChanged;
 		}
 
 		void ShareAdded(String noteid, String with)
@@ -102,16 +107,32 @@ namespace Tomboy.PrivateNotes
 			List<String> people = new List<String>();
 
 			AddressBook ab = AddressBookFactory.Instance().GetDefault();
-			// TODO we shouldn't do this every time!!!
+			// maybe we shouldn't do this every time
 			ab.Load();
 			List<AddressBookEntry> entries = ab.GetEntries();
+
+			// get a list of people with whom it is already shared
+			ShareProvider sp = ShareProviderFactory.GetShareProvider();
+			NoteShare share = sp.GetNoteShare(Note.Id);
+			List<String> alreadySharedWith = new List<string>();
+			if (share != null)
+			{
+				foreach (String id in share.sharedWith)
+				{
+					String cleanId = GetIdOnlyFromVariousFormats(id);
+					alreadySharedWith.Add(cleanId);
+				}
+			}
+
 			foreach (AddressBookEntry abe in entries)
 			{
-				people.Add(abe.name + " " + abe.mail + " - " + abe.id);
+				if (alreadySharedWith.Contains(abe.id))
+					people.Add("(active) " + abe.name + " " + abe.mail + " - " + abe.id);
+				else
+					people.Add(abe.name + " " + abe.mail + " - " + abe.id);
 			}
 
 			ItemSelector selector = new ItemSelector("Choose contact to share note with (type to search):", people, new inputDone(OnPeopleForShareChosen));
-
 		}
 
 		void OnUnshareItemActivated(object sender, EventArgs args)
@@ -130,7 +151,26 @@ namespace Tomboy.PrivateNotes
 
 		void OnImportActivated(object sender, EventArgs args)
 		{
-			TextInput ti = new TextInput("enter share path:", "http://someone:secret@example.com/myShare/", "http(s)?://.+", new inputDone(OnShareItemPathEntered));
+			TextInput ti = new TextInput("enter share path:", "http://someone:secret@example.com/myShare/", "(" + AddinPreferences.NOTESHARE_URL_PREFIX + ")?http(s)?://.+", new inputDone(OnShareItemPathEntered));
+		}
+
+		void OnCopyShareLink(object sender, EventArgs args)
+		{
+			ShareProvider sp = ShareProviderFactory.GetShareProvider();
+			NoteShare share = sp.GetNoteShare(Note.Id);
+			if (share != null)
+			{
+				String target = share.shareTarget;
+				Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
+				clipboard.Text = AddinPreferences.NOTESHARE_URL_PREFIX + target;
+			}
+			else
+			{
+				Gtk.MessageDialog md = new Gtk.MessageDialog(null, Gtk.DialogFlags.Modal, Gtk.MessageType.Info,
+					Gtk.ButtonsType.Ok, Catalog.GetString("Not shared yet. Click on 'Share Note' and select with whom you want to share first"));
+				md.Run();
+				md.Destroy();
+			}
 		}
 
 		void OnShareItemPathEntered(bool ok, String sharepath)
@@ -184,6 +224,31 @@ namespace Tomboy.PrivateNotes
 			{
 				// nothing
 			}
+		}
+
+		/// <summary>
+		/// sometimes we have data in the format:
+		/// somebody &lt;somebodysemail@something.com&gt; - thisis/theid - in some hex format
+		/// but we only want the last part (after the &gt; which again isn't always there)
+		/// </summary>
+		/// <param name="_idOrMore"></param>
+		/// <returns></returns>
+		private String GetIdOnlyFromVariousFormats(String _idOrMore)
+		{
+			String TAG = " - ";
+			int idx1 = _idOrMore.LastIndexOf(TAG);
+			if (idx1 > 0)
+			{
+				int idx2 = _idOrMore.LastIndexOf(TAG, idx1);
+				if (idx2 > 0)
+				{
+					// we have the un-desired format, transform it:
+					return _idOrMore.Substring(idx2 + TAG.Length);
+				}
+			}
+			else
+				Logger.Warn("we probably have the wrong id format: {0}", _idOrMore);
+			return _idOrMore;
 		}
 
 	}

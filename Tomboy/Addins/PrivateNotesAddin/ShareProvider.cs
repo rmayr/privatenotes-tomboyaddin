@@ -297,8 +297,19 @@ namespace Tomboy.PrivateNotes
 			XmlDocument xml = new XmlDocument();
 			xml.Load(configFile);
 			XmlNodeList nodes = xml.GetElementsByTagName("noteshare");
+			// get a list of all existing note ids:
+			List<String> existingIds = new List<string>();
+			foreach (Note n in Tomboy.DefaultNoteManager.Notes)
+				existingIds.Add(n.Id);
+
 			foreach (XmlNode n in nodes)
-				shares.Add(NoteShare.Deserialize(n));
+			{
+				NoteShare s = NoteShare.Deserialize(n);
+				if (existingIds.Contains(s.noteId))
+					shares.Add(s);
+				else
+					Logger.Debug("removing note {0} from shared notes because it doesn't exist any longer", s.noteId);
+			}
 			xml = null; // is there no .close() .dispose()?
 		}
 
