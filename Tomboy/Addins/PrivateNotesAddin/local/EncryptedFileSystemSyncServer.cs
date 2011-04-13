@@ -810,6 +810,12 @@ namespace Tomboy.Sync
 			virtual internal Dictionary<String, int> GetNoteRevisionsFromManifest(bool shared, String filePath, int revision)
 			{
 				Dictionary<String, int> updates = new Dictionary<String, int>();
+				if (!File.Exists(filePath))
+				{
+					Logger.Warn("file {0} doesn't exist (GetNoteRevisionsFromManifest)", filePath);
+					return updates;
+				}
+				
 				// disabled because of shared& normal encryption // if (IsValidXmlFile(filePath))
 				{
 					Stream plainStream = null;
@@ -1025,10 +1031,13 @@ namespace Tomboy.Sync
 			internal int GetRevisionFromManifestFile(bool shared, String path)
 			{
 				int latestRev = -1;
+				if (!File.Exists(path))
+					return latestRev;
+
 				// disabled check because we would have to deal with 2 different kinds of encryptions//if (IsValidXmlFile(path) == true)
 				{
 					Stream plainStream = null;
-					bool ok;
+					bool ok = true;
 					if (!shared)
 					{
 						using (FileStream fs = new FileStream(path, FileMode.Open))

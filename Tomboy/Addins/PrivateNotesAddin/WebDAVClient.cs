@@ -27,11 +27,11 @@ namespace Tomboy.PrivateNotes
   public delegate void CreateDirCompleteDel(int statusCode);
   public delegate void DeleteCompleteDel(int statusCode);
 
-	/// <summary>
-	/// takes care of communicating with a webdav server
-	/// not note-sync specific, but general-purpose
-	/// it is used by the WebDAVInterface
-	/// </summary>
+  /// <summary>
+  /// takes care of communicating with a webdav server
+  /// not note-sync specific, but general-purpose
+  /// it is used by the WebDAVInterface
+  /// </summary>
   public class WebDAVClient
   {
     public event ListCompleteDel ListComplete;
@@ -193,7 +193,15 @@ namespace Tomboy.PrivateNotes
       }
 
       AsyncCallback callback = new AsyncCallback(FinishList);
-      HTTPRequest(listUri, "PROPFIND", headers, Encoding.UTF8.GetBytes(propfind.ToString()), null, callback, remoteFilePath);
+
+      byte[] data = Encoding.UTF8.GetBytes(propfind.ToString());
+      Logger.Info("first data bytes: {0} {1} {2}", String.Format("{0:X}", data[0]), String.Format("{0:X}", data[1]), String.Format("{0:X}", data[2]));
+      if (data[0] == 0xef && data[1] == 0xbb && data[2] == 0xbf)
+      {
+        Logger.Warn(">>>> ERROR?! PLEASE TRY REMOVING THIS!");
+      }
+
+      HTTPRequest(listUri, "PROPFIND", headers, data, null, callback, remoteFilePath);
     }
 
 
@@ -281,7 +289,7 @@ namespace Tomboy.PrivateNotes
 
       Uri uploadUri = getServerUrl(remoteFilePath, false);
       string method = WebRequestMethods.Http.Put.ToString();
-
+      
       AsyncCallback callback = new AsyncCallback(FinishUpload);
       HTTPRequest(uploadUri, method, null, null, localFilePath, callback, state);
     }
@@ -289,6 +297,7 @@ namespace Tomboy.PrivateNotes
 
     void FinishUpload(IAsyncResult result)
     {
+      Logger.Debug("finish upload callback reached");
       // CHECK FOR EXCEPTION FIRST!
       if (lastError != null)
       {
@@ -538,6 +547,11 @@ namespace Tomboy.PrivateNotes
     {
       httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(uri);
 
+      //httpWebRequest.SendChunked = true;
+      //httpWebRequest.TransferEncoding = "UTF-8";
+      httpWebRequest.TransferEncoding = null;
+      
+
       /*
        * The following line fixes an authentication problem explained here:
        * http://www.devnewsgroups.net/dotnetframework/t9525-http-protocol-violation-long.aspx
@@ -572,7 +586,7 @@ namespace Tomboy.PrivateNotes
 
         /// XXX WTF somehow if this is active, it doesn't work on linux?!
 #if WIN32
-        //httpWebRequest.PreAuthenticate = true;
+        httpWebRequest.PreAuthenticate = true;
 #endif
         /// END WTF
       }
@@ -626,6 +640,7 @@ namespace Tomboy.PrivateNotes
     /// <param name="result"></param>
     private void ReadCallback(IAsyncResult result)
     {
+      Logger.Debug("webdav, got async callback");
       try {
       RequestState state = (RequestState)result.AsyncState;
       WebRequest request = state.request;
@@ -636,6 +651,7 @@ namespace Tomboy.PrivateNotes
         // Submit content
         if (state.content != null)
         {
+          Logger.Debug("getting {0} bytes of data (1)", state.content.Length);
           streamResponse.Write(state.content, 0, state.content.Length);
         }
         else
@@ -644,24 +660,28 @@ namespace Tomboy.PrivateNotes
           {
             byte[] content = new byte[4096];
             int bytesRead = 0;
+            int bytesTotal = 0;
             do
             {
               bytesRead = fs.Read(content, 0, content.Length);
+              bytesTotal += bytesRead;
               streamResponse.Write(content, 0, bytesRead);
             } while (bytesRead > 0);
-
+            Logger.Debug("getting {0} bytes of data from file {1}", bytesTotal, state.uploadFilePath);
             //XXX: perform upload status callback
           }
         }
-      } 
+      }
 
       // Done, invoke user callback
+      Logger.Debug("beginning get response");
       request.BeginGetResponse(state.userCallback, state.userState);
     } catch (Exception e) {
+      Logger.Warn("exception occured in async callback: {0} stack: {1}", e.Message, e.StackTrace);
       lastError = e;
       RequestState state = (RequestState)result.AsyncState;
+      Logger.Debug("invoking user callback");
       state.userCallback.Invoke(result);
-      Console.WriteLine("exception occured");
     }
     }
     #endregion

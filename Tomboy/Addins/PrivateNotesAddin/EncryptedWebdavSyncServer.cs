@@ -120,7 +120,7 @@ namespace Tomboy.PrivateNotes
 			}
 			catch (Exception e)
 			{
-				Logger.Warn("Error deleting servers lock: {1}", e.Message);
+				Logger.Warn("Error deleting servers lock: {0}", e.Message);
 			}
 		}
 

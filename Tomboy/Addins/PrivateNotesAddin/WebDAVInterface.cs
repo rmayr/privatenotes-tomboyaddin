@@ -127,6 +127,7 @@ namespace Tomboy.PrivateNotes
 		/// <returns></returns>
 		public bool UploadFile(String path)
 		{
+			Logger.Debug("uploading file {0}", path);
 			client.Upload(path, Path.GetFileName(path));
 			autoReset.WaitOne();
 			CheckException("error while uploading file " + path);
@@ -176,6 +177,7 @@ namespace Tomboy.PrivateNotes
 				if (!file.EndsWith("/")
 					&& !file.EndsWith("lock"))
 				{
+					Logger.Debug("uploading note {0}", fromPath);
 					// not for dirs and don't upload lockfile again
 					String toPath = Path.GetFileName(file);
 					client.Upload(file, toPath);
