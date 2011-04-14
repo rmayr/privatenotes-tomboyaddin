@@ -28,6 +28,7 @@ namespace Tomboy
 		string GetNoteTitle (string uri);
 		string [] GetTagsForNote (string uri);
 		bool HideNote (string uri);
+		bool ImportNoteFromUri(string uri);
 		string [] ListAllNotes ();
 		event RemoteAddedHandler NoteAdded;
 		event RemoteDeletedHandler NoteDeleted;

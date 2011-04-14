@@ -139,6 +139,20 @@ namespace Tomboy
 			return result;
 		}
 
+		public bool ImportNoteFromUri(string uri)
+		{
+			bool result = false;
+			//
+			Gtk.Application.Invoke(delegate
+			{
+				result = true;
+				Logger.Debug("IMPORTING (stage 1 i guess)");
+				result = remote.ImportNoteFromUri(uri);
+				//remote.CreateNote();
+			});
+			return result;
+		}
+
 		public string [] ListAllNotes ()
 		{
 			return remote.ListAllNotes ();

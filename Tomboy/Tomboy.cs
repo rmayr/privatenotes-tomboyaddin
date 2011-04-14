@@ -483,6 +483,7 @@ namespace Tomboy
 		string new_note_name;
 		bool open_start_here;
 		string open_note_uri;
+		string open_share_uri;
 		string open_note_name;
 		string open_external_note_path;
 		string highlight_search;
@@ -520,6 +521,7 @@ namespace Tomboy
 				return new_note ||
 				open_note_name != null ||
 				open_note_uri != null ||
+				open_share_uri != null ||
 				open_search ||
 				open_start_here ||
 				open_external_note_path != null;
@@ -693,6 +695,16 @@ namespace Tomboy
 					break;
 
 				default:
+						// if not passed with argument, maybe an url-link was opened!
+					if (args[idx].StartsWith("note://tomboy/"))
+					{
+						open_note_uri = args[idx];
+					}
+					else if (args[idx].StartsWith("note://tomboyshare/"))
+					{
+						open_share_uri = args[idx];
+						Logger.Debug("YIHA, SHARING IS CARING!");
+					}
 					break;
 				}
 
@@ -734,6 +746,12 @@ namespace Tomboy
 
 			if (open_note_name != null)
 				open_note_uri = remote.FindNote (open_note_name);
+
+			if (open_share_uri != null)
+			{
+				remote.ImportNoteFromUri(open_share_uri);
+				Logger.Debug("must transmit share uri!");
+			}
 
 			if (open_note_uri != null) {
 				if (highlight_search != null)

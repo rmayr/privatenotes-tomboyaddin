@@ -190,6 +190,12 @@ namespace Tomboy
 			recent_changes.Present ();
 		}
 
+		public bool ImportNoteFromUri(string uri)
+		{
+			Logger.Warn("IMPORTING! YIHA! {0}", uri);
+			return true;
+		}
+
 		public bool NoteExists (string uri)
 		{
 			Note note = note_manager.FindByUri (uri);
