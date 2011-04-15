@@ -28,5 +28,10 @@
   <Extension path="/Tomboy/NoteAddins">
     <NoteAddin type="Tomboy.PrivateNotes.ShareNoteAddin" />
   </Extension>
+
+  <!-- the sharing note-addin -->
+  <Extension path="/Tomboy/SharingAddin">
+    <SharingAddin type="Tomboy.PrivateNotes.SharingAppAddin" />
+  </Extension>
   
 </Addin>

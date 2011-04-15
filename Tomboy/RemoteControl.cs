@@ -192,7 +192,10 @@ namespace Tomboy
 
 		public bool ImportNoteFromUri(string uri)
 		{
-			Logger.Warn("IMPORTING! YIHA! {0}", uri);
+			SharingAddin sharer = note_manager.AddinManager.ShareAddin;
+			if (sharer == null)
+				Logger.Warn("No sharing addin, so we can't import shares!");
+			sharer.ImportShare(uri);
 			return true;
 		}
 

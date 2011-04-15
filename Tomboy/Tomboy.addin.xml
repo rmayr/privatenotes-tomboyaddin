@@ -6,6 +6,10 @@
 	<ExtensionPoint path="/Tomboy/ApplicationAddins">
 		<ExtensionNode name="ApplicationAddin" objectType="Tomboy.ApplicationAddin" />
 	</ExtensionPoint>
+
+  <ExtensionPoint path="/Tomboy/SharingAddin">
+    <ExtensionNode name="SharingAddin" objectType="Tomboy.SharingAddin" />
+  </ExtensionPoint>
 	
 	<ExtensionPoint path="/Tomboy/NoteAddins">
 		<ExtensionNode name="NoteAddin" objectType="Tomboy.NoteAddin" />

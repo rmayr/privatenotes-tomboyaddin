@@ -105,6 +105,9 @@ namespace Tomboy
 					addin.Initialize ();
 				}
 
+				if (manager.AddinManager.ShareAddin != null)
+					manager.AddinManager.ShareAddin.Initialize();
+
 				// Register the manager to handle remote requests.
 				RegisterRemoteControl (manager);
 				if (cmd_line.NeedsExecute) {

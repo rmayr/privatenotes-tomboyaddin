@@ -139,6 +139,7 @@
     <Compile Include="Tomboy\RemoteControl.cs" />
     <Compile Include="Tomboy\RemoteControlProxy.cs" />
     <Compile Include="Tomboy\RemoteControlWrapper.cs" />
+    <Compile Include="Tomboy\Sharing\SharingAddin.cs" />
     <Compile Include="Tomboy\Synchronization\ISyncUI.cs" />
     <Compile Include="Tomboy\Synchronization\SilentUI.cs" />
     <Compile Include="Tomboy\Tomboy.cs" />
