@@ -12,11 +12,11 @@ namespace Tomboy.PrivateNotes
 			bool success = false;
 			if (info.StartsWith(AddinPreferences.NOTESHARE_URL_PREFIX))
 			{
-				String url = info.Substring(AddinPreferences.NOTESHARE_URL_PREFIX.Length + 1);
+				String url = info.Substring(AddinPreferences.NOTESHARE_URL_PREFIX.Length);
 				Logger.Info("we should import {0}", url);
 				try
 				{
-					success = ShareProviderFactory.GetShareProvider().ImportShare(info);
+					success = ShareProviderFactory.GetShareProvider().ImportShare(url);
 				}
 				catch (Exception _e)
 				{
