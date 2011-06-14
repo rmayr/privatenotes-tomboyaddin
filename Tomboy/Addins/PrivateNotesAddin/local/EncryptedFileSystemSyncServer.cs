@@ -247,14 +247,18 @@ namespace Tomboy.Sync
 							// decrypt the note:
 							bool ok;
 							byte[] contents = null;
+
+							// TODO: there is currently absolutely no difference between the two versions!
+							// do we need them? change sth, or can we remove the if/else and just use one version?!
 							if (shareCopies.ContainsKey(id))
 							{
 								// use shared decrypt
 								contents = SecurityWrapper.DecryptFromSharedFile(serverNotePath, out ok);
 							} else {
 								// normal decrypt
-								using (FileStream fin = File.Open(manifestPath, FileMode.Open)) {
-									contents = SecurityWrapper.DecryptFromFile(manifestPath, fin, myKey, out ok);
+								using (FileStream fin = File.Open(serverNotePath, FileMode.Open))
+								{
+									contents = SecurityWrapper.DecryptFromFile(serverNotePath, fin, myKey, out ok);
 									//CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
 									//contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
 								}
@@ -886,9 +890,13 @@ namespace Tomboy.Sync
 			// NOTE: Assumes serverPath is set
 			virtual internal string GetRevisionDirPath(int rev)
 			{
+#if NODIRS
+				return serverPath;
+#else
 				return Path.Combine(
-											 Path.Combine(serverPath, (rev / 100).ToString()),
-											 rev.ToString());
+				               Path.Combine(serverPath, (rev / 100).ToString()),
+				               rev.ToString());
+#endif	
 			}
 
 			private void UpdateLockFile(SyncLockInfo syncLockInfo)

@@ -119,7 +119,7 @@ namespace Tomboy.PrivateNotes
 			{
 				foreach (String id in share.sharedWith)
 				{
-					String cleanId = GetIdOnlyFromVariousFormats(id);
+					String cleanId = NoteShare.GetIdOnlyFromVariousFormats(id);
 					alreadySharedWith.Add(cleanId);
 				}
 			}
@@ -175,7 +175,7 @@ namespace Tomboy.PrivateNotes
 
 		void OnShareItemPathEntered(bool ok, String sharepath)
 		{
-			if (ok)
+			if (ok && !String.IsNullOrEmpty(sharepath))
 			{
 				Logger.Info("sharepath add request: {0}", sharepath);
 				try
@@ -224,31 +224,6 @@ namespace Tomboy.PrivateNotes
 			{
 				// nothing
 			}
-		}
-
-		/// <summary>
-		/// sometimes we have data in the format:
-		/// somebody &lt;somebodysemail@something.com&gt; - thisis/theid - in some hex format
-		/// but we only want the last part (after the &gt; which again isn't always there)
-		/// </summary>
-		/// <param name="_idOrMore"></param>
-		/// <returns></returns>
-		private String GetIdOnlyFromVariousFormats(String _idOrMore)
-		{
-			String TAG = " - ";
-			int idx1 = _idOrMore.LastIndexOf(TAG);
-			if (idx1 > 0)
-			{
-				int idx2 = _idOrMore.LastIndexOf(TAG, idx1);
-				if (idx2 > 0)
-				{
-					// we have the un-desired format, transform it:
-					return _idOrMore.Substring(idx2 + TAG.Length);
-				}
-			}
-			else
-				Logger.Warn("we probably have the wrong id format: {0}", _idOrMore);
-			return _idOrMore;
 		}
 
 	}

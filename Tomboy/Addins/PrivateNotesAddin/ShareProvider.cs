@@ -33,7 +33,9 @@ namespace Tomboy.PrivateNotes
 
 		public bool IsSharedWith(String with)
 		{
-			return sharedWith.Contains(with);
+			String cleanedId = NoteShare.GetIdOnlyFromVariousFormats(with);
+			string match = sharedWith.Find(delegate(string element) { return cleanedId.Equals(NoteShare.GetIdOnlyFromVariousFormats(element)); });
+			return match != null;
 		}
 
 		public void Serialize(XmlWriter writer)
@@ -61,7 +63,33 @@ namespace Tomboy.PrivateNotes
 			}
 			return new NoteShare(id, with, target);
 		}
-		
+
+
+		/// <summary>
+		/// sometimes we have data in the format:
+		/// somebody &lt;somebodysemail@something.com&gt; - thisis/theid - in some hex format
+		/// but we only want the last part (after the &gt; which again isn't always there)
+		/// </summary>
+		/// <param name="_idOrMore"></param>
+		/// <returns></returns>
+		public static String GetIdOnlyFromVariousFormats(String _idOrMore)
+		{
+			String TAG = " - ";
+			int idx1 = _idOrMore.LastIndexOf(TAG);
+			if (idx1 > 0)
+			{
+				int idx2 = _idOrMore.LastIndexOf(TAG, idx1);
+				if (idx2 > 0)
+				{
+					// we have the un-desired format, transform it:
+					return _idOrMore.Substring(idx2 + TAG.Length);
+				}
+			}
+			else
+				Logger.Warn("we probably have the wrong id format: {0}", _idOrMore);
+			return _idOrMore;
+		}
+
 	}
 
 	public delegate void ShareAdded(String noteid, String with);

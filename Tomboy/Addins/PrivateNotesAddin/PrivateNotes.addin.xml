@@ -21,6 +21,7 @@
 
   <Extension path="/Tomboy/SyncServiceAddins">
     <SyncServiceAddin type="Tomboy.Sync.EncryptedWebdavSyncServiceAddin" />
+    <!--<SyncServiceAddin type="Tomboy.Sync.EncryptedFileSystemSyncServer" />-->
   </Extension>
 
   

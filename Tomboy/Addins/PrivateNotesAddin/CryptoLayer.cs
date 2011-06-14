@@ -95,6 +95,8 @@ namespace Tomboy.PrivateNotes.Crypto
 		//private CryptoFormat defaultFormat = new CryptoFileFormatRev1();
 #if NOCRYPT
 		private CryptoFormat defaultFormat = new NullCryptoFormat();
+#elif OLDCRYPT
+		private CryptoFormat defaultFormat = new CryptoFileFormatRev1();
 #else
 		private CryptoFormat defaultFormat = new GpgCryptoFormat();
 #endif

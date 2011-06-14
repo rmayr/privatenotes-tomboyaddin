@@ -106,8 +106,8 @@ namespace Tomboy.PrivateNotes.Crypto
 			FileStream fout = File.Create(tempFileName);
 			fout.Write(_content, 0, _content.Length);
 			fout.Close();
-			
-			InvokeGpg("--batch --symmetric --passphrase " + Util.FromBytes(_key) + " --output \"" + _filename + "\" \"" + tempFileName + '"');
+
+			InvokeGpg("--batch --symmetric --personal-cipher-preferences AES --passphrase " + Util.FromBytes(_key) + " --output \"" + _filename + "\" \"" + tempFileName + '"');
 
 			File.Delete(tempFileName);
 
@@ -175,6 +175,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			// build the commandline arguments
 			StringBuilder args = new StringBuilder();
 			args.Append("--batch -e"); // batch encrypt
+			args.Append(" --personal-cipher-preferences AES");
 			foreach (String r in _recipients)
 			{
 				String userid = r;

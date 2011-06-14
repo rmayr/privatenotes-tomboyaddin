@@ -195,11 +195,13 @@ namespace Tomboy.PrivateNotes
       AsyncCallback callback = new AsyncCallback(FinishList);
 
       byte[] data = Encoding.UTF8.GetBytes(propfind.ToString());
+			/* could not fix this error... (http on linux didn't work, only https)
       Logger.Info("first data bytes: {0} {1} {2}", String.Format("{0:X}", data[0]), String.Format("{0:X}", data[1]), String.Format("{0:X}", data[2]));
       if (data[0] == 0xef && data[1] == 0xbb && data[2] == 0xbf)
       {
         Logger.Warn(">>>> ERROR?! PLEASE TRY REMOVING THIS!");
       }
+			**/
 
       HTTPRequest(listUri, "PROPFIND", headers, data, null, callback, remoteFilePath);
     }
