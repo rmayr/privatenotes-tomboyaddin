@@ -37,6 +37,10 @@
       <Project>{315DBB30-1461-4A41-A23F-A888D84E1EA0}</Project>
       <Name>Tomboy</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tomboy\Addins\PrivateNotesAddin\PrivateNotes.csproj">
+     <Project>{DB9D7C56-4830-4D09-8F9E-95A2F5424AB1}</Project>
+     <Name>PrivateNotes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tomboy\Addins\Backlinks\Backlinks.csproj">
       <Project>{3D330B80-87BA-435E-B3B8-E3C796FB155C}</Project>
       <Name>Backlinks</Name>

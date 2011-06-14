@@ -39,6 +39,9 @@
 						<File Source="..\bin\Debug\NoteDirectoryWatcher.dll" Name="NoteDirectoryWatcher.dll" Id="NoteDirectoryWatcher.dll" Vital="yes" />
 						<File Source="..\bin\Debug\NoteOfTheDay.dll" Name="NoteOfTheDay.dll" Id="NoteOfTheDay.dll" Vital="yes" />
 						<File Source="..\bin\Debug\PrintNotes.dll" Name="PrintNotes.dll" Id="PrintNotes.dll" Vital="yes" />
+						<!-- privatenotes -->
+						<File Source="..\bin\Debug\PrivateNotes.dll" Name="PrivateNotes.dll" Id="PrivateNotes.dll"  Vital="yes"/>
+						<!-- privatenotes -->
 						<File Source="..\bin\Debug\Underline.dll" Name="Underline.dll" Id="Underline.dll" Vital="yes" />
 						<File Source="..\bin\Debug\WebSyncServiceAddin.dll" Name="WebSyncServiceAddin.dll" Id="WebSyncServiceAddin.dll" Vital="yes" />
 						<File Source="..\bin\Debug\Tomboy.exe" Name="Tomboy.exe" Id="Tomboy.exe" Vital="yes" KeyPath="yes">
@@ -54,6 +57,9 @@
 						<File Source="..\bin\Debug\NoteDirectoryWatcher.pdb" Name="NoteDirectoryWatcher.pdb" Id="NoteDirectoryWatcher.pdb" Vital="yes" />
 						<File Source="..\bin\Debug\NoteOfTheDay.pdb" Name="NoteOfTheDay.pdb" Id="NoteOfTheDay.pdb" Vital="yes" />
 						<File Source="..\bin\Debug\PrintNotes.pdb" Name="PrintNotes.pdb" Id="PrintNotes.pdb" Vital="yes" />
+						<!-- privatenotes -->
+						<File Source="..\bin\Debug\PrivateNotes.pdb" Name="PrivateNotes.pdb" Id="PrivateNotes.pdb" Vital="yes" />
+						<!-- privatenotes -->
 						<File Source="..\bin\Debug\Underline.pdb" Name="Underline.pdb" Id="Underline.pdb" Vital="yes" />
 						<File Source="..\bin\Debug\WebSyncServiceAddin.pdb" Name="WebSyncServiceAddin.pdb" Id="WebSyncServiceAddin.pdb" Vital="yes" />
 						<File Source="..\bin\Debug\Tomboy.pdb" Name="Tomboy.pdb" Id="Tomboy.pdb" Vital="yes" />

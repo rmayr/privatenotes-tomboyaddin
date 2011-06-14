@@ -30,6 +30,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSyncService", "Tomboy\Ad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveBrokenLinks", "Tomboy\Addins\RemoveBrokenLinks\RemoveBrokenLinks.csproj", "{AD6C9F12-3F95-497C-AF7E-629F787A097E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrivateNotes", "Tomboy\Addins\PrivateNotesAddin\PrivateNotes.csproj", "{DB9D7C56-4830-4D09-8F9E-95A2F5424AB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "Tomboy\Addins\TestProject\TestProject.csproj", "{F621D67F-6E6E-4E4D-9A7F-57462AC623CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptedFileSystemSyncService", "Tomboy\Addins\EncryptedFileSystemSyncService\EncryptedFileSystemSyncService.csproj", "{E6B617B6-618D-45A1-9EF9-9AF77B76A13F}"
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

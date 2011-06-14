@@ -1,6 +1,8 @@
+
 # Global ignores
 *~
 *.pyc
+.svn
 Makefile
 Makefile.in
 
@@ -84,6 +86,7 @@ Makefile.in
 
 # /Tomboy
 /Tomboy/Addins/*/*.dll
+/Tomboy/Addins/*/*/*.dll
 /Tomboy/Addins/*/*.dll.mdb
 /Tomboy/Addins/*/*.pidb
 /Tomboy/Addins/*/obj/

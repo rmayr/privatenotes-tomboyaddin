@@ -189,6 +189,15 @@ namespace Tomboy
 			recent_changes.SearchText = search_text;
 			recent_changes.Present ();
 		}
+    
+    public bool ImportNoteFromUri(string uri)
+		{
+			SharingAddin sharer = note_manager.AddinManager.ShareAddin;
+			if (sharer == null)
+				Logger.Warn("No sharing addin, so we can't import shares!");
+			sharer.ImportShare(uri);
+			return true;
+		}
 
 		public bool NoteExists (string uri)
 		{

@@ -23,6 +23,11 @@ namespace Tomboy
 		/// <summary>
 		/// </summary>
 		Dictionary<Note, List<NoteAddinInfo>> note_addins;
+    
+    /// <summary>
+		/// the share-addin (there can only be one)
+		/// </summary>
+		SharingAddin share_addin;
 
 		/// <summary>
 		/// Key = TypeExtensionNode.Id
@@ -43,6 +48,12 @@ namespace Tomboy
 			note_addin_infos = new Dictionary<string, List<NoteAddinInfo>> ();
 
 			InitializeMonoAddins (old_tomboy_conf_dir);
+		}
+    
+    public SharingAddin ShareAddin {
+		 get {
+				return share_addin;
+			}
 		}
 
 		void InitializeMonoAddins (string old_conf_dir)
@@ -100,6 +111,7 @@ namespace Tomboy
 			Mono.Addins.AddinManager.AddExtensionNodeHandler ("/Tomboy/ApplicationAddins", OnApplicationAddinExtensionChanged);
 			// NOTE: A SyncServiceAddin is a specialization of an ApplicationAddin
 			Mono.Addins.AddinManager.AddExtensionNodeHandler ("/Tomboy/SyncServiceAddins", OnApplicationAddinExtensionChanged);
+      Mono.Addins.AddinManager.AddExtensionNodeHandler("/Tomboy/SharingAddin", OnSharingAddinExtensionChanged);
 			Mono.Addins.AddinManager.AddExtensionNodeHandler ("/Tomboy/NoteAddins", OnNoteAddinExtensionChanged);
 		}
 
@@ -117,6 +129,26 @@ namespace Tomboy
 		void OnAddinUnloaded (object sender, Mono.Addins.AddinEventArgs args)
 		{
 			Logger.Debug ("AddinManager.OnAddinUnloaded: {0}", args.AddinId);
+		}
+    
+    void OnSharingAddinExtensionChanged(object sender, Mono.Addins.ExtensionNodeEventArgs args)
+		{
+			if (args.Change == Mono.Addins.ExtensionChange.Add) {
+				if (share_addin != null)
+					share_addin.Shutdown();
+
+				try {
+					Mono.Addins.TypeExtensionNode type_node =
+							args.ExtensionNode as Mono.Addins.TypeExtensionNode;
+						share_addin = type_node.CreateInstance () as SharingAddin;
+				} catch (Exception e) {
+					Logger.Debug ("Couldn't create a ShareAddin instance: {0}", e.Message);
+				}
+			} else {
+				if (share_addin != null) {
+					share_addin.Shutdown();
+				}
+			}
 		}
 
 		void OnApplicationAddinExtensionChanged (object sender, Mono.Addins.ExtensionNodeEventArgs args)
