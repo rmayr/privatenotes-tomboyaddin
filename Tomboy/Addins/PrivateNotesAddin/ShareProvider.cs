@@ -181,19 +181,6 @@ namespace Tomboy.PrivateNotes
 		bool SaveShares();
 	}
 
-
-	public class ShareProviderFactory
-	{
-		static WebDavShareProvider provider = null;
-		public static ShareProvider GetShareProvider()
-		{
-			if (provider == null) {
-				provider = new WebDavShareProvider();
-			}
-			return provider;
-		}
-	}
-
 	class WebDavShareProvider : ShareProvider
 	{
 		private List<NoteShare> shares;

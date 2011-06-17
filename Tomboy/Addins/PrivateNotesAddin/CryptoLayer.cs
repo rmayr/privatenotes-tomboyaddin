@@ -95,23 +95,35 @@ namespace Tomboy.PrivateNotes.Crypto
 			}
 		}
 
-		//private CryptoFormat defaultFormat = new CryptoFileFormatRev1();
-#if NOCRYPT
-		private CryptoFormat defaultFormat = new NullCryptoFormat();
-#elif OLDCRYPT
-		private CryptoFormat defaultFormat = new CryptoFileFormatRev1();
-#else
-		private CryptoFormat defaultFormat = new GpgCryptoFormat();
-#endif
-
-		/// <summary>
-		/// getting the default crypto format
-		/// </summary>
-		/// <returns></returns>
-		public CryptoFormat GetCryptoFormat()
-		{
-			return defaultFormat; 
+		private CryptoFormat formatNull = null;
+		private CryptoFormat formatPrivateNotes = null;
+		private CryptoFormat formatGpg = null;
+		
+		private CryptoFormat GetGpgCryptoFormat() {
+			if (formatGpg == null)
+				formatGpg = new GpgCryptoFormat();
+			return formatGpg;
 		}
+
+		private CryptoFormat GetPrivateNotesCryptoFormat()
+		{
+			if (formatPrivateNotes == null)
+				formatPrivateNotes = new CryptoFileFormatRev1();
+			return formatPrivateNotes;
+		}
+
+		private CryptoFormat GetNullCryptoFormat()
+		{
+			if (formatNull == null)
+				formatNull = new NullCryptoFormat();
+			return formatNull;
+		}
+
+		public enum CryptoFormatType {
+			nullCrypt,
+			privateNotesCrypt,
+			gpgCrypt
+		};
 
 		/// <summary>
 		/// get crypto format by version number
@@ -127,12 +139,36 @@ namespace Tomboy.PrivateNotes.Crypto
 					return new CryptoFileFormatRev0();
 
 				case 1:
-					return defaultFormat;
+					return GetPrivateNotesCryptoFormat();
 
 				default:
 					throw new Exception("Unknown encryption version");
 					//break; // not needed because of throw
 			}
+		}
+
+		/// <summary>
+		/// get a crypto format by its type
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public CryptoFormat GetCryptoFormat(CryptoFormatType type)
+		{
+			switch (type)
+			{
+				case CryptoFormatType.gpgCrypt:
+					return GetGpgCryptoFormat();
+					//break;
+				case CryptoFormatType.nullCrypt:
+					return GetNullCryptoFormat();
+					//break;
+				case CryptoFormatType.privateNotesCrypt:
+					return GetPrivateNotesCryptoFormat();
+					//break;
+				default:
+					throw new Exception("invalid cryptoformat-type: " + type.GetType().Name);
+			}
+
 		}
 		
 

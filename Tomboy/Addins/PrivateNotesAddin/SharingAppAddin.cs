@@ -24,7 +24,7 @@ namespace Tomboy.PrivateNotes
 				Logger.Info("we should import {0}", url);
 				try
 				{
-					success = ShareProviderFactory.GetShareProvider().ImportShare(url);
+					success = SecureSharingFactory.Get().GetShareProvider().ImportShare(url);
 				}
 				catch (Exception _e)
 				{

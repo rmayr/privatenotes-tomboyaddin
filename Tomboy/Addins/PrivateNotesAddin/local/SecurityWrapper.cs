@@ -23,7 +23,7 @@ namespace Tomboy.Sync
 		/// <param name="_recipients"></param>
 		public static void CopyAndEncryptShared(String _inputFile, String _toFile, byte[] _password, List<String> _recipients)
 		{
-			ShareCryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat() as ShareCryptoFormat;
+			ShareCryptoFormat ccf = SecureSharingFactory.Get().GetShareCrypto();
 			if (ccf == null)
 			{
 				Logger.Warn("wrong encryption format!");
@@ -63,7 +63,7 @@ namespace Tomboy.Sync
 		/// <param name="_recipients"></param>
 		public static void SaveAsSharedEncryptedFile(String _fileName, byte[] _data, byte[] _password, List<String> _recipients)
 		{
-			ShareCryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat() as ShareCryptoFormat;
+			ShareCryptoFormat ccf = SecureSharingFactory.Get().GetShareCrypto();
 			if (ccf == null)
 			{
 				Logger.Warn("wrong encryption format!");
@@ -99,7 +99,7 @@ namespace Tomboy.Sync
 			byte[] salt;
 			byte[] key = AESUtil.CalculateSaltedHash(_password, out salt);
 
-			CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
 			if (!ccf.PreHashedPasswordSupported())
 			{
 				// reset the key to the plain password
@@ -111,7 +111,7 @@ namespace Tomboy.Sync
 
 		public static void SaveAsEncryptedFile(String _fileName, byte[] _data, byte[] _password)
 		{
-			CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
 
 			byte[] salt;
 			byte[] key = AESUtil.CalculateSaltedHash(_password, out salt);
@@ -125,7 +125,7 @@ namespace Tomboy.Sync
 
 		public static Stream DecryptFromStream(String _inputFile, Stream _s, byte[] _key, out bool	_wasOk)
 		{
-			CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
 			byte[] data = ccf.DecryptFromStream(_inputFile, _s, _key, out _wasOk);
 			if (!_wasOk)
 				return null;
@@ -135,7 +135,7 @@ namespace Tomboy.Sync
 
 		public static byte[] DecryptFromFile(String _inputFile, Stream _s, byte[] _key, out bool _wasOk)
 		{
-			CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
 			byte[] data = ccf.DecryptFromStream(_inputFile, _s, _key, out _wasOk);
 			if (!_wasOk)
 				return null;
@@ -145,7 +145,7 @@ namespace Tomboy.Sync
 
 		public static byte[] DecryptFromSharedFile(String _file, out bool _wasOk)
 		{
-			ShareCryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat() as ShareCryptoFormat;
+			ShareCryptoFormat ccf = SecureSharingFactory.Get().GetShareCrypto();
 			if (ccf == null)
 			{
 				Logger.Warn("wrong encryption format!");

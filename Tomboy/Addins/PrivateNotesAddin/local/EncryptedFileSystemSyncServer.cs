@@ -95,9 +95,7 @@ namespace Tomboy.Sync
 			/// </summary>
 			private void GetFromShares()
 			{
-
-				ShareProvider provider = ShareProviderFactory.GetShareProvider();
-				shareSync = ShareSyncFactory.GetShareSyncForProvider(provider);
+				shareSync = SecureSharingFactory.Get().GetShareSync();
 
 				shareSync.FetchAllShares();
 			}
@@ -259,7 +257,7 @@ namespace Tomboy.Sync
 								using (FileStream fin = File.Open(serverNotePath, FileMode.Open))
 								{
 									contents = SecurityWrapper.DecryptFromFile(serverNotePath, fin, myKey, out ok);
-									//CryptoFormat ccf = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+									//CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
 									//contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
 								}
 							}
@@ -1183,7 +1181,7 @@ namespace Tomboy.Sync
 					{
 						// write share stuff:
 						xml.WriteStartElement(null, "shared", null);
-						ShareProvider provider = ShareProviderFactory.GetShareProvider();
+						ShareProvider provider = SecureSharingFactory.Get().GetShareProvider();
 						NoteShare share = provider.GetNoteShare(sharedId);
 						foreach (String with in share.sharedWith)
 						{

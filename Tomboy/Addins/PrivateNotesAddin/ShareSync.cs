@@ -72,20 +72,6 @@ namespace Tomboy.PrivateNotes
 		void CleanUp();
 	}
 
-	public class ShareSyncFactory
-	{
-		public static ShareSync GetShareSyncForProvider(ShareProvider _provider)
-		{
-			if (_provider is WebDavShareProvider)
-			{
-				return WebDAVShareSync.GetInstance(_provider);
-			} else {
-				Logger.Warn("no sharesync for provider of type " + _provider.GetType().Name);
-				throw new NotImplementedException("no sharesync for provider of type " + _provider.GetType().Name);
-			}
-		}
-	}
-
 	public class WebDAVShareSync : ShareSync
 	{
 		/// <summary>

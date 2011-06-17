@@ -25,7 +25,7 @@ namespace Tomboy.PrivateNotes
 			if (unshareItem != null)
 				unshareItem.Activated -= OnUnshareItemActivated;
 
-			ShareProvider provider = ShareProviderFactory.GetShareProvider();
+			ShareProvider provider = SecureSharingFactory.Get().GetShareProvider();
 			provider.OnShareAdded -= ShareAdded;
 			provider.OnShareRemoved -= ShareRemoved;
 		}
@@ -69,7 +69,7 @@ namespace Tomboy.PrivateNotes
 			copyShareLinkItem.Show();
 			AddPluginMenuItem(copyShareLinkItem);
 
-			ShareProvider provider = ShareProviderFactory.GetShareProvider();
+			ShareProvider provider = SecureSharingFactory.Get().GetShareProvider();
 			provider.OnShareAdded += ShareAdded;
 			provider.OnShareRemoved += ShareRemoved;
 
@@ -95,7 +95,7 @@ namespace Tomboy.PrivateNotes
 		private void CheckUnshareOption()
 		{
 			// if no longer shared at all
-			if (!ShareProviderFactory.GetShareProvider().IsNoteShared(Note.Id))
+			if (!SecureSharingFactory.Get().GetShareProvider().IsNoteShared(Note.Id))
 			{
 				unshareItem.Sensitive = false;
 			}
@@ -112,7 +112,7 @@ namespace Tomboy.PrivateNotes
 			List<AddressBookEntry> entries = ab.GetEntries();
 
 			// get a list of people with whom it is already shared
-			ShareProvider sp = ShareProviderFactory.GetShareProvider();
+			ShareProvider sp = SecureSharingFactory.Get().GetShareProvider();
 			NoteShare share = sp.GetNoteShare(Note.Id);
 			List<String> alreadySharedWith = new List<string>();
 			if (share != null)
@@ -138,7 +138,7 @@ namespace Tomboy.PrivateNotes
 		void OnUnshareItemActivated(object sender, EventArgs args)
 		{
 			Logger.Info("unshare menu item clicked!");
-			bool removed = ShareProviderFactory.GetShareProvider().RemoveShare(Note.Id);
+			bool removed = SecureSharingFactory.Get().GetShareProvider().RemoveShare(Note.Id);
 			string message = Catalog.GetString("Error: Could not be unshared.");
 			if (removed)
 			{
@@ -156,7 +156,7 @@ namespace Tomboy.PrivateNotes
 
 		void OnCopyShareLink(object sender, EventArgs args)
 		{
-			ShareProvider sp = ShareProviderFactory.GetShareProvider();
+			ShareProvider sp = SecureSharingFactory.Get().GetShareProvider();
 			NoteShare share = sp.GetNoteShare(Note.Id);
 			if (share != null)
 			{
@@ -180,7 +180,7 @@ namespace Tomboy.PrivateNotes
 				Logger.Info("sharepath add request: {0}", sharepath);
 				try
 				{
-					bool success = ShareProviderFactory.GetShareProvider().ImportShare(sharepath);
+					bool success = SecureSharingFactory.Get().GetShareProvider().ImportShare(sharepath);
 
 					// DUMMY PARENT
 					Gtk.Widget wid = new Gtk.Label();
@@ -210,7 +210,7 @@ namespace Tomboy.PrivateNotes
             if (ok && !String.IsNullOrEmpty(selection))
 			{
 				Logger.Info("person selected: {0}", selection);
-				bool added = ShareProviderFactory.GetShareProvider().AddShare(Note.Id, selection);
+				bool added = SecureSharingFactory.Get().GetShareProvider().AddShare(Note.Id, selection);
 				string message = Catalog.GetString("Error: Note not shared.");
 				if (added)
 				{
