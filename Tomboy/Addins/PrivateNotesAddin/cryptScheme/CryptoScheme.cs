@@ -218,7 +218,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			args.Append(_filename);
 			args.Append('"');
       
-      InvokeGpg(args.ToString());
+			InvokeGpg(args.ToString());
 			
 			_recipients = new List<String>();
 
@@ -248,28 +248,28 @@ namespace Tomboy.PrivateNotes.Crypto
 			return buffer;
 
 		}
-    
-    private static void InvokeGpg(String _arguments) {
-      System.Diagnostics.Process proc = new System.Diagnostics.Process();
-			proc.StartInfo.FileName = gpgExe;
-			proc.StartInfo.Arguments = _arguments;
-			proc.StartInfo.UseShellExecute = false;
-			proc.StartInfo.CreateNoWindow = true;
-			proc.StartInfo.RedirectStandardOutput = true;
-			proc.StartInfo.RedirectStandardError = true;
-			proc.Start();
-			String data = proc.StandardOutput.ReadToEnd();
-			String errdata = proc.StandardError.ReadToEnd();
-			Logger.Info(data);
-			if (!String.IsNullOrEmpty(errdata))
-			{
-				Logger.Info("ERRORS:");
-				Logger.Info(errdata);
-			}
-			proc.WaitForExit();
-			if (proc.ExitCode != 0)
-				throw new Exception("openPgp invocation exception: " + errdata);
-    }
+
+		private static void InvokeGpg(String _arguments) {
+			System.Diagnostics.Process proc = new System.Diagnostics.Process();
+				proc.StartInfo.FileName = gpgExe;
+				proc.StartInfo.Arguments = _arguments;
+				proc.StartInfo.UseShellExecute = false;
+				proc.StartInfo.CreateNoWindow = true;
+				proc.StartInfo.RedirectStandardOutput = true;
+				proc.StartInfo.RedirectStandardError = true;
+				proc.Start();
+				String data = proc.StandardOutput.ReadToEnd();
+				String errdata = proc.StandardError.ReadToEnd();
+				Logger.Info(data);
+				if (!String.IsNullOrEmpty(errdata))
+				{
+					Logger.Info("ERRORS:");
+					Logger.Info(errdata);
+				}
+				proc.WaitForExit();
+				if (proc.ExitCode != 0)
+					throw new Exception("openPgp invocation exception: " + errdata);
+		}
 
 
 		public int Version()

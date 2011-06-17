@@ -4,9 +4,17 @@ using System.Text;
 
 namespace Tomboy.PrivateNotes
 {
+	/// <summary>
+	/// subclass SharingAddin to be informed by Tomboy when a new note should
+	/// be added from a share
+	/// </summary>
 	public class SharingAppAddin : SharingAddin
 	{
-
+		/// <summary>
+		/// a share should be imported
+		/// </summary>
+		/// <param name="info">the share-info string (typically the path, might be prefixed with something (note://share/ or so)</param>
+		/// <returns>true if imported</returns>
 		public override bool ImportShare(String info)
 		{
 			bool success = false;

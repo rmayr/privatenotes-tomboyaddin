@@ -53,6 +53,9 @@ namespace Tomboy.PrivateNotes.Crypto
 		bool PreHashedPasswordSupported();
 	}
 
+	/// <summary>
+	/// a crypto format that supports encrypting for multiple recipients
+	/// </summary>
 	public interface ShareCryptoFormat : CryptoFormat
 	{
 		/// <summary>

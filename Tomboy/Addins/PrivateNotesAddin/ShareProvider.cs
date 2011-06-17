@@ -7,6 +7,9 @@ using Tomboy.PrivateNotes.Adress;
 
 namespace Tomboy.PrivateNotes
 {
+	/// <summary>
+	/// Stores information about a shared note
+	/// </summary>
 	public class NoteShare {
 		public String noteId;
 		public List<String> sharedWith = new List<string>();
@@ -95,21 +98,51 @@ namespace Tomboy.PrivateNotes
 	public delegate void ShareAdded(String noteid, String with);
 	public delegate void ShareRemoved(String noteid, String with);
 
+	/// <summary>
+	/// class for managing shares (locally)
+	/// knows what is shared with whom and where it is stored (server/path etc)
+	/// with this shares can be added/removed
+	/// </summary>
 	public interface ShareProvider
 	{
-
+		/// <summary>
+		/// you can register for this event, it will be triggered when a new share is added
+		/// </summary>
 		event ShareAdded OnShareAdded;
+
+		/// <summary>
+		/// event will be triggered when a share is removed
+		/// </summary>
 		event ShareRemoved OnShareRemoved;
 
+		/// <summary>
+		/// adds a new share. In other words: a note that already exists locally is added
+		/// to the shares. so the next time you sync, it will be put on the shared
+		/// location
+		/// </summary>
+		/// <param name="noteuid"></param>
+		/// <param name="shareWith"></param>
+		/// <returns></returns>
 		bool AddShare(String noteuid, String shareWith);
 
 		/// <summary>
-		/// add a share via a path/location that sb has sent you55
+		/// add a share via a path/location that sb has sent you
+		/// this first has to acquire the share and will probably add it
+		/// to your notes and then store all the necessary information
+		/// that the note will be synced with that share from now on
 		/// </summary>
 		/// <param name="share"></param>
 		/// <returns></returns>
 		bool ImportShare(String share);
 
+		/// <summary>
+		/// removes a share. that means the next time you sync, the note
+		/// will no longer be put into the shared dir, but synced with
+		/// your normal sync-folder
+		/// </summary>
+		/// <param name="noteuid"></param>
+		/// <param name="shareWith"></param>
+		/// <returns></returns>
 		bool RemoveShare(String noteuid, String shareWith);
 
 		/// <summary>
@@ -119,14 +152,35 @@ namespace Tomboy.PrivateNotes
 		/// <returns></returns>
 		bool RemoveShare(String noteuid);
 
+		/// <summary>
+		/// get all share-info items
+		/// </summary>
+		/// <returns></returns>
 		List<NoteShare> GetShares();
 
+		/// <summary>
+		/// get the share-info object for a specific note
+		/// if the note isn't shared, null will be returned
+		/// </summary>
+		/// <param name="noteid"></param>
+		/// <returns></returns>
 		NoteShare GetNoteShare(String noteid);
 
+		/// <summary>
+		/// checks if a note is shared by its id
+		/// </summary>
+		/// <param name="noteuid"></param>
+		/// <returns></returns>
 		bool IsNoteShared(String noteuid);
 
+		/// <summary>
+		/// saves added/removed shares. Until you call this method, all the information
+		/// is only held in memory
+		/// </summary>
+		/// <returns></returns>
 		bool SaveShares();
 	}
+
 
 	public class ShareProviderFactory
 	{

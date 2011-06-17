@@ -85,7 +85,6 @@ Makefile.in
 /libtomboy/*.lo
 
 # /Tomboy
-/Tomboy/Addins/*/*.dll
 /Tomboy/Addins/*/*/*.dll
 /Tomboy/Addins/*/*.dll.mdb
 /Tomboy/Addins/*/*.pidb
@@ -100,3 +99,6 @@ Makefile.in
 # /Setup
 /Setup/bin/
 /Setup/obj/
+
+# /Addins
+/Tomboy/Addins/TestProject/bin

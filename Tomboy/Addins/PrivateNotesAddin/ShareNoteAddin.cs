@@ -207,7 +207,7 @@ namespace Tomboy.PrivateNotes
 
 		void OnPeopleForShareChosen(bool ok, String selection)
 		{
-			if (ok)
+            if (ok && !String.IsNullOrEmpty(selection))
 			{
 				Logger.Info("person selected: {0}", selection);
 				bool added = ShareProviderFactory.GetShareProvider().AddShare(Note.Id, selection);
