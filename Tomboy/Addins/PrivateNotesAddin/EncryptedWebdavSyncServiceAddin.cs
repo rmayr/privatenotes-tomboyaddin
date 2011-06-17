@@ -63,6 +63,7 @@ namespace Tomboy.Sync
 		public override void Initialize ()
 		{
 			initialized = true;
+			GpgConfigUtility.ConfigureIfNecessary(null);
 		}
 
 		public override void Shutdown ()

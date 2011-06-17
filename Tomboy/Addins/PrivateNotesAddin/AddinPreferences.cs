@@ -44,8 +44,21 @@ namespace Tomboy.PrivateNotes
 			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("For more information, please visit:")));
 			container.PackStart(new Gtk.LinkButton("http://privatenotes.dyndns-server.com/", "http://privatenotes.dyndns-server.com/"));
 
+			Gtk.Button btn = new Gtk.Button(container);
+			btn.Label = Catalog.GetString("Configure GPG utility");
+			//btn.Activated += OnConfGpgActivated;
+			btn.Pressed += OnConfGpgActivated;
+
+			container.PackStart(new Gtk.Label());
+			container.PackStart(btn);
 
 			ShowAll();
+		}
+
+		void OnConfGpgActivated(object sender, EventArgs args)
+		{
+			// TODO how to get parent window here? (instead of null)
+			GpgConfigUtility.ConfigureGpg(false, null);
 		}
 
 	}

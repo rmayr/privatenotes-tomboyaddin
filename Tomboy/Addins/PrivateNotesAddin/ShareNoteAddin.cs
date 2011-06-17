@@ -16,6 +16,7 @@ namespace Tomboy.PrivateNotes
 
 		public override void Initialize()
 		{
+			GpgConfigUtility.ConfigureIfNecessary(null);
 		}
 
 		public override void Shutdown()
@@ -207,7 +208,7 @@ namespace Tomboy.PrivateNotes
 
 		void OnPeopleForShareChosen(bool ok, String selection)
 		{
-            if (ok && !String.IsNullOrEmpty(selection))
+			if (ok && !String.IsNullOrEmpty(selection))
 			{
 				Logger.Info("person selected: {0}", selection);
 				bool added = SecureSharingFactory.Get().GetShareProvider().AddShare(Note.Id, selection);
