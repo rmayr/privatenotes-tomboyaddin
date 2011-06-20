@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Net;
 
 namespace Tomboy.PrivateNotes
 {
@@ -193,6 +194,26 @@ namespace Tomboy.PrivateNotes
 			byte[] realData = new byte[lenghtInfo];
 			System.Array.Copy(_data, 4, realData, 0, lenghtInfo);
 			return realData;
+		}
+
+		/// <summary>
+		/// makes a http-get-request and returns the contents
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public static string HttpGet(string url)
+		{
+			HttpWebRequest req = WebRequest.Create(url)
+								 as HttpWebRequest;
+			string result = null;
+			using (HttpWebResponse resp = req.GetResponse()
+										  as HttpWebResponse)
+			{
+				StreamReader reader =
+					new StreamReader(resp.GetResponseStream());
+				result = reader.ReadToEnd();
+			}
+			return result;
 		}
 	}
 

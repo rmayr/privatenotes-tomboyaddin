@@ -181,11 +181,18 @@ namespace Tomboy.PrivateNotes
 		bool SaveShares();
 	}
 
+	/// <summary>
+	/// share provider that manages shares for webdav sync
+	/// </summary>
 	class WebDavShareProvider : ShareProvider
 	{
+		// list of all shares
 		private List<NoteShare> shares;
+		// config file path
 		private String configFile = null;
+		// triggered when new share is added
 		public event ShareAdded OnShareAdded;
+		// triggered when a share is removed
 		public event ShareRemoved OnShareRemoved;
 
 		public WebDavShareProvider()
@@ -216,14 +223,12 @@ namespace Tomboy.PrivateNotes
 			// check if this note is already shared
 			NoteShare share = GetNoteShare(noteuid);
 			bool shared = (share != null);
-
 			bool wasAdded = false;
-			String sharePath = "http://testuser3:test@testhost/webdav/testuser3";
 
 			if (!shared)
 			{
 				// not yet shared, request new webdav space to put share
-				share = new NoteShare(noteuid, shareWith, sharePath);
+				share = CreateNewShare(noteuid, shareWith);
 				// now also add ourself! (because it makes no sense to not share it
 				// with us, because then we couldn't decrypt our own files)
 				share.sharedWith.Add(AddressBookFactory.Instance().GetDefault().GetOwnAddress().id);
@@ -359,6 +364,19 @@ namespace Tomboy.PrivateNotes
 			return GetNoteShare(noteId) != null;
 		}
 
+		/// <summary>
+		/// creates a new noteShare, it is also responsible for allocating a new shared
+		/// space (sharePath location)
+		/// </summary>
+		/// <param name="noteuid"></param>
+		/// <param name="shareWith"></param>
+		/// <returns></returns>
+		virtual internal NoteShare CreateNewShare(String noteuid, String shareWith)
+		{
+			String sharePath = "http://testuser3:test@testhost/webdav/testuser3";
+			return new NoteShare(noteuid, shareWith, sharePath);
+		}
+
 		private void LoadFromConfig()
 		{
 			if (!File.Exists(configFile))
@@ -383,4 +401,5 @@ namespace Tomboy.PrivateNotes
 		}
 
 	}
+
 }

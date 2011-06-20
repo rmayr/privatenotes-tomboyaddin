@@ -211,11 +211,24 @@ namespace Tomboy.PrivateNotes
 			if (ok && !String.IsNullOrEmpty(selection))
 			{
 				Logger.Info("person selected: {0}", selection);
-				bool added = SecureSharingFactory.Get().GetShareProvider().AddShare(Note.Id, selection);
+				bool added = false;
+				string error = null;
+				try
+				{
+					added = SecureSharingFactory.Get().GetShareProvider().AddShare(Note.Id, selection);
+				}
+				catch (Exception e)
+				{
+					error = e.Message;
+				}
 				string message = Catalog.GetString("Error: Note not shared.");
 				if (added)
 				{
 					message = Catalog.GetString("Note is now shared...");
+				}
+				else if (error != null)
+				{
+					message += "\n" + error;
 				}
 				// DUMMY PARENT
 				Gtk.Widget wid = new Gtk.Label();

@@ -63,7 +63,8 @@ namespace Tomboy.PrivateNotes
 		{
 			if (provider == null)
 			{
-				provider = new WebDavShareProvider();
+				//provider = new WebDavShareProvider();
+				provider = new PrivateNotesWebDavShareProvider();
 			}
 			return provider;
 		}
