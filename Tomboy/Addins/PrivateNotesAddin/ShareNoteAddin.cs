@@ -33,6 +33,7 @@ namespace Tomboy.PrivateNotes
 
 		public override void OnNoteOpened()
 		{
+#if !NOSHARE
 			// Add the menu item when the window is created
 			shareItem = new Gtk.MenuItem(
 				Catalog.GetString("Share Note"));
@@ -75,7 +76,12 @@ namespace Tomboy.PrivateNotes
 			provider.OnShareRemoved += ShareRemoved;
 
 			CheckUnshareOption();
+#endif
 		}
+
+		// ---------------
+		// end of NoteAddin overrides
+		// ---------------
 
 		void ShareAdded(String noteid, String with)
 		{
