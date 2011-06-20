@@ -15,7 +15,7 @@ namespace Tomboy.PrivateNotes
 	/// </summary>
 	public class Util
 	{
-#if RANDOM_PADDING
+#if !NO_RANDOM_PADDING
 		private static Random random = new Random();
 #endif
 
@@ -137,7 +137,7 @@ namespace Tomboy.PrivateNotes
 			int padBytes = _multipleOf - tooMuch;
 			byte[] newData = new byte[_data.Length + padBytes];
 			System.Array.Copy(_data, newData, _data.Length);
-#if RANDOM_PADDING
+#if !NO_RANDOM_PADDING
 			// fill rest with random data
 			byte[] randomPad = new byte[padBytes];
 			random.NextBytes(randomPad);
@@ -167,7 +167,7 @@ namespace Tomboy.PrivateNotes
 			System.Array.Copy(lengthInfo, 0, newData, 0, lengthInfo.Length);
 			// write data
 			System.Array.Copy(_data, 0, newData, 4, _data.Length);
-#if RANDOM_PADDING
+#if !NO_RANDOM_PADDING
 			// fill rest with random data
 			byte[] randomPad = new byte[padBytes];
 			random.NextBytes(randomPad);

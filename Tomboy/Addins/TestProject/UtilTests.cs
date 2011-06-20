@@ -13,7 +13,7 @@ namespace TestProject
 	[TestFixture]
 	class UtilTests
 	{
-#if RANDOM_PADDING
+#if !NO_RANDOM_PADDING
 		[Test]
 		public void testRandomPadding()
 		{

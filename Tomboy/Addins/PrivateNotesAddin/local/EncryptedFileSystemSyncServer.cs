@@ -888,7 +888,7 @@ namespace Tomboy.Sync
 			// NOTE: Assumes serverPath is set
 			virtual internal string GetRevisionDirPath(int rev)
 			{
-#if NODIRS
+#if !TRYDIRS
 				return serverPath;
 #else
 				return Path.Combine(
