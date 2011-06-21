@@ -25,7 +25,7 @@ namespace Tomboy.PrivateNotes
 				throw new Exception("Could not obtain new share path from PrivateNotes server!");
 
 
-			String sharePath = "https://" + user + ":" + pass + "@" + privateNotesServer + "/webdav/" + user;
+			String sharePath = "https://" + user + ":" + pass + "@" + privateNotesServer + "/webdav2/" + user;
 			return new NoteShare(noteuid, shareWith, sharePath);
 		}
 
@@ -61,6 +61,7 @@ namespace Tomboy.PrivateNotes
 			if (!ok)
 			{
 				String errorMsg = null;
+				val = null;
 				if (jsonObj.TryGetValue("errorMsg", out val))
 					errorMsg = (string)val;
 				if (errorMsg != null)
@@ -69,13 +70,14 @@ namespace Tomboy.PrivateNotes
 					return false; // simply return false, because we don't know more
 			}
 
-
+			val = null;
 			if (jsonObj.TryGetValue("user", out val))
 				user = (string)val;
 			else
 				return false;
 
-			if (jsonObj.TryGetValue("user", out val))
+			val = null;
+			if (jsonObj.TryGetValue("password", out val))
 				password = (string)val;
 			else
 				return false;
