@@ -15,11 +15,17 @@ namespace Tomboy.PrivateNotes
 		public List<String> sharedWith = new List<string>();
 		public String shareTarget;
 
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public NoteShare() : this("", "", "")
 		{
 
 		}
 
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public NoteShare(String id, String with, String target)
 		{
 			noteId = id;
@@ -27,6 +33,9 @@ namespace Tomboy.PrivateNotes
 			shareTarget = target;
 		}
 
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public NoteShare(String id, List<String> with, String target)
 		{
 			noteId = id;
@@ -34,6 +43,11 @@ namespace Tomboy.PrivateNotes
 			shareTarget = target;
 		}
 
+		/// <summary>
+		/// check if somebody is included in this share
+		/// </summary>
+		/// <param name="with"></param>
+		/// <returns></returns>
 		public bool IsSharedWith(String with)
 		{
 			String cleanedId = NoteShare.GetIdOnlyFromVariousFormats(with);
@@ -41,6 +55,10 @@ namespace Tomboy.PrivateNotes
 			return match != null;
 		}
 
+		/// <summary>
+		/// serializes this share to xml
+		/// </summary>
+		/// <param name="writer"></param>
 		public void Serialize(XmlWriter writer)
 		{
 			writer.WriteStartElement(null, "noteshare", null);
@@ -55,6 +73,11 @@ namespace Tomboy.PrivateNotes
 			writer.WriteEndElement();
 		}
 
+		/// <summary>
+		/// reads a NoteShare object from xml
+		/// </summary>
+		/// <param name="share"></param>
+		/// <returns></returns>
 		public static NoteShare Deserialize(XmlNode share)
 		{
 			String id = share.Attributes["id"].Value;
@@ -202,6 +225,10 @@ namespace Tomboy.PrivateNotes
 			LoadFromConfig();
 		}
 
+		/// <summary>
+		/// saves all shares
+		/// </summary>
+		/// <returns></returns>
 		public bool SaveShares()
 		{
 			XmlWriter writer = XmlWriter.Create(configFile, XmlEncoder.DocumentSettings);
@@ -218,6 +245,9 @@ namespace Tomboy.PrivateNotes
 			return true;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public bool AddShare(String noteuid, String shareWith)
 		{
 			// check if this note is already shared
@@ -259,6 +289,9 @@ namespace Tomboy.PrivateNotes
 			return wasAdded;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public bool ImportShare(String share)
 		{
 			// download the stuff, then we should try to sync it...
@@ -301,6 +334,9 @@ namespace Tomboy.PrivateNotes
 			return true;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public bool RemoveShare(String noteuid, String shareWith)
 		{
 			bool removed = false;
@@ -325,6 +361,9 @@ namespace Tomboy.PrivateNotes
 			return removed;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public bool RemoveShare(String noteuid)
 		{
 			NoteShare share = GetNoteShare(noteuid);
@@ -344,11 +383,17 @@ namespace Tomboy.PrivateNotes
 			return removed;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public List<NoteShare> GetShares()
 		{
 			return shares;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public NoteShare GetNoteShare(String noteid)
 		{
 			foreach (NoteShare s in shares)
@@ -359,6 +404,9 @@ namespace Tomboy.PrivateNotes
 			return null;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public bool IsNoteShared(String noteId)
 		{
 			return GetNoteShare(noteId) != null;
@@ -377,6 +425,9 @@ namespace Tomboy.PrivateNotes
 			return new NoteShare(noteuid, shareWith, sharePath);
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		private void LoadFromConfig()
 		{
 			if (!File.Exists(configFile))

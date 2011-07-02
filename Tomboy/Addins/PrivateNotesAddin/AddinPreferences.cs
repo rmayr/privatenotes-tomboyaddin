@@ -55,6 +55,11 @@ namespace Tomboy.PrivateNotes
 			ShowAll();
 		}
 
+		/// <summary>
+		/// callback for when the user wants to manually configure the path of the pgp utility
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		void OnConfGpgActivated(object sender, EventArgs args)
 		{
 			// TODO how to get parent window here? (instead of null)

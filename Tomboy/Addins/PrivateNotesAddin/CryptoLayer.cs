@@ -7,7 +7,9 @@ using Tomboy.PrivateNotes.Adress;
 
 namespace Tomboy.PrivateNotes.Crypto
 {
-
+	/// <summary>
+	/// crypto format interface for SYMMETRIC cryptography only
+	/// </summary>
 	public interface CryptoFormat
 	{
 		/// <summary>
@@ -54,7 +56,7 @@ namespace Tomboy.PrivateNotes.Crypto
 	}
 
 	/// <summary>
-	/// a crypto format that supports encrypting for multiple recipients
+	/// a crypto format that supports encrypting for multiple recipients (asymmetric cryptography)
 	/// </summary>
 	public interface ShareCryptoFormat : CryptoFormat
 	{

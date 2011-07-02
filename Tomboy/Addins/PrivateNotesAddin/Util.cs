@@ -324,10 +324,17 @@ namespace Tomboy.PrivateNotes
 
 	}
 
+	/// <summary>
+	/// utility that helps us configure the GPG utility on different platforms
+	/// </summary>
 	public class GpgConfigUtility {
 
 		private static bool? configured = null;
 		
+		/// <summary>
+		/// checks if it is already configured
+		/// </summary>
+		/// <returns></returns>
 		public static bool CheckConfigured() {
 			if (configured == null) {
 				String gpgExe = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SHARE_GPG) as String;
@@ -336,6 +343,11 @@ namespace Tomboy.PrivateNotes
 			return configured.Value;
 		}
 
+		/// <summary>
+		/// configures the gpg utility if necessary. Tries automatically, if unsuccessful
+		/// the user will be asked
+		/// </summary>
+		/// <param name="parentWindow">winow that use as parent window if we need to ask user and display a dialog</param>
 		public static void ConfigureIfNecessary(Gtk.Window parentWindow)
 		{
 			bool configured = CheckConfigured();
@@ -344,6 +356,11 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// configures the gpg utility, first it tries automatically, if unsuccessful
+		/// the user will be asked
+		/// </summary>
+		/// <param name="parentWindow"></param>
 		public static void ConfigureGpg(bool tryAutomatic, Gtk.Window parentWindow) {
 			String foundPath = null;
 

@@ -17,6 +17,9 @@ namespace Tomboy.PrivateNotes
 	public interface ShareSync
 	{
 
+		/// <summary>
+		/// this should download all shares from the server(s)
+		/// </summary>
 		void FetchAllShares();
 
 		/// <summary>
@@ -121,6 +124,9 @@ namespace Tomboy.PrivateNotes
 			shareObjects = new Dictionary<string, NoteShare>();
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public void FetchAllShares()
 		{
 			CleanUp();
@@ -162,6 +168,9 @@ namespace Tomboy.PrivateNotes
 
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public void Import(String path)
 		{
 			String user, pw, server, serverbase;
@@ -185,6 +194,9 @@ namespace Tomboy.PrivateNotes
 
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public Dictionary<String, DirectoryInfo> GetShareCopies()
 		{
 			return shareBuffer;
@@ -209,6 +221,9 @@ namespace Tomboy.PrivateNotes
 				Logger.Warn("Note {0} is not part of the shared notes!", noteId);
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public void EncryptForShare(String noteId, String fromFile, String toFile)
 		{
 			if (shareObjects.ContainsKey(noteId))
@@ -223,6 +238,9 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public void EncryptForShare(String noteId, byte[] data, String toFile)
 		{
 			if (shareObjects.ContainsKey(noteId))
@@ -237,6 +255,9 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public bool GetSharePartners(String fromFile, out List<String> sharedwith)
 		{
 			bool ok = false;
@@ -283,6 +304,9 @@ namespace Tomboy.PrivateNotes
 			return ok;
 		}
 
+		/// <summary>
+		/// <inheritdoc />
+		/// </summary>
 		public void CleanUp()
 		{
 			foreach(DirectoryInfo di in shareBuffer.Values) {
@@ -314,6 +338,15 @@ namespace Tomboy.PrivateNotes
 			shareObjects.Clear();
 		}
 
+		/// <summary>
+		/// parses all the relevant parts of a webdav link from a URL
+		/// </summary>
+		/// <param name="link"></param>
+		/// <param name="user"></param>
+		/// <param name="password"></param>
+		/// <param name="server"></param>
+		/// <param name="basePath"></param>
+		/// <returns></returns>
 		public static bool ParseFromLink(String link, out String user, out String password, out String server, out String basePath) {
 			Uri url = new Uri(link);
 			string[] userInfo = url.UserInfo.Split(new char[] { ':' }, 2);

@@ -23,8 +23,8 @@ namespace Tomboy
 		/// <summary>
 		/// </summary>
 		Dictionary<Note, List<NoteAddinInfo>> note_addins;
-    
-    /// <summary>
+
+		/// <summary>
 		/// the share-addin (there can only be one)
 		/// </summary>
 		SharingAddin share_addin;

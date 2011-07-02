@@ -7,6 +7,12 @@ using Tomboy.PrivateNotes.Adress;
 namespace Tomboy.PrivateNotes
 {
 
+	/// <summary>
+	/// a note addin can do things when a note is viewed in a window. for example
+	/// displaying new gui elements there
+	/// 
+	/// this note addin provides functionality for managing shares over every note window
+	/// </summary>
 	public class ShareNoteAddin : NoteAddin
 	{
 		Gtk.MenuItem shareItem;
@@ -31,6 +37,10 @@ namespace Tomboy.PrivateNotes
 			provider.OnShareRemoved -= ShareRemoved;
 		}
 
+		/// <summary>
+		/// gets called when a note window is openend
+		/// here we add the gui elements
+		/// </summary>
 		public override void OnNoteOpened()
 		{
 #if !NOSHARE
@@ -83,6 +93,12 @@ namespace Tomboy.PrivateNotes
 		// end of NoteAddin overrides
 		// ---------------
 
+
+		/// <summary>
+		/// callback that will be executed when any share is added to our share-manager
+		/// </summary>
+		/// <param name="noteid"></param>
+		/// <param name="with"></param>
 		void ShareAdded(String noteid, String with)
 		{
 			if (noteid.Equals(Note.Id))
@@ -91,6 +107,11 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// callback that will be executed when any share is removed from our share-manager
+		/// </summary>
+		/// <param name="noteid"></param>
+		/// <param name="with"></param>
 		void ShareRemoved(String noteid, String with)
 		{
 			if (noteid.Equals(Note.Id))
@@ -99,6 +120,10 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// this method checks if this note is shared and if not it will deactivate the "unshare" element
+		/// so that it does not confuse the user
+		/// </summary>
 		private void CheckUnshareOption()
 		{
 			// if no longer shared at all
@@ -108,6 +133,11 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// the user has clicked on the "share" item
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		void OnShareItemActivated(object sender, EventArgs args)
 		{
 			Logger.Info("menu item clicked!");
@@ -142,6 +172,11 @@ namespace Tomboy.PrivateNotes
 			ItemSelector selector = new ItemSelector("Choose contact to share note with (type to search):", people, new inputDone(OnPeopleForShareChosen));
 		}
 
+		/// <summary>
+		/// the user has clicked "unshare"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		void OnUnshareItemActivated(object sender, EventArgs args)
 		{
 			Logger.Info("unshare menu item clicked!");
@@ -156,11 +191,22 @@ namespace Tomboy.PrivateNotes
 			GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
 		}
 
+		/// <summary>
+		/// the user has clicked "import share"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		void OnImportActivated(object sender, EventArgs args)
 		{
 			TextInput ti = new TextInput("enter share path:", "http://someone:secret@example.com/myShare/", "(" + AddinPreferences.NOTESHARE_URL_PREFIX + ")?http(s)?://.+", new inputDone(OnShareItemPathEntered));
 		}
 
+		/// <summary>
+		/// the user has clicked "copy share link"
+		/// here we will copy a link that will let other users add this note from the share
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		void OnCopyShareLink(object sender, EventArgs args)
 		{
 			ShareProvider sp = SecureSharingFactory.Get().GetShareProvider();
@@ -180,6 +226,11 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// callback for when the user wants to import a note and has already entered a url for this
+		/// </summary>
+		/// <param name="ok"></param>
+		/// <param name="sharepath"></param>
 		void OnShareItemPathEntered(bool ok, String sharepath)
 		{
 			if (ok && !String.IsNullOrEmpty(sharepath))
@@ -212,6 +263,13 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// when the user wants to share a note and has selected somebody to share it with
+		/// it might be that the note is not even shared with anybody at this point (not in
+		/// the shares-list at all)
+		/// </summary>
+		/// <param name="ok"></param>
+		/// <param name="selection"></param>
 		void OnPeopleForShareChosen(bool ok, String selection)
 		{
 			if (ok && !String.IsNullOrEmpty(selection))
