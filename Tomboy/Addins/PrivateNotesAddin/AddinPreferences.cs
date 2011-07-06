@@ -44,13 +44,17 @@ namespace Tomboy.PrivateNotes
 			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("For more information, please visit:")));
 			container.PackStart(new Gtk.LinkButton("http://privatenotes.dyndns-server.com/", "http://privatenotes.dyndns-server.com/"));
 
-			Gtk.Button btn = new Gtk.Button(container);
-			btn.Label = Catalog.GetString("Configure GPG utility");
-			//btn.Activated += OnConfGpgActivated;
-			btn.Pressed += OnConfGpgActivated;
+			Gtk.Button btnGpg = new Gtk.Button(container);
+			btnGpg.Label = Catalog.GetString("Configure GPG utility");
+			btnGpg.Pressed += OnConfGpgActivated;
+			
+			Gtk.Button btnRegister = new Gtk.Button(container);
+			btnRegister.Label = Catalog.GetString("Register for note:// protocol");
+			btnRegister.Pressed += OnRegisterProtocolActivated;
 
 			container.PackStart(new Gtk.Label());
-			container.PackStart(btn);
+			container.PackStart(btnGpg);
+			container.PackStart(btnRegister);
 
 			ShowAll();
 		}
@@ -64,6 +68,25 @@ namespace Tomboy.PrivateNotes
 		{
 			// TODO how to get parent window here? (instead of null)
 			GpgConfigUtility.ConfigureGpg(false, null);
+		}
+		
+		
+			
+		/// <summary>
+		/// callback for when the user wants to register for the note:// protocol
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		void OnRegisterProtocolActivated(object sender, EventArgs args)
+		{
+			// TODO how to get parent window here? (instead of null)
+			if (!NoteProtocolRegisterUtility.Register())
+			{
+				// dummy parent
+				Gtk.Widget wid = new Gtk.Label();
+				GtkUtil.ShowHintWindow(wid, Catalog.GetString("Protocol registration"),
+					Catalog.GetString("The protocol registration failed, sorry."));
+			}
 		}
 
 	}

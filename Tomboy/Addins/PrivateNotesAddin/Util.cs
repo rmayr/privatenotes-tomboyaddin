@@ -215,6 +215,16 @@ namespace Tomboy.PrivateNotes
 			}
 			return result;
 		}
+		
+		/// <summary>
+		/// checks if the current platform we are running on is windows
+		/// </summary>
+		/// <returns>true if on windows</returns>
+		public static bool IsWindows() {
+			int p = (int) Environment.OSVersion.Platform;
+			bool isUnix = (p == 4) || (p == 6) || (p == 128);
+			return !isUnix;
+		}
 	}
 
 #if WIN32 && DPAPI
@@ -283,8 +293,7 @@ namespace Tomboy.PrivateNotes
 		}
 
 	}
-
-
+	
 #endif
 
 
@@ -322,6 +331,49 @@ namespace Tomboy.PrivateNotes
 		}
 
 
+	}
+	
+	/// <summary>
+	/// utility that helps us register for the note:// protocol
+	/// 
+	/// currently this is only implemented for windows!
+	/// </summary>
+	public class NoteProtocolRegisterUtility {
+		
+		public static bool Register() {
+			if (Util.IsWindows()) {
+				string registerCommand =
+@"Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\note\shell\open\command]
+@=""\""__PROGRAM__PATH__\"" \""%1\""""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\note]
+@=""Tomboy Notes""
+""URL Protocol""=""""
+";
+				string exePath = System.Reflection.Assembly.GetEntryAssembly().Location;
+				exePath = exePath.Replace("\\", "\\\\"); // escape it for reg file
+				string customized = registerCommand.Replace("__PROGRAM__PATH__", exePath);
+				string tempPath = Path.GetTempPath();
+				try {
+					String regFile = Path.Combine(tempPath, "register.reg");
+					StreamWriter fout = File.CreateText(regFile);
+					fout.Write(customized);
+					fout.Close();
+					// now start:
+					System.Diagnostics.Process.Start(regFile);
+					return true;
+				} catch (Exception e) {
+					Logger.Warn("could Note Register because ", e);
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		
+		
 	}
 
 	/// <summary>
@@ -366,13 +418,7 @@ namespace Tomboy.PrivateNotes
 
 			if (tryAutomatic) {
 				List<String> defaultPaths = new List<string>();
-				bool isUnix = false;
-
-				{
-					// we don't need p afterwards
-					int p = (int) Environment.OSVersion.Platform;
-					isUnix = (p == 4) || (p == 6) || (p == 128);
-				}
+				bool isUnix = !Util.IsWindows();
 
 				if (isUnix) {
 					// unix / osx
