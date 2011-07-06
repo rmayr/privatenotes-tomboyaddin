@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Tomboy.PrivateNotes
 {
+#if !NOSHARES
 	/// <summary>
 	/// subclass SharingAddin to be informed by Tomboy when a new note should
 	/// be added from a share
@@ -91,4 +92,5 @@ namespace Tomboy.PrivateNotes
 		}
 
 	}
+#endif
 }
