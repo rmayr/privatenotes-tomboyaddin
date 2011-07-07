@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Tomboy;
+using Mono.Unix;
 using System.IO;
 using System.Xml;
 using Tomboy.PrivateNotes.Crypto;
@@ -1112,15 +1113,22 @@ namespace Tomboy.Sync
 				// now create the additional manifests:
 				foreach (String shareManifest in additionalManifests.Keys)
 				{
-					Dictionary<String, int> theNotes = new Dictionary<string, int>();
-					List<String> ids = additionalManifests[shareManifest];
-					foreach (String id in ids)
+					try
 					{
-						theNotes.Add(id, notes[id]);
+						Dictionary<String, int> theNotes = new Dictionary<string, int>();
+						List<String> ids = additionalManifests[shareManifest];
+						foreach (String id in ids)
+						{
+							theNotes.Add(id, notes[id]);
+						}
+						// TODO FIXME FATAL this doesn't work, because base.CreateManifestFile puts ALL the updated notes in!!!!
+						// THIS SHOULD BE FIXED NOW!
+						WriteManifestFile(true, shareManifest, newRevision, serverid, theNotes);
 					}
-					// TODO FIXME FATAL this doesn't work, because base.CreateManifestFile puts ALL the updated notes in!!!!
-					// THIS SHOULD BE FIXED NOW!
-					WriteManifestFile(true, shareManifest, newRevision, serverid, theNotes);
+					catch (Exception e)
+					{
+						GtkUtil.ShowHintWindow(new Gtk.Label(), Catalog.GetString("Sharing error"), Catalog.GetString("Error while syncing a share: " + e.Message));
+					}
 				}
 
 				// XXX: currently we only return the status of the "normal" manifest.. maybe that's bad :S

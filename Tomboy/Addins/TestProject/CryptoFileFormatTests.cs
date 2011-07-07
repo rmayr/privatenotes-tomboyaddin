@@ -30,7 +30,7 @@ namespace TestProject
 
 		public void testCrypt(String _file, String _data, byte[] _pw)
 		{
-			CryptoFormat cff = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			CryptoFormat cff = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat(1);
 
 			byte[] salt;
 			byte[] key = AESUtil.CalculateSaltedHash(_pw, out salt);
@@ -52,7 +52,7 @@ namespace TestProject
 		[Test]
 		public void TestDifferentDataLenghts()
 		{
-			CryptoFormat cff = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			CryptoFormat cff = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat(1);
 			String file = @"D:\test.txt";
 			byte[] pw = Util.GetBytes("password");
 			String data = "this is my base test data ";
@@ -80,7 +80,7 @@ namespace TestProject
 		[Test]
 		public void TestCrpytoFiles()
 		{
-			CryptoFormat cff = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat();
+			CryptoFormat cff = CryptoFormatProviderFactory.INSTANCE.GetCryptoFormat(1);
 			byte[] pw = Util.GetBytes("password");
 			String file = @"D:\test.txt";
 
