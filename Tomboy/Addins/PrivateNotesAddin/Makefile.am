@@ -11,8 +11,7 @@ ASSEMBLIES = 					\
 	$(LINK_MONO_ADDINS)			\
 	-r:Mono.Posix
 
-ADDIN_NAME = PrivateNotes
-TARGET = $(top_builddir)/bin/addins/$(ADDIN_NAME).dll
+TARGET = $(top_builddir)/bin/addins/PrivateNotes.dll
 CSFILES = \
 	$(srcdir)/AddinPreferences.cs									\
 	$(srcdir)/AddinPreferencesFactory.cs					\
@@ -34,7 +33,7 @@ CSFILES = \
 	$(srcdir)/Hyena.Json/*.cs											\
 	$(srcdir)/local/*.cs
 RESOURCES = \
-	-resource:$(srcdir)/$(ADDIN_NAME).addin.xml
+	-resource:$(srcdir)/PrivateNotes.addin.xml
 
 $(TARGET).mdb: $(TARGET)
 
@@ -49,7 +48,7 @@ addins_DATA = 			\
 
 EXTRA_DIST =            	\
 	$(CSFILES) \
-	$(srcdir)/$(ADDIN_NAME).addin.xml
+	$(srcdir)/PrivateNotes.addin.xml
 
 CLEANFILES =				\
 	$(TARGET).mdb \
