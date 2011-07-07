@@ -114,6 +114,7 @@ CSFILES = 					\
 	$(srcdir)/RecentChanges.cs		\
 	$(srcdir)/RecentTreeView.cs		\
 	$(srcdir)/Services.cs			\
+	$(srcdir)/SharingAddin.cs			\
 	$(srcdir)/Tag.cs			\
 	$(srcdir)/TagButton.cs			\
 	$(srcdir)/TagManager.cs			\
