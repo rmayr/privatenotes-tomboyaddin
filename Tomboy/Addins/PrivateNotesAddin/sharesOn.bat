@@ -1,9 +1,5 @@
 del PrivateNotes.addin.xml
+del PrivateNotes.csproj
 copy PrivateNotes.addin.xml_default PrivateNotes.addin.xml
-@echo off
-echo .
-echo .
-echo Dont forget to remove the "NOSHARES" compilation symbol!
-echo .
-echo .
+copy PrivateNotes.csproj_default PrivateNotes.csproj
 pause
