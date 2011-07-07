@@ -9,7 +9,7 @@ SUBDIRS =				\
 	InsertTimestamp		\
 	NoteOfTheDay		\
 	PrintNotes			\
-	PrivateNotes		\
+	PrivateNotesAddin		\
 	RemoveBrokenLinks	\
 	Sketching			\
 	SshSyncService		\
