@@ -81,7 +81,7 @@ namespace Tomboy.Sync
 		/// not automatically be saved by a GConf Property Editor.  Preferences
 		/// should be saved when SaveConfiguration () is called.
 		/// </summary>
-		public override Gtk.Widget CreatePreferencesControl ()
+		public override Gtk.Widget CreatePreferencesControl (EventHandler requiredPrefChanged)
 		{
 			Gtk.Table table = new Gtk.Table (1, 2, false);
 			table.RowSpacing = 5;
@@ -103,6 +103,7 @@ namespace Tomboy.Sync
 			                                    FileChooserAction.SelectFolder);
 			l.MnemonicWidget = pathButton;
 			pathButton.SetFilename (syncPath);
+			pathButton.CurrentFolderChanged += requiredPrefChanged;
 
 			table.Attach (pathButton, 1, 2, 0, 1,
 			              Gtk.AttachOptions.Expand | Gtk.AttachOptions.Fill,

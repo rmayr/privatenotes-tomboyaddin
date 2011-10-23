@@ -138,15 +138,15 @@ namespace Tomboy.Sync
 		/// not automatically be saved by a GConf Property Editor.	Preferences
 		/// should be saved when SaveConfiguration () is called.
 		/// </summary>
-		public override Gtk.Widget CreatePreferencesControl ()
+		public override Gtk.Widget CreatePreferencesControl (EventHandler requiredPrefChanged)
 		{
 			Gtk.VBox container = new Gtk.VBox(false, 0);
 
 			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Server Settings:</span>")));
-			SetupGuiServerRelated(container, 4);
+			SetupGuiServerRelated(container, 4, requiredPrefChanged);
 			container.PackStart(new Gtk.Label());
 			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Encryption Settings:</span>")));
-			SetupGuiEncryptionRelated(container, 4);
+			SetupGuiEncryptionRelated(container, 4, requiredPrefChanged);
 			container.ShowAll();
 			return container;
 		}
@@ -346,7 +346,7 @@ namespace Tomboy.Sync
 		/// </summary>
 		/// <param name="insertTo"></param>
 		/// <param name="defaultSpacing"></param>
-		void SetupGuiEncryptionRelated(Gtk.Box insertTo, int defaultSpacing)
+		void SetupGuiEncryptionRelated(Gtk.Box insertTo, int defaultSpacing, EventHandler requiredPrefChanged)
 		{
 			Gtk.HBox customBox = new Gtk.HBox(false, defaultSpacing);
 			insertTo.PackStart(customBox);
@@ -422,7 +422,7 @@ namespace Tomboy.Sync
 		/// </summary>
 		/// <param name="insertTo"></param>
 		/// <param name="defaultSpacing"></param>
-		void SetupGuiServerRelated(Gtk.Box insertTo, int defaultSpacing)
+		void SetupGuiServerRelated(Gtk.Box insertTo, int defaultSpacing, EventHandler requiredPrefChanged)
 		{
 			Gtk.Table customBox = new Gtk.Table(3, 2, false);
 
@@ -472,6 +472,7 @@ namespace Tomboy.Sync
 			object value = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERCHECKSSLCERT);
 			if (value == null || value.Equals(true))
 				check_ssl.Active = true;
+			
 		}
 
 #endregion
