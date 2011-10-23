@@ -1,0 +1,21 @@
+# BUILINDG PRIVATENOTES ON LINUX
+
+git clone git://gitorious.org/privatenotes/privatenotesmain.git
+
+# if you're using Ubuntu
+sudo apt-get build-dep tomboy
+sudo apt-get install gnome-common
+# if you are using Ubuntu 11.04 and want to build tomboy version >= 1.7
+sudo apt-get install libdbus1.0-cil libdbus1.0-cil-dev
+sudo apt-get install libdbus-glib1.0-cil libdbus-glib1.0-cil-dev
+
+#if you're using openSUSE, make sure the Source repository
+# is enabled in YaST, then:
+sudo zypper si -d tomboy 
+
+
+mkdir -p /home/paul/stage/tomboy
+./autogen.sh --prefix=/home/paul/stage/tomboy --disable-scrollkeeper
+make
+make install
+/home/paul/stage/tomboy/bin/tomboy
