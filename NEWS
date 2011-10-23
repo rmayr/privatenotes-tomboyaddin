@@ -9,6 +9,63 @@ Please send questions and suggestions to
 Please report bugs using http://bugzilla.gnome.org/
 (http://bugzilla.gnome.org/enter_bug.cgi?product=Tomboy).
 
+Version 1.9.1
+* New Translation: te(Telugu)
+* Updated Translations: sk, da, ja, uk, th
+
+Version 1.8
+* Translation Updates: ar, as, be, ca, da, eu, fr, ja, hu, ko, lv, sr
+
+Version 1.7.7
+* Translation Updates: be, bg, de, en, es, fr, he, id, it, lv, nl, pl,
+  pt, sk, sl, ta, zh
+
+Version 1.7.6
+* Replace string concat with variable substitution to make translations possible (654883)
+* Translation Updates: FR, GL, PA, CS, LT, RU, ES, SV, NO, FI
+
+Version 1.7.5
+* Translation Updates: DE, LT, NB, ES, GL, HE, SV
+ 
+Version 1.7.4
+* Name note being deleted in confirmation dialog (#627034)
+* Auto-linking notes should not update modification time (#634035)
+* Fix translation string in Export All Notes Addin (#654865)
+* Do not create nested links (#627060)
+* Save button in Sync Preferences should be insensitive until fields are
+  filled (#473332)
+* Tune down autosync frequency (#473332)
+* Keep selection after Notebook rename (#625679)
+* Allow renaming of template notes (#509147, 629699)
+* Improve template note functionality (#653062, 629324)
+* Translation Updates: es, gl, id, ru
+
+Version 1.7.3
+* Make NUNIT conditional (#647591)
+* Translation Updates: bg, sv, zh
+
+Version 1.7.2
+* New addin for advanced preferences (#401888, Alex Tereschenko)
+* Remove minumum size on Search All Notes window (#582558)
+* Fix note title matching in TrieTree (#584362)
+* Enforce minimum size on Name column in Search All Notes window (#575337)
+* Translation Updates: cs, de, es, fi, he, hu, lv, nb, pa, sl, tr, zh
+
+Version 1.7.1
+* New addin to Export All Notes (#356871, Robert Nordan)
+* Drop dependency for gconf-sharp-peditors (#652787)
+* Fix delete key behavior in bullet lists (#447245)
+* Resolve relative paths when exporting notes (#652783, Robert Nordan)
+* Fix string in Preferences UI (#630577, Matt Rajca)
+* Handle ending slashes in sync URLs (#651286, Robert Nordan)
+* Don't allow rename of special notebooks (#627872, Robert Nordan)
+* Don't open URL twice in Addin preferences (#643564, Max Lin)
+* Handle invalid files when loading notes (#639500, Lukas Vacek)
+* Add UI for no search results in notebook (#588730, Abhinav Upadhyay)
+* Update copyright to 2011 (#653280)
+* Handle matching brackets in links (#531085)
+* Translation Updates: es, gl, he, sl, sr, sv
+
 Version 1.7.0
 * Search does not give preference to note title (#637239, Robert Nordan)
 * Fix strings in sync dialogs (#473519)

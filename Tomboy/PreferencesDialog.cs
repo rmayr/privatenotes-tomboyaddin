@@ -482,7 +482,7 @@ namespace Tomboy
 				selectedSyncAddin = syncAddinStore.GetValue (active_iter, 0) as SyncServiceAddin;
 
 			if (selectedSyncAddin != null)
-				syncAddinPrefsWidget = selectedSyncAddin.CreatePreferencesControl ();
+				syncAddinPrefsWidget = selectedSyncAddin.CreatePreferencesControl (OnSyncAddinPrefsChanged);
 			if (syncAddinPrefsWidget == null) {
 				Gtk.Label l = new Gtk.Label (Catalog.GetString ("Not configurable"));
 				l.Yalign = 0.5f;
@@ -621,14 +621,6 @@ namespace Tomboy
 			Gtk.LinkButton get_more_link =
 				new Gtk.LinkButton ("http://live.gnome.org/Tomboy/PluginList",
 				                    Catalog.GetString ("Get More Add-Ins..."));
-			get_more_link.Clicked += delegate(object sender, EventArgs args) {
-				string uri = ((Gtk.LinkButton) sender).Uri;
-				try {
-					Services.NativeApplication.OpenUrl (uri, Screen);
-				} catch (Exception e) {
-					GuiUtils.ShowOpeningLocationError (this, uri, e.Message);
-				}
-			};
 			get_more_link.Show ();
 			Gtk.VBox tree_box = new Gtk.VBox (false, 0);
 			tree_box.Add (sw);
@@ -1109,7 +1101,7 @@ namespace Tomboy
 				        syncAddinStore.GetValue (iter, 0) as SyncServiceAddin;
 				if (newAddin != null) {
 					selectedSyncAddin = newAddin;
-					syncAddinPrefsWidget = selectedSyncAddin.CreatePreferencesControl ();
+					syncAddinPrefsWidget = selectedSyncAddin.CreatePreferencesControl (OnSyncAddinPrefsChanged);
 					if (syncAddinPrefsWidget == null) {
 						Gtk.Label l = new Gtk.Label (Catalog.GetString ("Not configurable"));
 						l.Yalign = 0.5f;
@@ -1121,7 +1113,7 @@ namespace Tomboy
 					syncAddinPrefsContainer.PackStart (syncAddinPrefsWidget, false, false, 0);
 
 					resetSyncAddinButton.Sensitive = false;
-					saveSyncAddinButton.Sensitive = true;
+					saveSyncAddinButton.Sensitive = false;
 				}
 			} else {
 				selectedSyncAddin = null;
@@ -1167,7 +1159,7 @@ namespace Tomboy
 				                                      "You have disabled the configured synchronization service.  " +
 				                                      "Your synchronization settings will now be cleared.  " +
 				                                      "You may be forced to synchronize all of your notes again " +
-				                                      "when you save new settings"));
+				                                      "when you save new settings."));
 				dialog.Run ();
 				dialog.Destroy ();
 			}
@@ -1284,6 +1276,13 @@ namespace Tomboy
 				dialog.Run ();
 				dialog.Destroy ();
 			}
+		}
+		
+		void OnSyncAddinPrefsChanged (object sender, EventArgs args)
+		{
+			// Enable/disable the save button based on required fields
+			if (selectedSyncAddin != null)
+				saveSyncAddinButton.Sensitive = selectedSyncAddin.AreSettingsValid;
 		}
 
 		void OpenTemplateButtonClicked (object sender, EventArgs args)

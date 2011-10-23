@@ -11,16 +11,13 @@ ASSEMBLIES = 					\
 	$(LINK_MONO_ADDINS)			\
 	-r:Mono.Posix
 
-ADDIN_NAME = ExportToHtml
+ADDIN_NAME = AdvancedPreferences
 TARGET = $(top_builddir)/bin/addins/$(ADDIN_NAME).dll
 CSFILES = \
-	$(srcdir)/ExportToHtmlDialog.cs		\
-	$(srcdir)/ExportToHtmlNoteAddin.cs		\
-	$(srcdir)/ExportToHtmlApplicationAddin.cs
+	$(srcdir)/AdvancedPreferencesAddin.cs
+	
 RESOURCES = \
-	-resource:$(srcdir)/$(ADDIN_NAME).addin.xml \
-	-resource:$(srcdir)/ExportToHtml.xsl
-
+	-resource:$(srcdir)/$(ADDIN_NAME).addin.xml
 
 $(TARGET).mdb: $(TARGET)
 
@@ -35,8 +32,7 @@ addins_DATA = 			\
 
 EXTRA_DIST =            	\
 	$(CSFILES) \
-	$(srcdir)/$(ADDIN_NAME).addin.xml \
-	$(srcdir)/ExportToHtml.xsl
+	$(srcdir)/$(ADDIN_NAME).addin.xml
 
 CLEANFILES =				\
 	$(TARGET).mdb \

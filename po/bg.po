@@ -1,18 +1,20 @@
 # Bulgarian translation of tomboy po-file.
 # Copyright (C) 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
 # Copyright (C) 2010, 2011 Free Software Foundation, Inc.
+# Copyright (C) 2011Krasimir Chonov <mk2616@abv.bg>.
 # This file is distributed under the same license as the tomboy package.
 # Rostislav Raykov <zbrox@i-space.org>, 2005.
 # Vladimir "Kaladan" Petkov <kaladan@gmail.com>, 2005, 2006, 2007, 2009.
 # Alexander Shopov <ash@kambanaria.org>, 2006, 2007, 2008, 2009, 2010, 2011.
+# Krasimir Chonov <mk2616@abv.bg>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: tomboy master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-12 23:25+0200\n"
-"PO-Revision-Date: 2011-01-12 23:25+0200\n"
-"Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
+"POT-Creation-Date: 2011-09-14 07:11+0300\n"
+"PO-Revision-Date: 2011-09-14 07:11+0300\n"
+"Last-Translator: Krasimir Chonov <mk2616@abv.bg>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
@@ -81,45 +83,52 @@ msgid "Custom Font Face"
 msgstr "Личен шрифт"
 
 #: ../data/tomboy.schemas.in.h:5
-msgid "Determines X coordinate of Search window; stored on Tomboy exit."
+msgid ""
+"Determines X coordinate of \"Search All Notes\" window; stored on Tomboy "
+"exit."
 msgstr ""
-"Указва координатата X на прозореца за търсене. Запазва се при изход от "
-"Tomboy."
+"Указва координатата X на прозореца „Търсене из всички бележки“. Запазва се "
+"при изход от Tomboy."
 
 #: ../data/tomboy.schemas.in.h:6
-msgid "Determines Y coordinate of Search window; stored on Tomboy exit."
+msgid ""
+"Determines Y coordinate of \"Search All Notes\" window; stored on Tomboy "
+"exit."
 msgstr ""
-"Указва координатата Y на прозореца за търсене. Запазва се при изход от "
-"Tomboy."
+"Указва координатата Y на прозореца „Търсене из всички бележки“. Запазва се "
+"при изход от Tomboy."
 
 #: ../data/tomboy.schemas.in.h:7
-msgid "Determines pixel height of Search window; stored on Tomboy exit."
+msgid ""
+"Determines pixel height of \"Search All Notes\" window; stored on Tomboy "
+"exit."
 msgstr ""
-"Указва височината на прозореца за търсене в пиксели. Запазва се при изход от "
-"Tomboy."
+"Указва височината на прозореца „Търсене из всички бележки“ в пиксели. "
+"Запазва се при изход от Tomboy."
 
 #: ../data/tomboy.schemas.in.h:8
-msgid "Determines pixel width of Search window; stored on Tomboy exit."
+msgid ""
+"Determines pixel width of \"Search All Notes\" window; stored on Tomboy exit."
 msgstr ""
-"Указва широчината на прозореца за търсене в пиксели. Запазва се при изход от "
-"Tomboy."
+"Указва широчината на прозореца „Търсене из всички бележки“ в пиксели. "
+"Запазва се при изход от Tomboy."
 
 #: ../data/tomboy.schemas.in.h:9
-msgid "Enable Auto bulleted lists."
-msgstr "Автоматични поточкови списъци."
-
-#: ../data/tomboy.schemas.in.h:10
 msgid "Enable Middle-Click Paste On Icon."
 msgstr ""
 "Поставяне на текст при натискане на средния бутон на мишката върху иконата."
 
-#: ../data/tomboy.schemas.in.h:11
+#: ../data/tomboy.schemas.in.h:10
 msgid "Enable Tray Icon"
 msgstr "Показване на иконата в областта за уведомяване"
 
-#: ../data/tomboy.schemas.in.h:12
+#: ../data/tomboy.schemas.in.h:11
 msgid "Enable WikiWord highlighting"
 msgstr "Отбелязване като Уики"
+
+#: ../data/tomboy.schemas.in.h:12
+msgid "Enable automatic bulleted lists."
+msgstr "Автоматични поточкови списъци."
 
 #: ../data/tomboy.schemas.in.h:13
 msgid "Enable closing notes with escape."
@@ -180,21 +189,17 @@ msgid "HTML Export All Linked Notes"
 msgstr "Изнасяне на всички свързани бележки в HTML"
 
 #: ../data/tomboy.schemas.in.h:24
-msgid "HTML Export Last Directory"
-msgstr "Последната папка да се изнесе като HTML"
-
-#: ../data/tomboy.schemas.in.h:25
 msgid "HTML Export Linked Notes"
 msgstr "Свързани бележки при изнасяне в HTML"
 
-#: ../data/tomboy.schemas.in.h:26
+#: ../data/tomboy.schemas.in.h:25
 msgid ""
 "If disabled, the \"Delete Note\" confirmation dialog will be suppressed."
 msgstr ""
 "Ако не е истина, прозорецът за потвърждаване на изтриването на бележки няма "
 "да се показва."
 
-#: ../data/tomboy.schemas.in.h:27
+#: ../data/tomboy.schemas.in.h:26
 msgid ""
 "If enable_custom_font is true, the font name set here will be used as the "
 "font when displaying notes."
@@ -202,7 +207,7 @@ msgstr ""
 "Ако настройката „enable_custom_font“ е истина, шрифтът указан тук ще бъде "
 "използван за бележките."
 
-#: ../data/tomboy.schemas.in.h:28
+#: ../data/tomboy.schemas.in.h:27
 msgid ""
 "If enabled, all notes that were open when Tomboy quit will automatically be "
 "reopened at startup."
@@ -210,13 +215,13 @@ msgstr ""
 "Ако е истина, отворените при спирането на Tomboy бележки ще бъдат "
 "автоматично показани при стартирането му."
 
-#: ../data/tomboy.schemas.in.h:29
+#: ../data/tomboy.schemas.in.h:28
 msgid "If enabled, an opened note can be closed by hitting the escape key."
 msgstr ""
 "Ако е включено, отворена бележка може да бъде затворена чрез натискането на "
 "клавиша „Esc“."
 
-#: ../data/tomboy.schemas.in.h:30
+#: ../data/tomboy.schemas.in.h:29
 msgid ""
 "If true, Tomboy's tray icon will be displayed in the notification area. "
 "Disabling this may be useful when another application is providing the "
@@ -226,7 +231,7 @@ msgstr ""
 "Изключването на тази настройка може да е полезно, когато тази функционалност "
 "се предоставя от друга програма."
 
-#: ../data/tomboy.schemas.in.h:31
+#: ../data/tomboy.schemas.in.h:30
 msgid ""
 "If true, misspellings will be underlined in red, and correct spelling "
 "suggestions shown in the right-click menu."
@@ -235,7 +240,7 @@ msgstr ""
 "за верен правопис — изнесени в менюто излизащо при натискането на десния "
 "бутон на мишката."
 
-#: ../data/tomboy.schemas.in.h:32
+#: ../data/tomboy.schemas.in.h:31
 msgid ""
 "If true, the desktop-global keybindings set in /apps/tomboy/"
 "global_keybindings will be enabled, allowing for useful Tomboy actions to be "
@@ -245,7 +250,7 @@ msgstr ""
 "global_keybindings“ ще са включени. Това ще позволи ползването на "
 "възможностите на Tomboy от всяко приложение."
 
-#: ../data/tomboy.schemas.in.h:33
+#: ../data/tomboy.schemas.in.h:32
 msgid ""
 "If true, the font name set in custom_font_face will be used as the font when "
 "displaying notes. Otherwise the desktop default font will be used."
@@ -254,7 +259,7 @@ msgstr ""
 "използвано за шрифта за показване на бележките. В противен случай ще бъде "
 "използван стандартният шрифт."
 
-#: ../data/tomboy.schemas.in.h:34
+#: ../data/tomboy.schemas.in.h:33
 msgid ""
 "Indicates that the Sticky Note Importer plugin has not been run, so it "
 "should run automatically the next time Tomboy starts."
@@ -263,7 +268,7 @@ msgstr ""
 "стартирана досега и трябва да се задейства автоматично при следващото "
 "стартиране на Tomboy."
 
-#: ../data/tomboy.schemas.in.h:35
+#: ../data/tomboy.schemas.in.h:34
 msgid ""
 "Integer determining the minimum number of notes to show in the Tomboy note "
 "menu."
@@ -271,7 +276,7 @@ msgstr ""
 "Цяло число, указващо минималния брой бележки, които да се показват в менюто "
 "на Tomboy за бележки."
 
-#: ../data/tomboy.schemas.in.h:36
+#: ../data/tomboy.schemas.in.h:35
 msgid ""
 "Integer value indicating how frequently to perform a background sync of your "
 "notes (when sync is configured). Any value less than 1 indicates that "
@@ -282,7 +287,7 @@ msgstr ""
 "синхронизиране (когато то е включено). Стойност под 1 указва, че "
 "синхронизирането е изключено. Най-малката приемлива стойност е 5."
 
-#: ../data/tomboy.schemas.in.h:37
+#: ../data/tomboy.schemas.in.h:36
 msgid ""
 "Integer value indicating if there is a preference to always perform a "
 "specific behavior when a conflict is detected, instead of prompting the "
@@ -295,7 +300,7 @@ msgstr ""
 "вътрешен избор. „0“ указва, че потребителят желае да бъде предупреждаван при "
 "всеки конфликт, за да предприеме конкретно действие."
 
-#: ../data/tomboy.schemas.in.h:38
+#: ../data/tomboy.schemas.in.h:37
 msgid ""
 "Integer value indicating if there is a preference to always perform a "
 "specific link updating behavior when a note is renamed, instead of prompting "
@@ -311,6 +316,10 @@ msgstr ""
 "която има връзки в другите бележки. „1“ указва, че връзките в другите "
 "бележки трябва да се премахнат, а „2“, че текстът във връзките трябва да се "
 "промени, за да съответства на преименуваната бележка."
+
+#: ../data/tomboy.schemas.in.h:38
+msgid "Last Directory used in HTML Export"
+msgstr "Последната папка за изнасяне на HTML"
 
 #: ../data/tomboy.schemas.in.h:39
 msgid "Link Updating Behavior on Note Rename"
@@ -384,20 +393,21 @@ msgid "SSHFS Synchronization Server URL"
 msgstr "Адрес на сървър за синхронизация чрез SSHFS"
 
 #: ../data/tomboy.schemas.in.h:54
-msgid "Saved height of Search window"
-msgstr "Запазена височина на прозореца за търсене"
+msgid "Saved height of \"Search All Notes\" window"
+msgstr "Запазена височина на прозореца „Търсене из всички бележки“"
 
 #: ../data/tomboy.schemas.in.h:55
-msgid "Saved horizontal position of Search window"
-msgstr "Запазена позиция по хоризонтала на прозореца за търсене"
+msgid "Saved horizontal position of \"Search All Notes\" window"
+msgstr ""
+"Запазена позиция по хоризонтала на прозореца „Търсене из всички бележки“"
 
 #: ../data/tomboy.schemas.in.h:56
-msgid "Saved vertical position of Search window"
-msgstr "Запазена позиция по вертикала на прозореца за търсене"
+msgid "Saved vertical position of \"Search All Notes\" window"
+msgstr "Запазена позиция по вертикала на прозореца „Търсене из всички бележки“"
 
 #: ../data/tomboy.schemas.in.h:57
-msgid "Saved width of Search window"
-msgstr "Запазена широчина на прозореца за търсене"
+msgid "Saved width of \"Search All Notes\" window"
+msgstr "Запазена широчина на прозореца „Търсене из всички бележки“"
 
 #: ../data/tomboy.schemas.in.h:58
 msgid "Selected Synchronization Service Addin"
@@ -641,7 +651,7 @@ msgstr "_Изтриване"
 msgid "Delete the selected note"
 msgstr "Изтриване на избраната бележка"
 
-#: ../Tomboy/ActionManager.cs:142 ../Tomboy/NoteWindow.cs:406
+#: ../Tomboy/ActionManager.cs:142 ../Tomboy/NoteWindow.cs:411
 msgid "_Close"
 msgstr "_Затваряне"
 
@@ -685,7 +695,7 @@ msgstr "Икона в областта за уведомяване"
 msgid "Create _New Note"
 msgstr "Създаване на _нова бележка"
 
-#: ../Tomboy/ActionManager.cs:175 ../Tomboy/NoteWindow.cs:349
+#: ../Tomboy/ActionManager.cs:175 ../Tomboy/NoteWindow.cs:354
 msgid "_Search All Notes"
 msgstr "Т_ърсене из всички бележки"
 
@@ -697,11 +707,24 @@ msgstr "Отваряне на „Търсене из всички бележки
 msgid "Start synchronizing notes"
 msgstr "Започване на синхронизацията на бележките"
 
+#. Addin's tab caption
+#: ../Tomboy/Addins/AdvancedPreferences/AdvancedPreferencesAddin.cs:38
+msgid "Advanced"
+msgstr "Допълнителни"
+
+#. Menu Note Count option
+#: ../Tomboy/Addins/AdvancedPreferences/AdvancedPreferencesAddin.cs:56
+msgid "Minimum number of notes to show in Recent list (maximum 18)"
+msgstr ""
+"Минимален брой бележки, които да се показват в менюто за последни бележки "
+"(стандартно е 18)"
+
 #: ../Tomboy/Addins/Backlinks/BacklinksNoteAddin.cs:38
 msgid "What links here?"
 msgstr "Бележки свързани с тази"
 
-#: ../Tomboy/Addins/Backlinks/BacklinksNoteAddin.cs:84
+#. This is a disabled placeholder item for an empty menu
+#: ../Tomboy/Addins/Backlinks/BacklinksNoteAddin.cs:85
 msgid "(none)"
 msgstr "(нищо)"
 
@@ -756,6 +779,26 @@ msgstr "Наистина ли да се изтрие тази икона?"
 msgid "If you remove an icon it is permanently lost."
 msgstr "Ако изтриете икона, тя се губи завинаги."
 
+#: ../Tomboy/Addins/Evolution/EvolutionNoteAddin.cs:273
+msgid "Cannot open email"
+msgstr "Неуспешно отваряне на е-пощата"
+
+#: ../Tomboy/Addins/ExportToHtml/ExportToHtmlApplicationAddin.cs:59
+msgid "HTML"
+msgstr "HTML"
+
+#: ../Tomboy/Addins/ExportToHtml/ExportToHtmlDialog.cs:13
+msgid "Destination for HTML Export"
+msgstr "Папка-цел за изнасяне в HTML"
+
+#: ../Tomboy/Addins/ExportToHtml/ExportToHtmlDialog.cs:23
+msgid "Export linked notes"
+msgstr "Изнасяне на свързани бележки"
+
+#: ../Tomboy/Addins/ExportToHtml/ExportToHtmlDialog.cs:28
+msgid "Include all other linked notes"
+msgstr "Включване на всички свързани бележки"
+
 #: ../Tomboy/Addins/ExportToHtml/ExportToHtmlNoteAddin.cs:67
 msgid "Export to HTML"
 msgstr "Изнасяне на тази бележка в HTML"
@@ -770,10 +813,14 @@ msgid "Note exported successfully"
 msgstr "Бележката бе успешно изнесена."
 
 #: ../Tomboy/Addins/ExportToHtml/ExportToHtmlNoteAddin.cs:132
+#: ../Tomboy/ExportAllApplicationAddin.cs:195
+#: ../Tomboy/ExportAllApplicationAddin.cs:273
 msgid "Access denied."
 msgstr "Достъпът е отказан."
 
 #: ../Tomboy/Addins/ExportToHtml/ExportToHtmlNoteAddin.cs:134
+#: ../Tomboy/ExportAllApplicationAddin.cs:200
+#: ../Tomboy/ExportAllApplicationAddin.cs:278
 msgid "Folder does not exist."
 msgstr "Папката не съществува."
 
@@ -781,22 +828,6 @@ msgstr "Папката не съществува."
 #, csharp-format
 msgid "Could not save the file \"{0}\""
 msgstr "Файлът „{0}“ не може да бъде запазен"
-
-#: ../Tomboy/Addins/ExportToHtml/ExportToHtmlDialog.cs:13
-msgid "Destination for HTML Export"
-msgstr "Папка-цел за изнасяне в HTML"
-
-#: ../Tomboy/Addins/ExportToHtml/ExportToHtmlDialog.cs:23
-msgid "Export linked notes"
-msgstr "Изнасяне на свързани бележки"
-
-#: ../Tomboy/Addins/ExportToHtml/ExportToHtmlDialog.cs:28
-msgid "Include all other linked notes"
-msgstr "Включване на всички свързани бележки"
-
-#: ../Tomboy/Addins/Evolution/EvolutionNoteAddin.cs:273
-msgid "Cannot open email"
-msgstr "Неуспех при отварянето на е-пощата"
 
 #: ../Tomboy/Addins/FileSystemSyncService/FileSystemSyncServiceAddin.cs:93
 msgid "_Folder Path:"
@@ -806,16 +837,16 @@ msgstr "_Път до папка:"
 msgid "Select Synchronization Folder..."
 msgstr "Избор на папка за синхронизация…"
 
-#: ../Tomboy/Addins/FileSystemSyncService/FileSystemSyncServiceAddin.cs:126
+#: ../Tomboy/Addins/FileSystemSyncService/FileSystemSyncServiceAddin.cs:127
 msgid "Folder path field is empty."
 msgstr "Полето за път до папката е празно."
 
-#: ../Tomboy/Addins/FileSystemSyncService/FileSystemSyncServiceAddin.cs:135
+#: ../Tomboy/Addins/FileSystemSyncService/FileSystemSyncServiceAddin.cs:136
 msgid ""
 "Specified folder path does not exist, and Tomboy was unable to create it."
 msgstr "Указаният път до папка не съществува, а Tomboy не успя да го създаде."
 
-#: ../Tomboy/Addins/FileSystemSyncService/FileSystemSyncServiceAddin.cs:213
+#: ../Tomboy/Addins/FileSystemSyncService/FileSystemSyncServiceAddin.cs:214
 msgid "Local Folder"
 msgstr "Локална папка"
 
@@ -826,7 +857,7 @@ msgstr "_Равноширок"
 #: ../Tomboy/Addins/GalagoPresence/GalagoPresenceNoteAddin.cs:244
 #, csharp-format
 msgid "Cannot contact '{0}'"
-msgstr "Неуспех при свързването с „{0}“"
+msgstr "Неуспешно свързване с „{0}“"
 
 #: ../Tomboy/Addins/GalagoPresence/GalagoPresenceNoteAddin.cs:247
 #, csharp-format
@@ -878,11 +909,11 @@ msgstr "Срещи"
 
 #: ../Tomboy/Addins/NoteOfTheDay/NoteOfTheDayPreferences.cs:16
 msgid ""
-"Change the <span weight=\"bold\">Today: Template</span> note to customize "
-"the text that new Today notes have."
+"Change the <b>Today: Template</b> note to customize the text that new Today "
+"notes have."
 msgstr ""
-"Променете бележката <span weight=\"bold\">Шаблонна бележка „Днес“</span>, за "
-"да промените текста, който се появява в новите бележки „Днес“."
+"Променете бележката <b>Шаблонна бележка „Днес“</b>, за да промените текста, "
+"който се появява в новите бележки „Днес“."
 
 #: ../Tomboy/Addins/NoteOfTheDay/NoteOfTheDayPreferences.cs:24
 msgid "_Open Today: Template"
@@ -907,26 +938,31 @@ msgstr "Страница {0} от {1}"
 msgid "dddd MM/dd/yyyy, hh:mm:ss tt"
 msgstr "dd.MM.yyyy — dddd, HH:mm"
 
+#. Adding menu item when note is opened and window created
+#: ../Tomboy/Addins/RemoveBrokenLinks/RemoveBrokenLinksAddin.cs:32
+msgid "Remove broken links"
+msgstr "Изтриване на счупените връзки"
+
 #: ../Tomboy/Addins/Sketching/SketchingNoteAddin.cs:19
 msgid "Add a sketch"
 msgstr "Добавяне на скица"
 
-#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:47
+#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:48
 #: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:59
 msgid "Se_rver:"
 msgstr "_Сървър:"
 
-#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:51
-#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:59
+#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:52
+#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:61
 msgid "User_name:"
 msgstr "_Име на потребител:"
 
-#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:55
+#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:56
 msgid "_Folder Path (optional):"
 msgstr "_Път до папката (по избор):"
 
 #. Text for label describing setup required for SSH sync addin to work
-#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:58
+#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:59
 msgid ""
 "SSH synchronization requires an existing SSH key for this server and user, "
 "added to a running SSH daemon."
@@ -934,15 +970,15 @@ msgstr ""
 "Синхронизацията по SSH изисква на демона за SSH да се даде ключ за този "
 "потребител на този сървър."
 
-#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:82
+#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:83
 msgid "Server or username field is empty."
 msgstr "Полето за сървър или потребителско име е празно."
 
-#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:130
-msgid "SSH (sshfs FUSE)"
-msgstr "SSH (потребителска файлова система sshfs)"
+#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:143
+msgid "SSH"
+msgstr "SSH"
 
-#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:179
+#: ../Tomboy/Addins/SshSyncService/SshSyncServiceAddin.cs:192
 msgid ""
 "Timeout connecting to server. Please ensure that your SSH key has been added "
 "to a running SSH daemon."
@@ -969,14 +1005,17 @@ msgstr "Завърши внасянето на лепкавите бележки
 
 #: ../Tomboy/Addins/StickyNoteImport/StickyNoteImportNoteAddin.cs:144
 #, csharp-format
-msgid "<b>{0}</b> of <b>{1}</b> Sticky Notes were successfully imported."
-msgstr "Успешно са внесени <b>{0}</b> от общо <b>{1}</b> лепкави бележки."
+msgid "<b>{0}</b> of <b>{1}</b> Sticky Note was successfully imported."
+msgid_plural ""
+"<b>{0}</b> of <b>{1}</b> Sticky Notes were successfully imported."
+msgstr[0] "Успешно е внесена <b>{0}</b> от общо <b>{1}</b> лепкави бележки."
+msgstr[1] "Успешно са внесени <b>{0}</b> от общо <b>{1}</b> лепкави бележки."
 
-#: ../Tomboy/Addins/StickyNoteImport/StickyNoteImportNoteAddin.cs:156
+#: ../Tomboy/Addins/StickyNoteImport/StickyNoteImportNoteAddin.cs:159
 msgid "Untitled"
 msgstr "Без име"
 
-#: ../Tomboy/Addins/StickyNoteImport/StickyNoteImportNoteAddin.cs:185
+#: ../Tomboy/Addins/StickyNoteImport/StickyNoteImportNoteAddin.cs:188
 msgid "Sticky Note: "
 msgstr "Лепкава бележка: "
 
@@ -1000,23 +1039,23 @@ msgstr "--- Tasque не работи ---"
 msgid "_Underline"
 msgstr "_Подчертаване"
 
-#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:55
+#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:56
 msgid "_URL:"
 msgstr "_Адрес:"
 
-#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:64
+#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:67
 msgid "_Password:"
 msgstr "_Парола:"
 
-#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:77
+#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:80
 msgid "URL, username, or password field is empty."
 msgstr "Полето за адреса, потребителското име или паролата е празно."
 
-#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:119
-msgid "WebDAV (wdfs FUSE)"
-msgstr "WebDAV (потребителска файлова система wdfs)"
+#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:133
+msgid "WebDAV"
+msgstr "WebDAV"
 
-#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:178
+#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:192
 msgid ""
 "There was an error connecting to the server.  This may be caused by using an "
 "incorrect user name and/or password."
@@ -1029,19 +1068,15 @@ msgstr ""
 #. Save configuration into GConf
 #. Preferences.Set ("/apps/tomboy/sync_wdfs_url", url ?? string.Empty);
 #. Preferences.Set ("/apps/tomboy/sync_wdfs_username", username ?? string.Empty);
-#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:254
+#: ../Tomboy/Addins/WebDavSyncService/WebDavSyncServiceAddin.cs:268
 msgid ""
 "Saving configuration to the GNOME keyring failed with the following message:"
 msgstr ""
 "Запазването на настройките в ключодържателя на GNOME бе неуспешно и върна "
 "следното съобщение:"
 
-#: ../Tomboy/Addins/WebSyncService/WebSyncServiceAddin.cs:70
-msgid "Tomboy Web"
-msgstr "Уеб сайт на Tomboy"
-
 #: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:66
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:96
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:97
 msgid "Connect to Server"
 msgstr "Свързване към сървър"
 
@@ -1050,23 +1085,23 @@ msgid "Connected"
 msgstr "Свързан"
 
 #. Translators: The web service supporting Tomboy WebSync is not responding as expected
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:125
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:156
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:170
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:126
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:157
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:171
 msgid "Server not responding. Try again later."
 msgstr "Сървърът не отговаря. Пробвайте отново по-късно."
 
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:201
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:202
 msgid "Authorization Failed, Try Again"
 msgstr "Неуспешна оторизация. Пробвайте отново"
 
 #. Translators: Title of web page presented to user after they authorized Tomboy for sync
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:210
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:211
 msgid "Tomboy Web Authorization Successful"
 msgstr "Успешна оторизация през уеб"
 
 #. Translators: Body of web page presented to user after they authorized Tomboy for sync
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:212
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:213
 msgid ""
 "Please return to the Tomboy Preferences window and press Save to start "
 "synchronizing."
@@ -1074,22 +1109,120 @@ msgstr ""
 "Върнете се в прозореца „Настройки на Tomboy“ и натиснете бутона „Запазване“, "
 "за да започне синхронизацията"
 
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:221
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:222
 msgid "Connected. Press Save to start synchronizing"
 msgstr "Успешна връзка. Натиснете „Запазване“, за да започне синхронизацията"
 
 #. Translators: The user must take action in their web browser to continue the authorization process
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:227
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:239
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:228
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:240
 msgid "Authorizing in browser (Press to reset connection)"
 msgstr "Оторизация чрез браузър (натиснете, за да преустановите връзката)"
 
 #. Translators: Sometimes a user's default browser is not set, so we recommend setting it and trying again
-#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:235
+#: ../Tomboy/Addins/WebSyncService/WebSyncPreferencesWidget.cs:236
 msgid "Set the default browser and try again"
 msgstr "Задайте стандартен браузър и пробвайте отново"
 
-#: ../Tomboy/JumpListManager.cs:96 ../Tomboy/RecentChanges.cs:83
+#: ../Tomboy/Addins/WebSyncService/WebSyncServiceAddin.cs:70
+msgid "Tomboy Web"
+msgstr "Уеб сайт на Tomboy"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:53
+#, csharp-format
+msgid "Export All Notes to {0}"
+msgstr "Изнасяне на всички бележки в {0}"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:54
+#, csharp-format
+msgid "Start exporting notes to {0}"
+msgstr "Изнасяне на всички бележки в {0}"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:58
+#, csharp-format
+msgid "Export selected notebook to {0}"
+msgstr "Изнасяне на избрания бележник в {0}"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:59
+#, csharp-format
+msgid "Start exporting notebook to {0}"
+msgstr "Изнасяне на бележник в {0}"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:65
+#: ../Tomboy/Synchronization/SyncManager.cs:161
+msgid "_Tools"
+msgstr "_Инструменти"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:68
+msgid "Export"
+msgstr "Изнасяне"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:69
+msgid "Export your notes."
+msgstr "Изнасяне на бележките ви."
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:72
+#, csharp-format
+msgid "Export All Notes To {0}"
+msgstr "Изнасяне на всички бележки в {0}"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:77
+#, csharp-format
+msgid "Export Selected Notebook To {0}"
+msgstr "Изнасяне на избрания бележник в {0}"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:153
+#, csharp-format
+msgid "All Notes {0} Export"
+msgstr "Изнасяне на всички бележки в {0}"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:193
+#: ../Tomboy/ExportAllApplicationAddin.cs:271
+msgid "Could not export, access denied."
+msgstr "Не може да се изнася — достъпът е отказан."
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:198
+#: ../Tomboy/ExportAllApplicationAddin.cs:276
+msgid "Could not export, folder does not exist."
+msgstr "Не може да се изнася — папката не съществува."
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:203
+#: ../Tomboy/ExportAllApplicationAddin.cs:281
+#, csharp-format
+msgid "Could not export: {0}"
+msgstr "Не може да се изнася: „{0}“"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:205
+#: ../Tomboy/ExportAllApplicationAddin.cs:283
+msgid "Unknown error."
+msgstr "Непозната грешка."
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:236
+#: ../Tomboy/Notebooks/Notebook.cs:237
+msgid "Unfiled Notes"
+msgstr "Некартотекирани"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:389
+#, csharp-format
+msgid "Your notes were exported to \"{0}\"."
+msgstr "Бележките бяха изнесени в „{0}“."
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:398
+msgid "Notes exported successfully"
+msgstr "Бележките бяха успешно изнесени"
+
+#: ../Tomboy/ExportAllApplicationAddin.cs:421
+#, csharp-format
+msgid "Could not save the files in \"{0}\""
+msgstr "Файловете не могат да бъдат запазени в „{0}“"
+
+#. Translators: {0} is the export type, e.g. HTML
+#: ../Tomboy/ExportAllApplicationAddin.cs:507
+#, csharp-format
+msgid "Create destination folder for {0} export"
+msgstr "Създаване на целева папка за изнасянето на {0}"
+
+#: ../Tomboy/JumpListManager.cs:96 ../Tomboy/RecentChanges.cs:85
 msgid "Search All Notes"
 msgstr "Търсене из всички бележки"
 
@@ -1142,26 +1275,6 @@ msgstr "Името на бележника е заето"
 msgid "C_reate"
 msgstr "_Създаване"
 
-#. The templateNoteTite should show the name of the
-#. notebook.  For example, if the name of the notebooks
-#. "Meetings", the templateNoteTitle should be "Meetings
-#. Notebook Template".  Translators should place the
-#. name of the notebook accordingly using "{0}".
-#. TODO: Figure out how to make this note for
-#. translators appear properly.
-#: ../Tomboy/Notebooks/Notebook.cs:79
-#, csharp-format
-msgid "{0} Notebook Template"
-msgstr "Шаблона бележка за {0}"
-
-#: ../Tomboy/Notebooks/Notebook.cs:183
-msgid "All Notes"
-msgstr "Всички бележки"
-
-#: ../Tomboy/Notebooks/Notebook.cs:215
-msgid "Unfiled Notes"
-msgstr "Некартотекирани"
-
 #: ../Tomboy/Notebooks/NotebookApplicationAddin.cs:48
 msgid "Note_books"
 msgstr "_Бележници"
@@ -1201,15 +1314,35 @@ msgid "Delete the selected notebook"
 msgstr "Изтриване на избрания бележник"
 
 #: ../Tomboy/Notebooks/NotebookApplicationAddin.cs:68
-#: ../Tomboy/RecentChanges.cs:260
+#: ../Tomboy/RecentChanges.cs:276
 msgid "Notebooks"
 msgstr "Бележници"
 
-#: ../Tomboy/Notebooks/NotebookManager.cs:361
+#. The templateNoteTite should show the name of the
+#. notebook.  For example, if the name of the notebooks
+#. "Meetings", the templateNoteTitle should be "Meetings
+#. Notebook Template".  Translators should place the
+#. name of the notebook accordingly using "{0}".
+#. TODO: Figure out how to make this note for
+#. translators appear properly.
+#: ../Tomboy/Notebooks/Notebook.cs:79
+#, csharp-format
+msgid "{0} Notebook Template"
+msgstr "Шаблона бележка за {0}"
+
+#: ../Tomboy/Notebooks/Notebook.cs:153
+msgid "New Note"
+msgstr "Нова бележка"
+
+#: ../Tomboy/Notebooks/Notebook.cs:205
+msgid "All Notes"
+msgstr "Всички бележки"
+
+#: ../Tomboy/Notebooks/NotebookManager.cs:367
 msgid "Really delete this notebook?"
 msgstr "Наистина ли да се изтрие този бележник?"
 
-#: ../Tomboy/Notebooks/NotebookManager.cs:363
+#: ../Tomboy/Notebooks/NotebookManager.cs:369
 msgid ""
 "The notes that belong to this notebook will not be deleted, but they will no "
 "longer be associated with this notebook.  This action cannot be undone."
@@ -1230,34 +1363,40 @@ msgstr "Няма бележници"
 msgid "New \"{0}\" Note"
 msgstr "Нова бележка за {0}"
 
-#: ../Tomboy/Notebooks/NotebookNoteAddin.cs:46
+#: ../Tomboy/Notebooks/NotebookNoteAddin.cs:56
 msgid "Place this note into a notebook"
 msgstr "Поставяне на бележката в бележник"
 
-#: ../Tomboy/Notebooks/NotebookNoteAddin.cs:127
+#: ../Tomboy/Notebooks/NotebookNoteAddin.cs:148
 msgid "Notebook"
 msgstr "Бележник"
 
-#: ../Tomboy/Notebooks/NotebookNoteAddin.cs:156
+#: ../Tomboy/Notebooks/NotebookNoteAddin.cs:177
 msgid "_New notebook..."
 msgstr "Но_в бележник…"
 
-#: ../Tomboy/Note.cs:1568
-msgid "Really delete this note?"
-msgstr "Наистина ли да се изтрие тази бележка?"
+#: ../Tomboy/Note.cs:515 ../Tomboy/NoteManager.cs:475
+#, csharp-format
+msgid "New Note {0}"
+msgstr "Нова бележка {0}"
 
-#: ../Tomboy/Note.cs:1571
+#: ../Tomboy/Note.cs:1607
+#, csharp-format
+msgid "Really delete \"{0}\"?"
+msgstr "Наистина ли да се изтрие тази {0} бележка?"
+
+#: ../Tomboy/Note.cs:1610
 #, csharp-format
 msgid "Really delete this {0} note?"
 msgid_plural "Really delete these {0} notes?"
 msgstr[0] "Наистина ли да се изтрие тази {0} бележка?"
 msgstr[1] "Наистина ли да се изтрият тези {0} бележки?"
 
-#: ../Tomboy/Note.cs:1582
+#: ../Tomboy/Note.cs:1621
 msgid "If you delete a note it is permanently lost."
 msgstr "Ако изтриете бележка, тя се губи завинаги."
 
-#: ../Tomboy/Note.cs:1616
+#: ../Tomboy/Note.cs:1655
 #, csharp-format
 msgid ""
 "An error occurred while saving your notes. Please check that you have "
@@ -1268,13 +1407,13 @@ msgstr ""
 "достатъчно свободно място на диска и необходимите права за папката „{0}“. "
 "Подробностите за грешката са във файла „{1}“."
 
-#: ../Tomboy/Note.cs:1632
+#: ../Tomboy/Note.cs:1671
 msgid "Error saving note data."
 msgstr "Грешка при запазване на данните на бележка."
 
 #. New Note Template
 #. Translators: This is 'New Note' Template, not New 'Note Template'
-#: ../Tomboy/NoteManager.cs:21 ../Tomboy/PreferencesDialog.cs:256
+#: ../Tomboy/NoteManager.cs:21 ../Tomboy/PreferencesDialog.cs:257
 msgid "New Note Template"
 msgstr "Нова шаблонна бележка"
 
@@ -1400,7 +1539,7 @@ msgstr ""
 "ще се свържат автоматично.</note-content>"
 
 #. Attempt to find an existing Start Here note
-#: ../Tomboy/NoteManager.cs:299 ../Tomboy/NoteManager.cs:369
+#: ../Tomboy/NoteManager.cs:299 ../Tomboy/NoteManager.cs:395
 msgid "Start Here"
 msgstr "Начална бележка"
 
@@ -1408,14 +1547,9 @@ msgstr "Начална бележка"
 msgid "Using Links in Tomboy"
 msgstr "Създаване на връзки в Tomboy"
 
-#: ../Tomboy/NoteManager.cs:449
-#, csharp-format
-msgid "New Note {0}"
-msgstr "Нова бележка {0}"
-
 #. Use a simple "Describe..." body and highlight
 #. it so it can be easily overwritten
-#: ../Tomboy/NoteManager.cs:522 ../Tomboy/NoteManager.cs:615
+#: ../Tomboy/NoteManager.cs:543 ../Tomboy/NoteManager.cs:646
 msgid "Describe your new note here."
 msgstr "Тук опишете новата бележка."
 
@@ -1479,139 +1613,164 @@ msgstr "Връзките да не се преименуват _никога"
 msgid "Alwa_ys rename links"
 msgstr "Връзките да се преименуват _винаги"
 
-#: ../Tomboy/NoteWindow.cs:58
+#: ../Tomboy/NoteWindow.cs:59
 msgid "Find in This Note"
 msgstr "Търсене в тази бележка"
 
-#: ../Tomboy/NoteWindow.cs:361
+#: ../Tomboy/NoteWindow.cs:366
 msgid "_Link to New Note"
 msgstr "_Връзка към нова бележка"
 
-#: ../Tomboy/NoteWindow.cs:373
+#: ../Tomboy/NoteWindow.cs:378
 msgid "Te_xt"
 msgstr "Т_екст"
 
-#: ../Tomboy/NoteWindow.cs:381
+#: ../Tomboy/NoteWindow.cs:386
 msgid "_Find in This Note"
 msgstr "_Търсене в тази бележка"
 
-#: ../Tomboy/NoteWindow.cs:396
+#: ../Tomboy/NoteWindow.cs:401
 msgid "Clos_e All Notes"
 msgstr "Затваряне на вси_чки бележки"
 
-#: ../Tomboy/NoteWindow.cs:436
+#: ../Tomboy/NoteWindow.cs:441
 msgid "Search"
 msgstr "Търсене"
 
-#: ../Tomboy/NoteWindow.cs:439
-msgid "Search your notes (Ctrl-Shift-F)"
-msgstr "Търсене в бележките (Ctrl-Shift-F)"
+#. TODO: If we ever add a way to customize internal keybindings, this will need to change
+#: ../Tomboy/NoteWindow.cs:445
+msgid "Search your notes"
+msgstr "Търсене из бележките ви"
 
-#: ../Tomboy/NoteWindow.cs:451
+#: ../Tomboy/NoteWindow.cs:457
 msgid "Link"
 msgstr "Връзка"
 
-#: ../Tomboy/NoteWindow.cs:457
-msgid "Link selected text to a new note (Ctrl-L)"
-msgstr "Свързване на избрания текст към друга бележка (Ctrl-L)"
+#: ../Tomboy/NoteWindow.cs:464
+msgid "Link selected text to a new note"
+msgstr "Свързване на избрания текст към нова бележка"
 
-#: ../Tomboy/NoteWindow.cs:470
+#: ../Tomboy/NoteWindow.cs:477
 msgid "_Text"
 msgstr "Т_екст"
 
-#: ../Tomboy/NoteWindow.cs:475
+#: ../Tomboy/NoteWindow.cs:482
 msgid "Set properties of text"
 msgstr "Настройване свойствата на текста"
 
-#: ../Tomboy/NoteWindow.cs:480
+#: ../Tomboy/NoteWindow.cs:487
 msgid "T_ools"
 msgstr "_Инструменти"
 
-#: ../Tomboy/NoteWindow.cs:484
+#: ../Tomboy/NoteWindow.cs:491
 msgid "Use tools on this note"
 msgstr "Използване на инструменти в тази бележка"
 
-#: ../Tomboy/NoteWindow.cs:492
+#: ../Tomboy/NoteWindow.cs:499
 msgid "Delete this note"
 msgstr "Изтриване на тази бележка"
 
-#: ../Tomboy/NoteWindow.cs:500 ../Tomboy/Synchronization/SyncManager.cs:163
+#: ../Tomboy/NoteWindow.cs:507 ../Tomboy/Synchronization/SyncManager.cs:163
 msgid "Synchronize Notes"
 msgstr "Синхронизация на бележките"
 
-#: ../Tomboy/NoteWindow.cs:562
+#: ../Tomboy/NoteWindow.cs:565
+msgid ""
+"This note is a template note. It determines the default content of regular "
+"notes, and will not show up in the note menu or search window."
+msgstr ""
+"Това е шаблон на бележка. С нея се определя съдържанието на стандартните "
+"бележки и не можете да я намерите в менюто „Бележка“ или при търсене."
+
+#: ../Tomboy/NoteWindow.cs:571
+msgid "Convert to regular note"
+msgstr "Преобразуване в стандартна бележка"
+
+#: ../Tomboy/NoteWindow.cs:576
+msgid "Save Si_ze"
+msgstr "Запазване на ра_змера"
+
+#: ../Tomboy/NoteWindow.cs:585
+msgid "Save Se_lection"
+msgstr "Запазване на избо_ра"
+
+#: ../Tomboy/NoteWindow.cs:594
+msgid "Save _Title"
+msgstr "Запазване на и_мето"
+
+#: ../Tomboy/NoteWindow.cs:639
 msgid "_Find..."
 msgstr "_Търсене…"
 
-#: ../Tomboy/NoteWindow.cs:573
+#: ../Tomboy/NoteWindow.cs:650
 msgid "Find _Next"
 msgstr "_Следващо"
 
-#: ../Tomboy/NoteWindow.cs:586
+#: ../Tomboy/NoteWindow.cs:663
 msgid "Find _Previous"
 msgstr "_Предишно"
 
-#: ../Tomboy/NoteWindow.cs:674
+#: ../Tomboy/NoteWindow.cs:751
 msgid "Cannot create note"
 msgstr "Неуспешно създаване на бележка"
 
-#: ../Tomboy/NoteWindow.cs:755
+#: ../Tomboy/NoteWindow.cs:832
 msgid "_Find:"
 msgstr "_Търсене:"
 
-#: ../Tomboy/NoteWindow.cs:766
+#: ../Tomboy/NoteWindow.cs:843
 msgid "_Previous"
 msgstr "_Предишна поява"
 
-#: ../Tomboy/NoteWindow.cs:775
+#: ../Tomboy/NoteWindow.cs:852
 msgid "_Next"
 msgstr "_Следваща поява"
 
-#: ../Tomboy/NoteWindow.cs:1258
+#: ../Tomboy/NoteWindow.cs:1335
 msgid "_Bold"
 msgstr "_Получерно"
 
-#: ../Tomboy/NoteWindow.cs:1270
+#: ../Tomboy/NoteWindow.cs:1347
 msgid "_Italic"
 msgstr "_Курсивно"
 
-#: ../Tomboy/NoteWindow.cs:1282
+#: ../Tomboy/NoteWindow.cs:1359
 msgid "_Strikeout"
 msgstr "_Зачеркнато"
 
-#: ../Tomboy/NoteWindow.cs:1294
+#: ../Tomboy/NoteWindow.cs:1371
 msgid "_Highlight"
 msgstr "О_цветяване"
 
-#: ../Tomboy/NoteWindow.cs:1307
+#: ../Tomboy/NoteWindow.cs:1384
 msgid "Font Size"
 msgstr "Размер на шрифта"
 
-#: ../Tomboy/NoteWindow.cs:1310
+#: ../Tomboy/NoteWindow.cs:1387
 msgid "_Normal"
 msgstr "_Нормален"
 
-#: ../Tomboy/NoteWindow.cs:1327
+#: ../Tomboy/NoteWindow.cs:1404
 msgid "Hu_ge"
 msgstr "Ог_ромен"
 
-#: ../Tomboy/NoteWindow.cs:1335
+#: ../Tomboy/NoteWindow.cs:1412
 msgid "_Large"
 msgstr "_Голям"
 
-#: ../Tomboy/NoteWindow.cs:1343
+#: ../Tomboy/NoteWindow.cs:1420
 msgid "S_mall"
 msgstr "_Малък"
 
-#: ../Tomboy/NoteWindow.cs:1352
+#: ../Tomboy/NoteWindow.cs:1429
 msgid "Increase Font Size"
 msgstr "Увеличаване на шрифта"
 
-#: ../Tomboy/NoteWindow.cs:1370
+#: ../Tomboy/NoteWindow.cs:1447
 msgid "Decrease Font Size"
 msgstr "Намаляване на шрифта"
 
-#: ../Tomboy/NoteWindow.cs:1390
+#: ../Tomboy/NoteWindow.cs:1467
 msgid "Bullets"
 msgstr "Поточкови списъци"
 
@@ -1631,11 +1790,11 @@ msgstr "Синхронизация"
 msgid "Add-ins"
 msgstr "Приставки"
 
-#: ../Tomboy/PreferencesDialog.cs:173
+#: ../Tomboy/PreferencesDialog.cs:174
 msgid "_Spell check while typing"
 msgstr "_Автоматична проверка на правописа"
 
-#: ../Tomboy/PreferencesDialog.cs:182
+#: ../Tomboy/PreferencesDialog.cs:183
 msgid ""
 "Misspellings will be underlined in red, with correct spelling suggestions "
 "shown in the context menu."
@@ -1644,11 +1803,11 @@ msgstr ""
 "предложения за корекция."
 
 #. WikiWords...
-#: ../Tomboy/PreferencesDialog.cs:193
+#: ../Tomboy/PreferencesDialog.cs:194
 msgid "Highlight _WikiWords"
 msgstr "_Отбелязване на УикиДуми"
 
-#: ../Tomboy/PreferencesDialog.cs:201
+#: ../Tomboy/PreferencesDialog.cs:202
 msgid ""
 "Enable this option to highlight words <b>ThatLookLikeThis</b>. Clicking the "
 "word will create a note with that name."
@@ -1658,31 +1817,31 @@ msgstr ""
 "същото име."
 
 #. Auto bulleted list
-#: ../Tomboy/PreferencesDialog.cs:208
+#: ../Tomboy/PreferencesDialog.cs:209
 msgid "Enable auto-_bulleted lists"
 msgstr "Включване на _поточковите списъци"
 
-#: ../Tomboy/PreferencesDialog.cs:217
+#: ../Tomboy/PreferencesDialog.cs:218
 msgid "Use custom _font"
 msgstr "_Избор на личен шрифт"
 
-#: ../Tomboy/PreferencesDialog.cs:235
+#: ../Tomboy/PreferencesDialog.cs:236
 msgid "When renaming a linked note: "
 msgstr "При преименуването на болежка, към която има връзки: "
 
-#: ../Tomboy/PreferencesDialog.cs:238
+#: ../Tomboy/PreferencesDialog.cs:239
 msgid "Ask me what to do"
 msgstr "Да се пита за действие"
 
-#: ../Tomboy/PreferencesDialog.cs:239
+#: ../Tomboy/PreferencesDialog.cs:240
 msgid "Never rename links"
 msgstr "Връзките да не се преименуват никога"
 
-#: ../Tomboy/PreferencesDialog.cs:240
+#: ../Tomboy/PreferencesDialog.cs:241
 msgid "Always rename links"
 msgstr "Връзките да се преименуват винаги"
 
-#: ../Tomboy/PreferencesDialog.cs:260
+#: ../Tomboy/PreferencesDialog.cs:261
 msgid ""
 "Use the new note template to specify the text that should be used when "
 "creating a new note."
@@ -1690,16 +1849,16 @@ msgstr ""
 "Използвайте шаблона за нови бележки, за да укажете текста, който трябва да "
 "се използва при създаването на нова бележка."
 
-#: ../Tomboy/PreferencesDialog.cs:269
+#: ../Tomboy/PreferencesDialog.cs:270
 msgid "Open New Note Template"
 msgstr "Отваряне на нова шаблонна бележка"
 
 #. Hotkeys...
-#: ../Tomboy/PreferencesDialog.cs:326
+#: ../Tomboy/PreferencesDialog.cs:327
 msgid "Listen for _Hotkeys"
 msgstr "_Следене за бързи клавиши"
 
-#: ../Tomboy/PreferencesDialog.cs:335
+#: ../Tomboy/PreferencesDialog.cs:336
 msgid ""
 "Hotkeys allow you to quickly access your notes from anywhere with a "
 "keypress. Example Hotkeys: <b>&lt;Control&gt;&lt;Shift&gt;F11</b>, <b>&lt;"
@@ -1710,82 +1869,82 @@ msgstr ""
 "N</b>"
 
 #. Show notes menu keybinding...
-#: ../Tomboy/PreferencesDialog.cs:355
+#: ../Tomboy/PreferencesDialog.cs:356
 msgid "Show notes _menu"
 msgstr "Показване на _менюто за бележки"
 
 #. Open Start Here keybinding...
-#: ../Tomboy/PreferencesDialog.cs:372
+#: ../Tomboy/PreferencesDialog.cs:373
 msgid "Open \"_Start Here\""
 msgstr "Отваряне на „_Начална бележка“"
 
 #. Create new note keybinding...
-#: ../Tomboy/PreferencesDialog.cs:389
+#: ../Tomboy/PreferencesDialog.cs:390
 msgid "Create _new note"
 msgstr "Създаване на нова _бележка"
 
 #. Open Search All Notes window keybinding...
-#: ../Tomboy/PreferencesDialog.cs:406
+#: ../Tomboy/PreferencesDialog.cs:407
 msgid "Open \"Search _All Notes\""
 msgstr "Отваряне на „Т_ърсене из всички бележки“"
 
-#: ../Tomboy/PreferencesDialog.cs:433
+#: ../Tomboy/PreferencesDialog.cs:434
 msgid "Ser_vice:"
 msgstr "_Услуга:"
 
-#: ../Tomboy/PreferencesDialog.cs:486 ../Tomboy/PreferencesDialog.cs:1113
+#: ../Tomboy/PreferencesDialog.cs:487 ../Tomboy/PreferencesDialog.cs:1106
 msgid "Not configurable"
 msgstr "Не се настройва"
 
-#: ../Tomboy/PreferencesDialog.cs:512
+#: ../Tomboy/PreferencesDialog.cs:513
 msgid "Automaticall_y Sync in Background Every"
 msgstr "_Автоматично фоново синхронизиране на всеки"
 
 #. Translators: See above comment for details on
 #. this string.
-#: ../Tomboy/PreferencesDialog.cs:518
+#: ../Tomboy/PreferencesDialog.cs:519
 msgid "Minutes"
 msgstr "минути"
 
 #. "Advanced..." button to bring up extra sync config dialog
-#: ../Tomboy/PreferencesDialog.cs:540
+#: ../Tomboy/PreferencesDialog.cs:541
 msgid "_Advanced..."
 msgstr "_Допълнителни…"
 
-#: ../Tomboy/PreferencesDialog.cs:601
+#: ../Tomboy/PreferencesDialog.cs:602
 msgid "The following add-ins are installed"
 msgstr "Инсталирани са следните приставки"
 
-#: ../Tomboy/PreferencesDialog.cs:622
+#: ../Tomboy/PreferencesDialog.cs:623
 msgid "Get More Add-Ins..."
 msgstr "Изтегляне на още приставки…"
 
-#: ../Tomboy/PreferencesDialog.cs:648
+#: ../Tomboy/PreferencesDialog.cs:641
 msgid "_Enable"
 msgstr "_Включване"
 
-#: ../Tomboy/PreferencesDialog.cs:654
+#: ../Tomboy/PreferencesDialog.cs:647
 msgid "_Disable"
 msgstr "_Изключване"
 
-#: ../Tomboy/PreferencesDialog.cs:785
+#: ../Tomboy/PreferencesDialog.cs:778
 msgid "Not Implemented"
 msgstr "Не е реализирано"
 
-#: ../Tomboy/PreferencesDialog.cs:799
+#: ../Tomboy/PreferencesDialog.cs:792
 #, csharp-format
 msgid "{0} Preferences"
 msgstr "Настройки на {0}"
 
-#: ../Tomboy/PreferencesDialog.cs:938
+#: ../Tomboy/PreferencesDialog.cs:931
 msgid "Choose Note Font"
 msgstr "Избор на шрифт за бележките"
 
-#: ../Tomboy/PreferencesDialog.cs:982
+#: ../Tomboy/PreferencesDialog.cs:975
 msgid "Other Synchronization Options"
 msgstr "Други настройки на синхронизацията"
 
-#: ../Tomboy/PreferencesDialog.cs:988
+#: ../Tomboy/PreferencesDialog.cs:981
 msgid ""
 "When a conflict is detected between a local note and a note on the "
 "configured synchronization server:"
@@ -1793,23 +1952,23 @@ msgstr ""
 "Когато локалната версия на бележка е в конфликт с тази на настроения сървър "
 "за синхронизация:"
 
-#: ../Tomboy/PreferencesDialog.cs:995
+#: ../Tomboy/PreferencesDialog.cs:988
 msgid "Always ask me what to do."
 msgstr "Винаги да се пита за действие."
 
-#: ../Tomboy/PreferencesDialog.cs:999
+#: ../Tomboy/PreferencesDialog.cs:992
 msgid "Rename my local note."
 msgstr "Локалната бележка да се преименува."
 
-#: ../Tomboy/PreferencesDialog.cs:1003
+#: ../Tomboy/PreferencesDialog.cs:996
 msgid "Replace my local note with the server's update."
 msgstr "Бележката на сървъра да замени локалната."
 
-#: ../Tomboy/PreferencesDialog.cs:1149
-msgid "WARNING: Are you sure?"
-msgstr "ПРЕДУПРЕЖДЕНИЕ: Сигурни ли сте?"
+#: ../Tomboy/PreferencesDialog.cs:1142
+msgid "Are you sure?"
+msgstr "Сигурни ли сте?"
 
-#: ../Tomboy/PreferencesDialog.cs:1151
+#: ../Tomboy/PreferencesDialog.cs:1144
 msgid ""
 "Clearing your synchronization settings is not recommended.  You may be "
 "forced to synchronize all of your notes again when you save new settings."
@@ -1818,313 +1977,116 @@ msgstr ""
 "наложи наново да синхронизирате всичките си бележки, когато запазите новите "
 "си настройки"
 
-#: ../Tomboy/PreferencesDialog.cs:1164
+#: ../Tomboy/PreferencesDialog.cs:1157
 msgid "Resetting Synchronization Settings"
 msgstr "Изчистване на настройките на синхронизацията"
 
-#: ../Tomboy/PreferencesDialog.cs:1166
+#: ../Tomboy/PreferencesDialog.cs:1159
 msgid ""
 "You have disabled the configured synchronization service.  Your "
 "synchronization settings will now be cleared.  You may be forced to "
-"synchronize all of your notes again when you save new settings"
+"synchronize all of your notes again when you save new settings."
 msgstr ""
 "Изключили сте услугата за автоматична синхронизация. Настройките ви за "
 "автоматична синхронизация ще бъдат изчистени. Може да се наложи наново да "
 "синхронизирате всичките си бележки, когато запазите новите си настройки"
 
-#: ../Tomboy/PreferencesDialog.cs:1244
-msgid "Success! You're connected!"
-msgstr "Свързването е успешно!"
+#: ../Tomboy/PreferencesDialog.cs:1237
+msgid "Connection successful"
+msgstr "Успешно свързване"
 
-#: ../Tomboy/PreferencesDialog.cs:1246
+#: ../Tomboy/PreferencesDialog.cs:1239
 msgid ""
 "Tomboy is ready to synchronize your notes. Would you like to synchronize "
 "them now?"
 msgstr ""
 "Tomboy може да синхронизира бележките. Искате ли да ги синхронизирате сега?"
 
-#: ../Tomboy/PreferencesDialog.cs:1269
+#: ../Tomboy/PreferencesDialog.cs:1262
 #, csharp-format
 msgid ""
-"Sorry, but something went wrong.  Please check your information and try "
-"again.  The {0} might be useful too."
+"Please check your information and try again.  The log file {0} may contain "
+"more information about the error."
 msgstr ""
-"За жалост нещо се обърка. Проверете настройките и опитайте отново. "
-"Погледнете съдържанието на файла „{0}“."
+"Проверете настройките и опитайте отново. Погледнете съдържанието на "
+"журналния файл „{0}“ за грешката."
 
-#: ../Tomboy/PreferencesDialog.cs:1282
-msgid "Error connecting :("
+#: ../Tomboy/PreferencesDialog.cs:1274
+msgid "Error connecting"
 msgstr "Грешка при свързване"
 
-#: ../Tomboy/PreferencesDialog.cs:1358
+#: ../Tomboy/PreferencesDialog.cs:1357
 msgid "Version:"
 msgstr "Версия:"
 
-#: ../Tomboy/PreferencesDialog.cs:1365
+#: ../Tomboy/PreferencesDialog.cs:1364
 msgid "Author:"
 msgstr "Автор:"
 
-#: ../Tomboy/PreferencesDialog.cs:1372
+#: ../Tomboy/PreferencesDialog.cs:1371
 msgid "Copyright:"
 msgstr "Авторски права:"
 
-#: ../Tomboy/PreferencesDialog.cs:1378
+#: ../Tomboy/PreferencesDialog.cs:1377
 msgid "Add-in Dependencies:"
 msgstr "Зависимости на приставката:"
 
-#: ../Tomboy/RecentChanges.cs:98
+#: ../Tomboy/RecentChanges.cs:100
 msgid "_Search:"
 msgstr "_Търсене:"
 
-#: ../Tomboy/RecentChanges.cs:331
+#: ../Tomboy/RecentChanges.cs:350
 msgid "Note"
 msgstr "Бележка"
 
-#: ../Tomboy/RecentChanges.cs:353
+#: ../Tomboy/RecentChanges.cs:373
 msgid "Last Changed"
 msgstr "Последно променени"
 
-#: ../Tomboy/RecentChanges.cs:484
+#: ../Tomboy/RecentChanges.cs:512
 msgid "Matches"
 msgstr "Съвпадения"
 
-#: ../Tomboy/RecentChanges.cs:535
+#: ../Tomboy/RecentChanges.cs:563
+msgid "Title match"
+msgstr "Съвпадение на заглавието"
+
+#: ../Tomboy/RecentChanges.cs:566
 #, csharp-format
 msgid "{0} match"
 msgid_plural "{0} matches"
 msgstr[0] "({0} съвпадение)"
 msgstr[1] "({0} съвпадения)"
 
-#: ../Tomboy/RecentChanges.cs:549
+#: ../Tomboy/RecentChanges.cs:580
 #, csharp-format
 msgid "Total: {0} note"
 msgid_plural "Total: {0} notes"
 msgstr[0] "Общо: {0} бележка"
 msgstr[1] "Общо: {0} бележки"
 
-#: ../Tomboy/RecentChanges.cs:560
+#: ../Tomboy/RecentChanges.cs:591
 #, csharp-format
 msgid "Matches: {0} note"
 msgid_plural "Matches: {0} notes"
 msgstr[0] "Съвпадения: {0} бележка"
 msgstr[1] "Съвпадения: {0} бележки"
 
-#: ../Tomboy/RecentChanges.cs:696
+#: ../Tomboy/RecentChanges.cs:603
+msgid ""
+"No results found in the selected notebook.\n"
+"Click here to search across all notes."
+msgstr ""
+"Не са открити резултати в избрания бележник.\n"
+"Натиснете тук, за да търсите във всички бележки."
+
+#: ../Tomboy/RecentChanges.cs:609
+msgid "Click here to search across all notebooks"
+msgstr "Натиснете тук, за да търсите във всички бележки."
+
+#: ../Tomboy/RecentChanges.cs:775
 msgid "Notes"
 msgstr "Бележки"
-
-#: ../Tomboy/Tomboy.cs:251
-msgid "Cannot create new note"
-msgstr "Неуспех при създаването на нова бележка"
-
-#: ../Tomboy/Tomboy.cs:317
-msgid "Primary Development:"
-msgstr "Основна разработка:"
-
-#: ../Tomboy/Tomboy.cs:323
-msgid "Contributors:"
-msgstr "Сътрудници:"
-
-#: ../Tomboy/Tomboy.cs:401
-msgid "translator-credits"
-msgstr ""
-"Владимир „Kaladan“ Петков <kaladan@gmail.com>\n"
-"Ростислав „zbrox“ Райков <zbrox@i-space.org>\n"
-"Александър Шопов <ash@kambanaria.org>\n"
-"\n"
-"Проектът за превод на GNOME има нужда от подкрепа.\n"
-"Научете повече за нас на http://gnome.cult.bg\n"
-"Докладвайте за грешки на http://gnome.cult.bg/bugs"
-
-#: ../Tomboy/Tomboy.cs:410
-msgid ""
-"Copyright © 2004-2007 Alex Graveley\n"
-"Copyright © 2004-2010 Others\n"
-msgstr ""
-"Авторски права: © 2004-2007 Alex Graveley\n"
-"Авторски права: © 2004-2010 Други\n"
-
-#: ../Tomboy/Tomboy.cs:412
-msgid "A simple and easy to use desktop note-taking application."
-msgstr "Програма за просто и лесно взимане на бележки."
-
-#: ../Tomboy/Tomboy.cs:422
-msgid "Homepage"
-msgstr "Домашна страница"
-
-#: ../Tomboy/Tomboy.cs:540
-msgid ""
-"Tomboy: A simple, easy to use desktop note-taking application.\n"
-"Copyright (C) 2004-2006 Alex Graveley <alex@beatniksoftware.com>\n"
-"\n"
-msgstr ""
-"Tomboy: Проста и лесна програма за водене на бележки.\n"
-"Авторски права: © 2004-2006 Alex Graveley <alex@beatniksoftware.com>\n"
-"\n"
-
-#: ../Tomboy/Tomboy.cs:552
-msgid ""
-"Usage:\n"
-"  --version\t\t\tPrint version information.\n"
-"  --help\t\t\tPrint this usage message.\n"
-"  --note-path [path]\t\tLoad/store note data in this directory.\n"
-"  --search [text]\t\tOpen the search all notes window with the search text.\n"
-msgstr ""
-"Начин на употреба:\n"
-"  --version                         Показване на информация за версията.\n"
-"  --help                            Показване на това съобщение.\n"
-"  --note-path [път]                 Зареждане/съхранение на данните за "
-"бележката\n"
-"                                    в тази папка.\n"
-"  --search [текст]                  Отваряне на прозореца за търсене във "
-"всички\n"
-"                                    бележки на този текст.\n"
-
-#: ../Tomboy/Tomboy.cs:562
-msgid ""
-"  --new-note\t\t\tCreate and display a new note.\n"
-"  --new-note [title]\t\tCreate and display a new note, with a title.\n"
-"  --open-note [title/url]\tDisplay the existing note matching title.\n"
-"  --start-here\t\t\tDisplay the 'Start Here' note.\n"
-"  --highlight-search [text]\tSearch and highlight text in the opened note.\n"
-msgstr ""
-"  --new-note                        Създаване и показване на нова бележка.\n"
-"  --new-note [заглавие]             Създаване и показване на нова бележка "
-"със\n"
-"                                    заглавие.\n"
-"  --open-note [заглавие/адрес]      Показване на бележка с това заглавие.\n"
-"  --start-here                      Показване на „Начална бележка“.\n"
-"  --highlight-search [текст]        Търсене и отбелязване на текст в "
-"отворената\n"
-"                                    бележка.\n"
-
-#: ../Tomboy/Tomboy.cs:576
-#, csharp-format
-msgid "Version {0}"
-msgstr "Версия {0}"
-
-#: ../Tomboy/Tray.cs:68
-msgid " (new)"
-msgstr "(ново)"
-
-#: ../Tomboy/Tray.cs:293
-msgid "_About Tomboy"
-msgstr "_Относно Tomboy"
-
-#: ../Tomboy/Utils.cs:189
-msgid ""
-"The \"Tomboy Notes Manual\" could not be found.  Please verify that your "
-"installation has been completed successfully."
-msgstr "Ръководството на Tomboy не бе открито. Проверете инсталацията си."
-
-#: ../Tomboy/Utils.cs:198
-msgid "Help not found"
-msgstr "Помощта не е открита"
-
-#: ../Tomboy/Utils.cs:214
-msgid "Cannot open location"
-msgstr "Местоположението не може да се отвори"
-
-#: ../Tomboy/Utils.cs:236
-#, csharp-format
-msgid "Today, {0}"
-msgstr "Днес, {0}"
-
-#: ../Tomboy/Utils.cs:238
-msgid "Today"
-msgstr "Днес"
-
-#: ../Tomboy/Utils.cs:242
-#, csharp-format
-msgid "Yesterday, {0}"
-msgstr "Вчера, {0}"
-
-#: ../Tomboy/Utils.cs:244
-msgid "Yesterday"
-msgstr "Вчера"
-
-#: ../Tomboy/Utils.cs:249
-#, csharp-format
-msgid "{0} day ago, {1}"
-msgid_plural "{0} days ago, {1}"
-msgstr[0] "преди {0} ден, {1}"
-msgstr[1] "преди {0} дни, {1}"
-
-#: ../Tomboy/Utils.cs:253
-#, csharp-format
-msgid "{0} day ago"
-msgid_plural "{0} days ago"
-msgstr[0] "преди {0} ден"
-msgstr[1] "преди {0} дни"
-
-#: ../Tomboy/Utils.cs:259
-#, csharp-format
-msgid "Tomorrow, {0}"
-msgstr "Утре, {0}"
-
-#: ../Tomboy/Utils.cs:261
-msgid "Tomorrow"
-msgstr "Утре"
-
-#: ../Tomboy/Utils.cs:266
-#, csharp-format
-msgid "In {0} day, {1}"
-msgid_plural "In {0} days, {1}"
-msgstr[0] "След {0} ден, {1}"
-msgstr[1] "След {0} дни, {1}"
-
-#: ../Tomboy/Utils.cs:270
-#, csharp-format
-msgid "In {0} day"
-msgid_plural "In {0} days"
-msgstr[0] "След {0} ден"
-msgstr[1] "След {0} дни"
-
-#: ../Tomboy/Utils.cs:275
-msgid "MMMM d, h:mm tt"
-msgstr "d MMMM, HH:mm"
-
-#: ../Tomboy/Utils.cs:276
-msgid "MMMM d"
-msgstr "d MMMM"
-
-#: ../Tomboy/Utils.cs:278
-msgid "No Date"
-msgstr "Без дата"
-
-#: ../Tomboy/Utils.cs:281
-msgid "MMMM d yyyy, h:mm tt"
-msgstr "d MMMM yyyy, HH:mm"
-
-#: ../Tomboy/Utils.cs:282
-msgid "MMMM d yyyy"
-msgstr "d MMMM yyyy"
-
-#: ../Tomboy/Watchers.cs:155
-#, csharp-format
-msgid "(Untitled {0})"
-msgstr "(Без име {0})"
-
-#: ../Tomboy/Watchers.cs:189
-#, csharp-format
-msgid ""
-"A note with the title <b>{0}</b> already exists. Please choose another name "
-"for this note before continuing."
-msgstr ""
-"Бележка със заглавие <b>{0}</b> вече съществува. Изберете друго име за тази "
-"бележка преди да продължите."
-
-#: ../Tomboy/Watchers.cs:204
-msgid "Note title taken"
-msgstr "Прието е заглавието на бележката"
-
-#: ../Tomboy/Watchers.cs:549
-msgid "_Copy Link Address"
-msgstr "_Копиране на адреса на връзката"
-
-#: ../Tomboy/Watchers.cs:554
-msgid "_Open Link"
-msgstr "_Отваряне на връзка"
 
 #: ../Tomboy/Synchronization/FuseSyncServiceAddin.cs:94
 #, csharp-format
@@ -2361,10 +2323,6 @@ msgstr ""
 "Версията върху сървъра на „{0}“ е в конфликт с локалната версия на "
 "бележката. Какво искате да се случи с локалната бележка?"
 
-#: ../Tomboy/Synchronization/SyncManager.cs:161
-msgid "_Tools"
-msgstr "_Инструменти"
-
 #: ../Tomboy/Synchronization/SyncUtils.cs:119
 #: ../Tomboy/Synchronization/SyncUtils.cs:163
 msgid "Could not enable FUSE"
@@ -2400,3 +2358,219 @@ msgstr ""
 "За да не получавате това съобщение в бъдеще, трябва да заредите модула за "
 "FUSE при стартиране. Добавете реда „modprobe fuse“ към /etc/init.d/boot."
 "local или „fuse“ към /etc/modules."
+
+#: ../Tomboy/Tomboy.cs:251
+msgid "Cannot create new note"
+msgstr "Неуспешно създаване на нова бележка"
+
+#: ../Tomboy/Tomboy.cs:317
+msgid "Primary Development:"
+msgstr "Основна разработка:"
+
+#: ../Tomboy/Tomboy.cs:330
+msgid "Contributors:"
+msgstr "Сътрудници:"
+
+#: ../Tomboy/Tomboy.cs:415
+msgid "translator-credits"
+msgstr ""
+"Владимир „Kaladan“ Петков <kaladan@gmail.com>\n"
+"Ростислав „zbrox“ Райков <zbrox@i-space.org>\n"
+"Александър Шопов <ash@kambanaria.org>\n"
+"\n"
+"Проектът за превод на GNOME има нужда от подкрепа.\n"
+"Научете повече за нас на http://gnome.cult.bg\n"
+"Докладвайте за грешки на http://gnome.cult.bg/bugs"
+
+#: ../Tomboy/Tomboy.cs:424
+msgid ""
+"Copyright © 2004-2007 Alex Graveley\n"
+"Copyright © 2004-2011 Others\n"
+msgstr ""
+"Авторски права: © 2004-2007 Alex Graveley\n"
+"Авторски права: © 2004-2011 Други\n"
+
+#: ../Tomboy/Tomboy.cs:426
+msgid "A simple and easy to use desktop note-taking application."
+msgstr "Програма за просто и лесно взимане на бележки."
+
+#: ../Tomboy/Tomboy.cs:436
+msgid "Homepage"
+msgstr "Домашна страница"
+
+#: ../Tomboy/Tomboy.cs:554
+msgid ""
+"Tomboy: A simple, easy to use desktop note-taking application.\n"
+"Copyright © 2004-2007 Alex Graveley\n"
+"<alex@beatniksoftware.com>\n"
+"\n"
+"Copyright © 2004-2011 Others\n"
+msgstr ""
+"Tomboy: Проста и лесна програма за водене на бележки.\n"
+"Авторски права: © 2004-2006 Alex Graveley <alex@beatniksoftware.com>\n"
+"\n"
+"Авторски права: © 2004-2011 Други\n"
+
+#: ../Tomboy/Tomboy.cs:568
+msgid ""
+"Usage:\n"
+"  --version\t\t\tPrint version information.\n"
+"  --help\t\t\tPrint this usage message.\n"
+"  --note-path [path]\t\tLoad/store note data in this directory.\n"
+"  --search [text]\t\tOpen the search all notes window with the search text.\n"
+msgstr ""
+"Начин на употреба:\n"
+"  --version                         Показване на информация за версията.\n"
+"  --help                            Показване на това съобщение.\n"
+"  --note-path [път]                 Зареждане/съхранение на данните за "
+"бележката\n"
+"                                    в тази папка.\n"
+"  --search [текст]                  Отваряне на прозореца за търсене във "
+"всички\n"
+"                                    бележки на този текст.\n"
+
+#: ../Tomboy/Tomboy.cs:578
+msgid ""
+"  --new-note\t\t\tCreate and display a new note.\n"
+"  --new-note [title]\t\tCreate and display a new note, with a title.\n"
+"  --open-note [title/url]\tDisplay the existing note matching title.\n"
+"  --start-here\t\t\tDisplay the 'Start Here' note.\n"
+"  --highlight-search [text]\tSearch and highlight text in the opened note.\n"
+msgstr ""
+"  --new-note                        Създаване и показване на нова бележка.\n"
+"  --new-note [заглавие]             Създаване и показване на нова бележка "
+"със\n"
+"                                    заглавие.\n"
+"  --open-note [заглавие/адрес]      Показване на бележка с това заглавие.\n"
+"  --start-here                      Показване на „Начална бележка“.\n"
+"  --highlight-search [текст]        Търсене и отбелязване на текст в "
+"отворената\n"
+"                                    бележка.\n"
+
+#: ../Tomboy/Tomboy.cs:592
+#, csharp-format
+msgid "Version {0}"
+msgstr "Версия {0}"
+
+#: ../Tomboy/Tray.cs:68
+msgid " (new)"
+msgstr "(ново)"
+
+#: ../Tomboy/Tray.cs:293
+msgid "_About Tomboy"
+msgstr "_Относно Tomboy"
+
+#: ../Tomboy/Utils.cs:189
+msgid ""
+"The \"Tomboy Notes Manual\" could not be found.  Please verify that your "
+"installation has been completed successfully."
+msgstr "Ръководството на Tomboy не бе открито. Проверете инсталацията си."
+
+#: ../Tomboy/Utils.cs:198
+msgid "Help not found"
+msgstr "Помощта не е открита"
+
+#: ../Tomboy/Utils.cs:214
+msgid "Cannot open location"
+msgstr "Местоположението не може да се отвори"
+
+#: ../Tomboy/Utils.cs:236
+#, csharp-format
+msgid "Today, {0}"
+msgstr "Днес, {0}"
+
+#: ../Tomboy/Utils.cs:238
+msgid "Today"
+msgstr "Днес"
+
+#: ../Tomboy/Utils.cs:242
+#, csharp-format
+msgid "Yesterday, {0}"
+msgstr "Вчера, {0}"
+
+#: ../Tomboy/Utils.cs:244
+msgid "Yesterday"
+msgstr "Вчера"
+
+#: ../Tomboy/Utils.cs:249
+#, csharp-format
+msgid "{0} day ago, {1}"
+msgid_plural "{0} days ago, {1}"
+msgstr[0] "преди {0} ден, {1}"
+msgstr[1] "преди {0} дни, {1}"
+
+#: ../Tomboy/Utils.cs:253
+#, csharp-format
+msgid "{0} day ago"
+msgid_plural "{0} days ago"
+msgstr[0] "преди {0} ден"
+msgstr[1] "преди {0} дни"
+
+#: ../Tomboy/Utils.cs:259
+#, csharp-format
+msgid "Tomorrow, {0}"
+msgstr "Утре, {0}"
+
+#: ../Tomboy/Utils.cs:261
+msgid "Tomorrow"
+msgstr "Утре"
+
+#: ../Tomboy/Utils.cs:266
+#, csharp-format
+msgid "In {0} day, {1}"
+msgid_plural "In {0} days, {1}"
+msgstr[0] "След {0} ден, {1}"
+msgstr[1] "След {0} дни, {1}"
+
+#: ../Tomboy/Utils.cs:270
+#, csharp-format
+msgid "In {0} day"
+msgid_plural "In {0} days"
+msgstr[0] "След {0} ден"
+msgstr[1] "След {0} дни"
+
+#: ../Tomboy/Utils.cs:275
+msgid "MMMM d, h:mm tt"
+msgstr "d MMMM, HH:mm"
+
+#: ../Tomboy/Utils.cs:276
+msgid "MMMM d"
+msgstr "d MMMM"
+
+#: ../Tomboy/Utils.cs:278
+msgid "No Date"
+msgstr "Без дата"
+
+#: ../Tomboy/Utils.cs:281
+msgid "MMMM d yyyy, h:mm tt"
+msgstr "d MMMM yyyy, HH:mm"
+
+#: ../Tomboy/Utils.cs:282
+msgid "MMMM d yyyy"
+msgstr "d MMMM yyyy"
+
+#: ../Tomboy/Watchers.cs:155
+#, csharp-format
+msgid "(Untitled {0})"
+msgstr "(Без име {0})"
+
+#: ../Tomboy/Watchers.cs:189
+#, csharp-format
+msgid ""
+"A note with the title <b>{0}</b> already exists. Please choose another name "
+"for this note before continuing."
+msgstr ""
+"Бележка със заглавие <b>{0}</b> вече съществува. Изберете друго име за тази "
+"бележка преди да продължите."
+
+#: ../Tomboy/Watchers.cs:204
+msgid "Note title taken"
+msgstr "Прието е заглавието на бележката"
+
+#: ../Tomboy/Watchers.cs:587
+msgid "_Copy Link Address"
+msgstr "_Копиране на адреса на връзката"
+
+#: ../Tomboy/Watchers.cs:592
+msgid "_Open Link"
+msgstr "_Отваряне на връзка"

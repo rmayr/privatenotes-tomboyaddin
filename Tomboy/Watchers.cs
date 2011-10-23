@@ -374,7 +374,45 @@ namespace Tomboy
 		Gtk.TextMark click_mark;
 
 		const string URL_REGEX =
-			@"((\b((news|http|https|ftp|file|irc)://|mailto:|(www|ftp)\.|\S*@\S*\.)|(?<=^|\s)/\S+/|(?<=^|\s)~/\S+)\S*\b/?)";
+			//@"((\b((news|http|https|ftp|file|irc)://|mailto:|(www|ftp)\.|\S*@\S*\.)|(?<=^|\s)/\S+/|(?<=^|\s)~/\S+)\S*\b/?)";
+			    @"("+
+		    		@"(("+
+		    		    @"((?<=(?<starter>("+        // preceded by a starter
+		    			 @"(?<starterA>(\())"+	//	opening parenthesis closed by )
+		    			@"|(?<starterB>(\[))"+	// or	opening bracket	    closed by ]
+		    			@"|(?<starterC>(\{))"+	// or	opening thing	    closed by }
+		    		    @")))"+
+		    		    @"|\b)"+			    //  or at beginning of a word \b
+		    		    @"("+
+		    			@"(news|http|https|ftp|file|irc)://"+    // http:// ...
+		    		        @"|mailto:"+				// or mailto...
+		    			@"|(www|ftp)\."+				// or www...
+		    		        @"|\S*@\S*\."+				// or email adress
+		    		    @")"+
+		    		@")"+
+		    		@"|("+
+		    		    @"((?<=(?<starter>("+        // preceded by a starter
+		    			 @"(?<starterA>(\())"+	//	opening parenthesis closed by )
+		    			@"|(?<starterB>(\[))"+	// or	opening bracket	    closed by ]
+		    			@"|(?<starterC>(\{))"+	// or	opening thing	    closed by }
+		    		    @")))"+
+				    @"|(?<=^|\s))"+
+		    		    @"("+
+			    		    @"(/\S+/)"+				// or starting with '/'
+			    		    @"|(~/\S+?)"+				// or starting with '~/'
+		    		    @")"+
+		    		@"))"+
+		    		@"(?(starter)"+			    //
+		    		    @"(\S(?!("+			    // if starter detected : forbid ender
+									//ignore this comment (for syntax) ([{
+		    			@"(?(starterA)\)|"+				// closing parenthesis
+		    			@"(?(starterB)\]|"+				// closing bracket
+		    			@"(?(starterC)\})))"+				// closing thing
+		    		    @")))*\S?"+
+		    		    @"|\S*/?"+			    // else anything without space
+		    		@")"+
+		    	    @")";
+
 		
 
 		static Regex regex;
@@ -717,7 +755,7 @@ namespace Tomboy
 				return;
 
 			// Don't create links inside URLs
-			if (title_start.HasTag (Note.TagTable.UrlTag))
+			if (Note.TagTable.HasLinkTag (title_start))
 				return;
 
 			Logger.Debug ("Matching Note title '{0}' at {1}-{2}...",
@@ -892,15 +930,18 @@ namespace Tomboy
 			                match = match.NextMatch ()) {
 				System.Text.RegularExpressions.Group group = match.Groups [1];
 
-				Logger.Debug ("Highlighting wikiword: '{0}' at offset {1}",
-				            group,
-				            group.Index);
-
 				Gtk.TextIter start_cpy = start;
 				start_cpy.ForwardChars (group.Index);
 
 				end = start_cpy;
 				end.ForwardChars (group.Length);
+
+				if (Note.TagTable.HasLinkTag (start_cpy))
+					break;
+
+				Logger.Debug ("Highlighting wikiword: '{0}' at offset {1}",
+							group,
+							group.Index);
 
 				if (Manager.Find (group.ToString ()) == null) {
 					Buffer.ApplyTag (broken_link_tag, start_cpy, end);
@@ -1094,8 +1135,8 @@ namespace Tomboy
 		void OnTagRemoved (Note note, string tag_name)
 		{
 			Tag tag = TagManager.GetTag (tag_name);
-			Logger.Debug ("Watchers.OnTagRemoved popularity count: {0}", tag.Popularity);
-			if (tag.Popularity == 0)
+			Logger.Debug ("Watchers.OnTagRemoved popularity count: {0}", tag != null ? tag.Popularity : 0);
+			if (tag != null && tag.Popularity == 0)
 				TagManager.RemoveTag (tag);
 		}
 	}
