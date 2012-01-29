@@ -9,8 +9,8 @@ ASSEMBLIES = 						\
 	$(LINK_TOMBOY_EXE)				\
 	$(GTKSHARP_LIBS) 				\
 	$(LINK_MONO_ADDINS)				\
-	$(srcdir)/XmppOtrLibrary.dll	\
-	$(srcdir)/Infinote.dll			\
+	-r:$(top_builddir)/Tomboy/Addins/PrivateNotesAddin/libs/XmppOtrLibrary.dll	\
+	-r:$(top_builddir)/Tomboy/Addins/PrivateNotesAddin/libs/Infinote.dll		\
 	-r:Mono.Posix
 
 TARGET = $(top_builddir)/bin/addins/PrivateNotes.dll
@@ -56,4 +56,3 @@ EXTRA_DIST =            	\
 CLEANFILES =				\
 	$(TARGET).mdb \
 	$(TARGET)
-

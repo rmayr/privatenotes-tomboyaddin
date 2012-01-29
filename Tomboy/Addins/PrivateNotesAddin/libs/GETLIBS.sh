@@ -8,9 +8,6 @@ LIBSDIR="$DIR/../../../../../InfinoteLib/Infinote/Infinote/bin/Debug"
 
 LIBSDIR="$( readlink -m $LIBSDIR )"
 
-echo "using "
-echo $LIBSDIR/Infinote.dll
-
 if ([ -d $LIBSDIR/ ] && [ -e $LIBSDIR/Infinote.dll ]); then
 	echo "file exists :)"
 else
@@ -29,4 +26,8 @@ else
 	unzip -o $LIBSDIR/precompiled.zip -d $LIBSDIR
 fi
 
-cp -f $LIBSDIR/*.dll ./
+echo "copying new files..."
+
+cp -f $LIBSDIR/*.dll $DIR/
+
+echo "done"
