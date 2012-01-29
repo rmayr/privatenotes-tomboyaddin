@@ -1,4 +1,7 @@
-﻿using Tomboy.Sync;
+﻿using Infinote;
+using PrivateNotes;
+using PrivateNotes.Infinote;
+using Tomboy.Sync;
 using System;
 using Mono.Unix;
 using System.Collections.Generic;
@@ -15,10 +18,13 @@ namespace Tomboy.PrivateNotes
 	/// </summary>
 	public class ShareNoteAddin : NoteAddin
 	{
-		Gtk.MenuItem shareItem;
-		Gtk.MenuItem unshareItem;
-		Gtk.MenuItem importSharedNoteItem;
-		Gtk.MenuItem copyShareLinkItem;
+		private Gtk.MenuItem shareItem;
+		private Gtk.MenuItem unshareItem;
+		private Gtk.MenuItem importSharedNoteItem;
+		private Gtk.MenuItem copyShareLinkItem;
+		private Gtk.MenuItem liveItem;
+
+		private bool? isLiveEditing = false;
 
 		public override void Initialize()
 		{
@@ -35,6 +41,7 @@ namespace Tomboy.PrivateNotes
 			ShareProvider provider = SecureSharingFactory.Get().GetShareProvider();
 			provider.OnShareAdded -= ShareAdded;
 			provider.OnShareRemoved -= ShareRemoved;
+			Communicator.Instance.OnLiveEditingStateChanged -= EditingStateChanged;
 		}
 
 		/// <summary>
@@ -49,7 +56,7 @@ namespace Tomboy.PrivateNotes
 				Catalog.GetString("Share Note"));
 			shareItem.Activated += OnShareItemActivated;
 			shareItem.AddAccelerator("activate", Window.AccelGroup,
-				(uint)Gdk.Key.a, Gdk.ModifierType.ControlMask,
+				(uint)Gdk.Key.r, Gdk.ModifierType.ControlMask,
 				Gtk.AccelFlags.Visible);
 			shareItem.Show();
 			AddPluginMenuItem(shareItem);
@@ -87,12 +94,31 @@ namespace Tomboy.PrivateNotes
 
 			CheckUnshareOption();
 #endif
+
+			liveItem = new Gtk.MenuItem(
+				Catalog.GetString("Live Note Editing"));
+			liveItem.Activated += OnLiveItemActivated;
+			liveItem.AddAccelerator("live", Window.AccelGroup,
+				(uint)Gdk.Key.l, Gdk.ModifierType.ControlMask,
+				Gtk.AccelFlags.Visible);
+			liveItem.Show();
+			AddPluginMenuItem(liveItem);
+			CheckLiveEditingStatus();
+
+			Gtk.MenuItem editAddressesItem = new Gtk.MenuItem(
+				Catalog.GetString("Edit Cooperation Addresses"));
+			editAddressesItem.Activated += OnEditAddressesActivated;
+			editAddressesItem.Show();
+			AddPluginMenuItem(editAddressesItem);
+
+			Communicator.Instance.OnLiveEditingStateChanged += EditingStateChanged;
 		}
 
 		// ---------------
 		// end of NoteAddin overrides
 		// ---------------
 
+#region delegate-impls
 
 		/// <summary>
 		/// callback that will be executed when any share is added to our share-manager
@@ -119,6 +145,16 @@ namespace Tomboy.PrivateNotes
 				CheckUnshareOption();
 			}
 		}
+
+		void EditingStateChanged(String noteId, bool started)
+		{
+			if (noteId.Equals(Note.Id))
+			{
+				CheckLiveEditingStatus();
+			}
+		}
+
+#endregion
 
 		/// <summary>
 		/// this method checks if this note is shared and if not it will deactivate the "unshare" element
@@ -189,6 +225,88 @@ namespace Tomboy.PrivateNotes
 			// DUMMY PARENT
 			Gtk.Widget wid = new Gtk.Label();
 			GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
+		}
+
+		void OnEditAddressesActivated(object sender, EventArgs args)
+		{
+			String filePath = Communicator.Instance.AddressProvider.AddressFile;
+			try
+			{
+				System.Diagnostics.Process.Start(filePath);
+			}
+			catch (Exception e)
+			{
+				Logger.Warn("Cannot opern address file", e);
+			}
+		}
+
+		void OnLiveItemActivated(object sender, EventArgs args)
+		{
+			CheckLiveEditingStatus();
+			if (!isLiveEditing.HasValue)
+			{
+				// null, so no communicator there, show info
+				Gtk.Widget wid = new Gtk.Label();
+				GtkUtil.ShowHintWindow(wid, Catalog.GetString("Xmpp Configuration Error"), Catalog.GetString("Please go to sync preferences and configure Xmppp User+Password correctly to use this feature."));
+			}
+			else if (!isLiveEditing.Value)
+			{
+				//Communicator.Instance.testSend(Note.Title);
+				List<XmppEntry> possible = Communicator.Instance.AddressProvider.GetAppropriateForNote(Note.Id);
+				if (possible.Count > 0)
+				{
+					GtkUtil.ShowInfo(possible.Count + " possible live-edit partners");
+					List<object> tempList = new List<object>();
+					tempList.AddRange(possible.ToArray());
+					new MultiButtonPartnerSelector("Select cooperation-partner:", tempList, OnSelectEditPartner);
+				}
+				else
+				{
+					GtkUtil.ShowInfo("No one is available to live-edit with!");
+				}
+			}
+			else
+			{
+				// commit
+				bool worked = Communicator.Instance.CommitNoteLiveEditing(Note.Id);
+				GtkUtil.ShowInfo(String.Format("Commiting live note editing... {0}",worked?"ok":"error"));
+			}
+		}
+
+		void OnSelectEditPartner(bool ok, Object resultObj)
+		{
+			if (ok)
+			{
+				XmppEntry partner = resultObj as XmppEntry;
+				if (partner != null)
+				{
+					Logger.Warn("Triggering live note editing! :) with user " + partner.XmppId);
+					bool worked = Communicator.Instance.StartNoteLiveEditing(Note.Id, partner.XmppId);
+					GtkUtil.ShowInfo(String.Format("Live editing on {0} with {1} {2}", Note.Id, partner.XmppId,
+											   ((worked) ? "was started" : "could not be started")));
+				}
+			}
+		}
+
+		void CheckLiveEditingStatus()
+		{
+			bool communicatorAvailable = Communicator.Instance.IsConfigured();
+			if (!communicatorAvailable)
+			{
+				((Gtk.Label)liveItem.Child).Text =
+						Catalog.GetString("Live Editing");
+				isLiveEditing = null;
+			}
+			else
+			{
+				var before = isLiveEditing.HasValue && isLiveEditing.Value;
+				isLiveEditing = Communicator.Instance.IsInLiveEditMode(Note.Id);
+				if (before != isLiveEditing)
+				{
+					((Gtk.Label) liveItem.Child).Text =
+						Catalog.GetString(isLiveEditing.Value ? "Commit Live Note Editing" : "Live Note Editing");
+				}
+			}
 		}
 
 		/// <summary>

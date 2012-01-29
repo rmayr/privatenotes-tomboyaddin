@@ -5,7 +5,7 @@ using System.IO;
 
 using Gtk;
 using Mono.Unix;
-
+using PrivateNotes.Infinote;
 using Tomboy;
 using Tomboy.PrivateNotes;
 using Tomboy.PrivateNotes.Crypto;
@@ -53,6 +53,9 @@ namespace Tomboy.Sync
 		private Gtk.Entry server_path;
 		private Gtk.Entry server_user;
 		private Gtk.Entry server_pass;
+
+		private Gtk.Entry xmpp_user_at_server;
+		private Gtk.Entry xmpp_pw;
 		#endregion
 
 		private bool initialized = false;
@@ -144,9 +147,15 @@ namespace Tomboy.Sync
 
 			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Server Settings:</span>")));
 			SetupGuiServerRelated(container, 4, requiredPrefChanged);
+
 			container.PackStart(new Gtk.Label());
 			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Encryption Settings:</span>")));
 			SetupGuiEncryptionRelated(container, 4, requiredPrefChanged);
+
+			container.PackStart(new Gtk.Label());
+			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Xmpp Settings:</span>")));
+			SetupGuiXmppRelated(container, 4, requiredPrefChanged);
+
 			container.ShowAll();
 			return container;
 		}
@@ -188,6 +197,39 @@ namespace Tomboy.Sync
 				storePassword(string.Empty);
 			}
 
+			String xmppUserServer = xmpp_user_at_server.Text.Trim();
+			String xmppPw = xmpp_pw.Text.Trim();
+            
+			// separate user/server
+			String xUser, xServer;
+			if (Util.SeparateMail(xmppUserServer, out xUser, out xServer))
+			{
+				string oldServer = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER) as string;
+				string oldUser = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPUSER) as string;
+				string oldPassword = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPPW) as string;
+				Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER, xServer);
+				Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPUSER, xUser);
+				Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPPW, xmppPw);
+
+				if (oldPassword != xmppPw || oldUser != xUser || oldServer != xServer)
+				{
+					Logger.Info("Xmpp inforamtion changed, reconnecting service...");
+					try
+					{
+						Communicator.Instance.Connect();
+					}
+					catch (Exception e)
+					{
+						Logger.Warn("cannot initialize Communicator ", e);
+					}
+				}
+			}
+			else
+			{
+				Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER, string.Empty);
+				Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPPW, xmppPw);
+			}
+
 			return true;
 		}
 
@@ -201,6 +243,9 @@ namespace Tomboy.Sync
 			Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_SERVERPATH, string.Empty);
 			Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_SERVERUSER, string.Empty);
 			Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_SERVERCHECKSSLCERT, "true");
+			Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER, string.Empty);
+			Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPUSER, string.Empty);
+			Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_XMPPPW, string.Empty);
 			storePassword(" ");
 		}
 
@@ -475,7 +520,41 @@ namespace Tomboy.Sync
 			
 		}
 
-#endregion
+		/// <summary>
+		/// setup fields: xmpp-user, xmpp-password
+		/// </summary>
+		/// <param name="insertTo"></param>
+		/// <param name="defaultSpacing"></param>
+		void SetupGuiXmppRelated(Gtk.Box insertTo, int defaultSpacing, EventHandler requiredPrefChanged)
+		{
+			Gtk.Table customBox = new Gtk.Table(2, 2, false);
+
+			// somehow you can't change the default spacing or set it for all rows
+			for (int i = 0; i < 2; i++)
+				customBox.SetRowSpacing((uint)i, (uint)defaultSpacing);
+
+			// insert the labels
+			//customBox.Attach(new Gtk.Label(Catalog.GetString("Server path:")), 0, 1, 0, 1);
+			customBox.Attach(new Gtk.Label(Catalog.GetString("User:")), 0, 1, 0, 1);
+			customBox.Attach(new Gtk.Label(Catalog.GetString("Password:")), 0, 1, 1, 2);
+
+			insertTo.PackStart(customBox);
+
+			xmpp_user_at_server = new Gtk.Entry();
+			customBox.Attach(xmpp_user_at_server, 1, 2, 0, 1);
+			string server = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER) as String;
+			string user = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPUSER) as String;
+			xmpp_user_at_server.Text = user + "@" + server;
+
+			xmpp_pw = new Gtk.Entry();
+			customBox.Attach(xmpp_pw, 1, 2, 1, 2);
+			string pw = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPPW) as String;
+			xmpp_pw.InvisibleChar = '*';
+			xmpp_pw.Visibility = false;
+			xmpp_pw.Text = pw;
+		}
+
+		#endregion
 
 		#region Gui Callbacks
 

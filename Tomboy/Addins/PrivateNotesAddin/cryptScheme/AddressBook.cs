@@ -28,6 +28,44 @@ namespace Tomboy.PrivateNotes.Adress
 		AddressBookEntry GetOwnAddress();
 	}
 
+	public class AddressBookHelper
+	{
+		private static Dictionary<AddressBook, AddressBookHelper> instances = new Dictionary<AddressBook, AddressBookHelper>();
+
+		private static Dictionary<String, AddressBookEntry> entries = new Dictionary<String, AddressBookEntry>(); 
+
+		private AddressBookHelper(AddressBook book)
+		{
+			var content = book.GetEntries();
+			foreach (var item in content)
+			{
+				String fingerprint = Util.GetFingerprintFromGpgId(item.id);
+				if (!entries.ContainsKey(fingerprint))
+				{
+					entries.Add(fingerprint, item);
+				}
+			}
+		}
+
+		public static AddressBookHelper GetInstance(AddressBook forBook)
+		{
+			if (instances.ContainsKey(forBook))
+				return instances[forBook];
+
+			var instance = new AddressBookHelper(forBook);
+            instances.Add(forBook, instance);
+			return instance;
+		}
+
+		public AddressBookEntry GetByFingerprint(String fingerPrint)
+		{
+			AddressBookEntry result;
+			entries.TryGetValue(fingerPrint, out result);
+			return result;
+		}
+
+	}
+
 	public class AddressBookFactory
 	{
 		private static AddressBookFactory INSTANCE = new AddressBookFactory();

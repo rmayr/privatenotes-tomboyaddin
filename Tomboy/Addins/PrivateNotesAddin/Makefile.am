@@ -5,10 +5,12 @@ CSFLAGS = 		\
 	-define:DEBUG 	\
 	-target:library
 
-ASSEMBLIES = 					\
-	$(LINK_TOMBOY_EXE)			\
+ASSEMBLIES = 						\
+	$(LINK_TOMBOY_EXE)				\
 	$(GTKSHARP_LIBS) 				\
-	$(LINK_MONO_ADDINS)			\
+	$(LINK_MONO_ADDINS)				\
+	$(srcdir)/XmppOtrLibrary.dll	\
+	$(srcdir)/Infinote.dll			\
 	-r:Mono.Posix
 
 TARGET = $(top_builddir)/bin/addins/PrivateNotes.dll
@@ -31,6 +33,7 @@ CSFILES = \
 	$(srcdir)/cryptScheme/*.cs										\
 	$(srcdir)/gui/*.cs														\
 	$(srcdir)/Hyena.Json/*.cs											\
+	$(srcdir)/Infinote/*.cs											\
 	$(srcdir)/local/*.cs
 RESOURCES = \
 	-resource:$(srcdir)/PrivateNotes.addin.xml

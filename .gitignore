@@ -99,6 +99,3 @@ Makefile.in
 # /Setup
 /Setup/bin/
 /Setup/obj/
-
-# /Addins
-/Tomboy/Addins/TestProject/bin

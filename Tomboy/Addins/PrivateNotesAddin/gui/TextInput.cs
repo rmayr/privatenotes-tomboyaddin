@@ -7,6 +7,7 @@ using Mono.Unix;
 namespace Tomboy.PrivateNotes
 {
 	public delegate void inputDone(bool ok, String value);
+	public delegate void inputDoneObject(bool ok, Object value);
 
 	/// <summary>
 	/// utility class that is able to display a text-input

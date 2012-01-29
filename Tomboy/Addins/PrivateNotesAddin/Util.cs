@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Tomboy.PrivateNotes
 {
@@ -225,6 +226,63 @@ namespace Tomboy.PrivateNotes
 			bool isUnix = (p == 4) || (p == 6) || (p == 128);
 			return !isUnix;
 		}
+
+		public static String GetFingerprintFromGpgId(String id)
+		{
+			string[] elements = id.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+			return (elements.Length > 1) ? elements[1].Trim() : id.Trim();
+		}
+
+		public static String GetCleanText(String text)
+		{
+			return Regex.Replace(text, "[^a-zA-Z0-9 _\\.@]", "");
+		}
+
+		/// <summary>
+		/// if string is longer it will be cropped and "..." will be added
+		/// if string is shorter, spaces are appended
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="length"></param>
+		/// <returns></returns>
+		public static String ToLength(String text, int length)
+		{
+			if (text.Length < length)
+			{
+				return text + new string(' ', length - text.Length);
+			}
+			else if (text.Length == length)
+			{
+				return text;
+			}
+			else
+			{
+				// text is longer
+				return text.Substring(0, length - 3) + new string('.', 3);
+			}
+		}
+
+		/// <summary>
+		/// separates the user and server part from an email address
+		/// </summary>
+		/// <param name="mail"></param>
+		/// <param name="user"></param>
+		/// <param name="server"></param>
+		/// <returns></returns>
+		public static bool SeparateMail(String mail, out String user, out String server)
+		{
+			bool success = false;
+			int idx = mail.LastIndexOf("@");
+			user = "";
+			server = "";
+			if (idx > 0 && idx < mail.Length - 1)
+			{
+				user = mail.Substring(0, idx);
+				server = mail.Substring(idx + 1, mail.Length - idx - 1);
+				success = true;
+			}
+			return success;
+		}
 	}
 
 #if WIN32 && DPAPI
@@ -330,6 +388,33 @@ namespace Tomboy.PrivateNotes
 			return l;
 		}
 
+		private static Gtk.Label infoLabel;
+
+		private static List<string> logs = new List<string>(); 
+
+		public static void ShowInfo(String txt)
+		{
+			if (infoLabel == null || infoLabel.Parent == null)
+			{
+				var window = new Gtk.Window("info");
+				infoLabel = new Gtk.Label("infoLabel");
+				window.Child = infoLabel;
+			}
+
+			logs.Insert(0, txt);
+			String infoTxt = "";
+			for (int i = 0; i < 5 && i < logs.Count; i++)
+			{
+				if (i > 0)
+					infoTxt += "\n";
+				infoTxt += logs[i];
+			}
+
+			infoLabel.Text = infoTxt;
+
+			EventHandler showDelegate = delegate(object s, EventArgs ea) { ((Gtk.Window)infoLabel.Parent).ShowAll(); ((Gtk.Window)infoLabel.Parent).Present(); };
+			Gtk.Application.Invoke(showDelegate);
+		}
 
 	}
 	

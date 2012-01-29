@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using PrivateNotes;
+using PrivateNotes.Infinote;
 
 namespace Tomboy.PrivateNotes
 {
@@ -69,7 +71,16 @@ namespace Tomboy.PrivateNotes
 		/// </summary>
 		public override void Initialize()
 		{
+			initialized = true;
 			Logger.Info("Initializing PrivateNotes Sharing Addin");
+			try
+			{
+				Communicator.Instance.Connect();
+			}
+			catch (Exception e)
+			{
+				Logger.Warn("cannot initialize Communicator ", e);
+			}
 		}
 
 		/// <summary>
@@ -80,16 +91,12 @@ namespace Tomboy.PrivateNotes
 
 		}
 
+		private bool initialized = false;
+
 		/// <summary>
 		/// Return true if the addin is initialized
 		/// </summary>
-		public override bool Initialized
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool Initialized { get { return initialized; }}
 
 	}
 #endif

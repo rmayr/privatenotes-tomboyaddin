@@ -50,14 +50,26 @@
     <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <Reference Include="Infinote, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\Infinote.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL" />
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
+    <Reference Include="XmppOtrLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\XmppOtrLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="gui\LiveEditingInfoWindow.cs" />
+    <Compile Include="gui\MultiButtonPartnerSelector.cs" />
+    <Compile Include="gui\MultiButtonSelector.cs" />
+    <Compile Include="Infinote\Communicator.cs" />
     <Compile Include="cryptScheme\AddressBook.cs" />
     <Compile Include="gui\ItemSelector.cs" />
     <Compile Include="gui\TextInput.cs" />
@@ -72,6 +84,8 @@
     <Compile Include="Hyena.Json\Token.cs" />
     <Compile Include="Hyena.Json\Tokenizer.cs" />
     <Compile Include="Hyena.Json\TokenType.cs" />
+    <Compile Include="Infinote\TomboyNoteProvider.cs" />
+    <Compile Include="Infinote\XmppAddressProvider.cs" />
     <Compile Include="local\EncryptedFileSystemSyncServer.cs" />
     <Compile Include="local\SecurityWrapper.cs" />
     <Compile Include="EncryptedWebdavSyncServiceAddin.cs" />

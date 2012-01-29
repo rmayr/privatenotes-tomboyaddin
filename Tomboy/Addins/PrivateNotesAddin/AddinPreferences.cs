@@ -21,6 +21,10 @@ namespace Tomboy.PrivateNotes
 
 		public const string SYNC_PRIVATENOTES_SHARE_GPG = "/apps/tomboy/sync/private_notes/share_gpg";
 
+		public const string SYNC_PRIVATENOTES_XMPPSERVER = "/apps/tomboy/sync/private_notes/xmpp_server";
+		public const string SYNC_PRIVATENOTES_XMPPUSER = "/apps/tomboy/sync/private_notes/xmpp_user";
+		public const string SYNC_PRIVATENOTES_XMPPPW = "/apps/tomboy/sync/private_notes/xmpp_password";
+
 		// match-label texts
 		public const string MATCH_TEXT = "<markup><span foreground=\"green\">match</span></markup>";
 		public const string MATCH_NOT_TEXT = "<span foreground=\"red\">don't match</span>";

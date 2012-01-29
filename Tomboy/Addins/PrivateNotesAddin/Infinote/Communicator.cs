@@ -1,0 +1,412 @@
+﻿using System;
+using System.Collections.Generic;
+using Infinote;
+using Tomboy;
+using Tomboy.PrivateNotes;
+using XmppOtrLibrary;
+using Logger = Tomboy.Logger;
+
+namespace PrivateNotes.Infinote
+{
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="started">when false, it means stopped</param>
+	internal delegate void NoteLiveEditingChanged(String noteId, bool started);
+
+	/// <summary>
+	/// provides communication with other parties (e.g. for co-operative editing of a note)
+	/// </summary>
+	class Communicator
+	{
+
+#region members
+
+		//public MultiNoteEditor NoteEditors { get; private set; }
+		private MultiNoteEditor NoteEditors { get; set; }
+
+		public int RetryCount { get; private set; }
+		private const int MAX_RETRIES = 10;
+
+		public TomboyNoteProvider NoteProvider { get { return (NoteEditors == null) ? null : (TomboyNoteProvider)NoteEditors.Provider; } }
+
+		/// <summary>
+		/// contains noteId (key) -> withUser (value)
+		/// </summary>
+		private Dictionary<String, String> currentCooperations = new Dictionary<string, string>();
+
+		private EasyXmpp xmpp;
+
+		private string server, user, pw;
+
+		public event NoteLiveEditingChanged OnLiveEditingStateChanged;
+
+		public XmppAddressProvider AddressProvider { get; private set; }
+
+		private LiveEditingInfoWindow infoWindow = new LiveEditingInfoWindow();
+
+#endregion
+
+
+#region Singleton
+		private static Communicator _instance;
+
+		public static Communicator Instance
+		{
+			get
+			{
+				if (_instance == null)
+				{
+					_instance = new Communicator();
+					//TestSetup();
+				}
+				return _instance;
+			}
+		}
+#endregion
+
+		private Communicator()
+		{
+			AddressProvider = new XmppAddressProvider();
+			AddressProvider.Load();
+			AddressProvider.UpdateAddressBookFile();
+		}
+
+#region public-methods
+
+		public bool IsConfigured()
+		{
+			var server = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER) as string;
+			var user = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPUSER) as string;
+			var pw = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPPW) as string;
+			return !(String.IsNullOrEmpty(server) || String.IsNullOrEmpty(user) || pw == null);
+		}
+
+		public void Connect()
+		{
+			if (!GetConfiguration())
+				throw new InvalidOperationException("Xmpp service not configured yet");
+			// reset retry count on external request
+			RetryCount = 0;
+			ConnectXmpp();
+		}
+
+		public bool StartNoteLiveEditing(String noteId, String withUser)
+		{
+			if (NoteEditors == null)
+			{
+				return false;
+			}
+
+			string occupyingUser;
+			if (currentCooperations.TryGetValue(noteId, out occupyingUser))
+			{
+				if (occupyingUser != withUser)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				currentCooperations.Add(noteId, withUser);
+			}
+			// destroy it before, otherwise we might have problems with changes that have been made in the meantime
+			NoteEditors.DestroyEditorStateMachine(noteId);
+			var esm = NoteEditors.GetOrCreateEditorStateMachine(noteId, withUser);
+			esm.OnStateChanged += delegate(EditorStateMachine.SmState state)
+			                      	{
+										DlgOnEditorStateChanged(noteId, state);
+			                      	};
+			return esm.InitCooperation();
+		}
+
+		public bool CommitNoteLiveEditing(String noteId)
+		{
+			if (NoteEditors == null)
+			{
+				return false;
+			}
+
+			var esm = NoteEditors.FindEditorStateMachine(noteId);
+			var result = false;
+			if (esm != null)
+			{
+				result = esm.CommitCooperation();
+			}
+			return result;
+		}
+
+
+		public List<String> GetOnlinePartnerIds()
+		{
+			List<String> results = new List<string>();
+			if (xmpp == null)
+			{
+				return results;
+			}
+
+			foreach (XmppPartner partner in xmpp.PartnerObjects)
+			{
+				if (partner.IsOnline)
+				{
+					results.Add(partner.Name);
+				}
+			}
+			return results;
+		}
+
+		public bool IsInLiveEditMode(String noteId)
+		{
+			if (NoteEditors == null)
+			{
+				return false;
+			}
+
+			var esm = NoteEditors.FindEditorStateMachine(noteId);
+			var result = false;
+			if (esm != null)
+			{
+				result = esm.CurrentState == EditorStateMachine.SmState.Editing;
+			}
+			return result;
+		}
+
+#endregion
+
+#region privates
+
+		private void ConnectXmpp()
+		{
+			RetryCount++;
+			if (RetryCount > MAX_RETRIES)
+			{
+				Logger.Warn("Stopping xmpp connect retries after " + RetryCount + " tries.");
+				return;
+			}
+			else if (RetryCount > 1)
+			{
+				Logger.Warn("Xmpp Connect Retry #" + RetryCount);
+			}
+
+			if (xmpp != null)
+			{
+				xmpp.OnSecureMessage -= DlgOnSecureMsg;
+				xmpp.OnPartnerOffline -= DlgOnPartnerOffline;
+				xmpp.OnPartnerOnline -= DlgOnPartnerOnline;
+				xmpp.OnConnectionEstablished -= DlgOnConnectionEstablished;
+				xmpp.Close();
+			}
+			
+			xmpp = new EasyXmpp(server, user, pw);
+			NoteEditors = new MultiNoteEditor(user + "@" + server, new TomboyNoteProvider());
+			NoteEditors.OnSendMessage += DlgOnNoteEditorsEmitMsg;
+			NoteEditors.OnError += DlgOnError;
+			NoteEditors.SetMsgChecker(NoteEditorsCheckAllowed);
+			// add friends here
+			var friends = xmpp.OtherUsers;
+			var storedFriends = AddressProvider.GetAll();
+			foreach (var addMe in storedFriends)
+			{
+				friends.Add(addMe.XmppId);
+			}
+			xmpp.OtherUsers = friends;
+			xmpp.OnSecureMessage += DlgOnSecureMsg;
+			xmpp.OnPartnerOffline += DlgOnPartnerOffline;
+			xmpp.OnPartnerOnline += DlgOnPartnerOnline;
+			xmpp.OnConnectionEstablished += DlgOnConnectionEstablished;
+			xmpp.Start();
+		}
+
+		private bool NoteEditorsCheckAllowed(String from, String noteId)
+		{
+			string currentPartner = null;
+			if (currentCooperations.TryGetValue(noteId, out currentPartner))
+			{
+				if (currentPartner == from)
+				{
+					// we are already working with him
+					return true;
+				}
+				else
+				{
+					// another user, we can only cooperate with one at a time
+					var esm = NoteEditors.FindEditorStateMachine(noteId);
+					if (esm != null)
+					{
+						var state = esm.CurrentState;
+						// only allow if we are not in an "active" state
+						if (state == EditorStateMachine.SmState.Editing || state == EditorStateMachine.SmState.CommitCheck
+								|| state == EditorStateMachine.SmState.PreCheck2)
+						{
+							// but first destroy that one
+							NoteEditors.DestroyEditorStateMachine(noteId);
+							currentCooperations.Remove(noteId);
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					}
+					else
+					{
+						// it was an error that it is stored in currentCooperations
+						currentCooperations.Remove(noteId);
+						return true;
+					}
+				}
+			}
+			else
+			{
+				return NoteEditors.Provider.IsNoteSharedWith(noteId, from);
+			}
+		}
+
+		private bool GetConfiguration()
+		{
+			var server = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER) as string;
+			var user = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPUSER) as string;
+			var pw = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPPW) as string;
+			if (String.IsNullOrEmpty(server) || String.IsNullOrEmpty(user) || pw == null)
+			{
+				return false;
+			}
+			this.server = server;
+			this.user = user;
+			this.pw = pw;
+			return true;
+		}
+
+#endregion
+
+		#region delegate-implementations
+
+		private void DlgOnEditorStateChanged(String noteId, EditorStateMachine.SmState state)
+		{
+			if (OnLiveEditingStateChanged != null)
+			{
+				if (state == EditorStateMachine.SmState.Editing) {
+					OnLiveEditingStateChanged(noteId, true);
+				}
+				else if (state == EditorStateMachine.SmState.Done
+						|| state == EditorStateMachine.SmState.Error)
+				{
+					OnLiveEditingStateChanged(noteId, false);
+				}
+			}
+			if (state == EditorStateMachine.SmState.Editing)
+			{
+				infoWindow.SetInfo(noteId, "editing", true);
+			}
+			else if (state == EditorStateMachine.SmState.Done)
+			{
+				GtkUtil.ShowInfo("Editing note " + noteId + " finished successfully");
+				// destroy the editorStateMachine to allow future connections
+				NoteEditors.DestroyEditorStateMachine(noteId);
+				currentCooperations.Remove(noteId);
+				// make sure this is saved
+				((TomboyNoteProvider)NoteEditors.Provider).SaveNote(noteId);
+				infoWindow.SetInfo(noteId, "finished editing", false);
+			}
+			else if (state == EditorStateMachine.SmState.Error)
+			{
+				GtkUtil.ShowInfo("Editing note " + noteId + " failed!");
+				// destroy the editorStateMachine to allow future connections
+				NoteEditors.DestroyEditorStateMachine(noteId);
+				currentCooperations.Remove(noteId);
+				infoWindow.SetInfo(noteId, "an Error occured!", false);
+			}
+		}
+
+		private void DlgOnNoteEditorsEmitMsg(String to, String msg)
+		{
+			var com = xmpp.GetSecureCommunicator(to);
+			if (com != null && com.ConnectionEstablished)
+			{
+				Logger.Info("OUT " + msg);
+				com.SendSecuredMessage(msg);
+			}
+			else
+			{
+				Tomboy.Logger.Warn("cannot send msg to {0} because connection currently not secured.", to);
+			}
+		}
+
+		private void DlgOnError(String error)
+   		{
+			GtkUtil.ShowHintWindow(new Gtk.Label(), "MultiNoteEditor Error", error);
+   		}
+
+		private void DlgOnSecureMsg(String from, string msg)
+		{
+			//GtkUtil.ShowHintWindow(new Gtk.Label(), "secure msg from " + from, msg);
+			Logger.Info("IN  " + msg);
+			string concernedNote;
+			var newlyCreated = NoteEditors.OnMessage(from, msg, out concernedNote);
+			if (newlyCreated != null && concernedNote != null)
+			{
+				// a new esm was created, save it:
+				currentCooperations.Add(concernedNote, from);
+				newlyCreated.OnStateChanged += delegate(EditorStateMachine.SmState state)
+                      	{
+							DlgOnEditorStateChanged(concernedNote, state);
+                      	};
+			}
+		}
+
+		private void DlgOnPartnerOffline(String partnerId)
+		{
+			//NoteEditors.GetEditorStateMachine()
+			String infoMsg = partnerId + " went offline...";
+
+			// destroy currently active editing-sessions:
+			bool hadSome = DestroyEditorsFor(partnerId);
+			if (hadSome)
+			{
+				infoMsg += "\nActive editing sessions were destoryed";
+			}
+
+			GtkUtil.ShowInfo(infoMsg);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="partnerId"></param>
+		/// <returns>true if there were any</returns>
+		private bool DestroyEditorsFor(String partnerId)
+		{
+			List<string> noteIds = new List<string>();
+			foreach (var elem in currentCooperations)
+			{
+				if (elem.Value == partnerId)
+				{
+					noteIds.Add(elem.Key);
+				}
+			}
+			foreach (var noteId in noteIds)
+			{
+				NoteEditors.DestroyEditorStateMachine(noteId);
+				currentCooperations.Remove(noteId);
+			}
+			return noteIds.Count > 0;
+		}
+
+		private void DlgOnPartnerOnline(String partnerId)
+		{
+			//NoteEditors.GetEditorStateMachine()
+			GtkUtil.ShowInfo(partnerId + " came online...");
+		}
+
+		private void DlgOnConnectionEstablished(bool success)
+		{
+			if (!success)
+			{
+				ConnectXmpp();
+			}
+		}
+
+#endregion
+
+	}
+}

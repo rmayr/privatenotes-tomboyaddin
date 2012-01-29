@@ -141,6 +141,23 @@ namespace Tomboy
 					Mono.Addins.TypeExtensionNode type_node =
 							args.ExtensionNode as Mono.Addins.TypeExtensionNode;
 						share_addin = type_node.CreateInstance () as SharingAddin;
+						if (share_addin != null)
+						{
+							if (share_addin.Initialized == false)
+							{
+								try
+								{
+									share_addin.Initialize();
+								}
+								catch (Exception e)
+								{
+									Logger.Debug("Error initializing share addin {0}: {1}\n{2}",
+												  share_addin.GetType().ToString(),
+												  e.Message,
+												  e.StackTrace);
+								}
+							}
+						}
 				} catch (Exception e) {
 					Logger.Debug ("Couldn't create a ShareAddin instance: {0}", e.Message);
 				}
