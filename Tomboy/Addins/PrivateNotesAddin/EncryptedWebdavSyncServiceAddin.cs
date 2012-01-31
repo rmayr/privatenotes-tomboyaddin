@@ -1,4 +1,9 @@
 //#define USE_LOCAL_TEST
+// Part of PrivateNotes Project - FH Hagenberg
+// http://privatenotes.dyndns-server.com/wiki/
+// Authors: 
+//      Paul Klingelhuber <s1010455009@students.fh-hagenberg.at>
+// 
 
 using System;
 using System.IO;

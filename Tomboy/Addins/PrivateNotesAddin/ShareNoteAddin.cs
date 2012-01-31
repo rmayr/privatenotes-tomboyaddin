@@ -1,4 +1,9 @@
-﻿using Infinote;
+﻿// Part of PrivateNotes Project - FH Hagenberg
+// http://privatenotes.dyndns-server.com/wiki/
+// Authors: 
+//      Paul Klingelhuber <s1010455009@students.fh-hagenberg.at>
+// 
+using Infinote;
 using PrivateNotes;
 using PrivateNotes.Infinote;
 using Tomboy.Sync;
