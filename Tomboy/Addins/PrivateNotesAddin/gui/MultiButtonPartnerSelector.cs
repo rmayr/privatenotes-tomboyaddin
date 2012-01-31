@@ -38,7 +38,12 @@ namespace Tomboy.PrivateNotes
 			onlinePartners = Communicator.Instance.GetOnlinePartnerIds();
 		}
 
-
+		/// <summary>
+		/// creates the button for an item
+		/// </summary>
+		/// <param name="idx"></param>
+		/// <param name="forObject"></param>
+		/// <returns></returns>
 		internal override Gtk.Button CreateButton(int idx, object forObject)
 		{
 			XmppEntry addresItem = forObject as XmppEntry;
@@ -66,6 +71,10 @@ namespace Tomboy.PrivateNotes
 			return btn;
 		}
 
+		/// <summary>
+		/// user clicked a button
+		/// </summary>
+		/// <param name="idx"></param>
 		void ButtonClicked(int idx)
 		{
 			onOk(true, allItems[idx]);

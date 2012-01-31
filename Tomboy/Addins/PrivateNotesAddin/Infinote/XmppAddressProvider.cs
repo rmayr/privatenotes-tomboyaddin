@@ -22,6 +22,9 @@ namespace PrivateNotes.Infinote
 
 		private AddressBook addressBook;
 
+		/// <summary>
+		/// load entries from the file
+		/// </summary>
 		public void Load()
 		{
 			addressBook = AddressBookFactory.Instance().GetDefault();
@@ -29,6 +32,11 @@ namespace PrivateNotes.Infinote
 			ParseAddressFile(AddressFile);
 		}
 
+		/// <summary>
+		/// update the entries (saved addresses by the user won't be removed!)
+		/// new contacts will be added + all entries are sorted so that entries
+		/// where the user added an address, will appear at the top
+		/// </summary>
 		public void UpdateAddressBookFile()
 		{
 			Load();
@@ -71,6 +79,11 @@ namespace PrivateNotes.Infinote
 			}
 		}
 
+		/// <summary>
+		/// get an addressbook-entry by an xmpp-name
+		/// </summary>
+		/// <param name="xmppId"></param>
+		/// <returns></returns>
 		public XmppEntry GetEntryForXmppId(String xmppId)
 		{
 			XmppEntry result;
@@ -78,6 +91,11 @@ namespace PrivateNotes.Infinote
 			return result;
 		}
 
+		/// <summary>
+		/// get an entry by a gpg-fingerprint (the string will be filtered)
+		/// </summary>
+		/// <param name="gpgId"></param>
+		/// <returns></returns>
 		public XmppEntry GetEntryForGpgFingerprint(String gpgId)
 		{
 			foreach (var entry in contacts)
@@ -93,6 +111,11 @@ namespace PrivateNotes.Infinote
 			return null;
 		}
 
+		/// <summary>
+		/// get an entry for a gpg-id (key-fingerprint, will not be filtered)
+		/// </summary>
+		/// <param name="gpgId"></param>
+		/// <returns></returns>
 		private XmppEntry GetEntryForExactGpgId(String gpgId)
 		{
 			foreach (var entry in contacts)
@@ -105,11 +128,20 @@ namespace PrivateNotes.Infinote
 			return null;
 		}
 
+		/// <summary>
+		/// retrieves all entries
+		/// </summary>
+		/// <returns></returns>
 		public List<XmppEntry> GetAll()
 		{
 			return new List<XmppEntry>(contacts.Values);
 		} 
 
+		/// <summary>
+		/// gets the share-partners for a note
+		/// </summary>
+		/// <param name="noteId"></param>
+		/// <returns></returns>
 		public List<XmppEntry> GetAppropriateForNote(String noteId)
 		{
 			List<XmppEntry> result = new List<XmppEntry>();
@@ -167,6 +199,13 @@ namespace PrivateNotes.Infinote
 
 		}
 
+		/// <summary>
+		/// parse a line, the gpg id will be returned by out parameter gpgId, the added xmpp-id will be returned as return value
+		/// if the user hasn't added any address, null will be returned
+		/// </summary>
+		/// <param name="line"></param>
+		/// <param name="gpgId"></param>
+		/// <returns></returns>
 		private String ReadLine(String line, out String gpgId)
 		{
 			gpgId = null;

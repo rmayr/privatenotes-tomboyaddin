@@ -2,10 +2,10 @@
 	namespace="Tomboy"
 	name="Encrypted WebDav Sync With Share"
 	author="Paul Klingelhuber S1010455009@fh-hagenberg.at"
-	description="Synchronization with WebDav Server. Notes are encrypted with AES. Also sharing is possible with multiple other people."
+	description="Synchronization with WebDav. Notes encrypted with AES. Notes-sharing with multiple people and live cooperative editing."
 	category="Synchronization"
 	defaultEnabled="true"
-	version="2.0">
+	version="3.0">
 
 	<Runtime>
 		<Import assembly="PrivateNotes.dll" />
@@ -30,9 +30,14 @@
     <NoteAddin type="Tomboy.PrivateNotes.ShareNoteAddin" />
   </Extension>
 
-  <!-- the sharing addin -->
-  <Extension path="/Tomboy/SharingAddin">
-    <SharingAddin type="Tomboy.PrivateNotes.SharingAppAddin" />
-  </Extension>
+  <!-- the sharing addin
+       if the addin is compiled with no SharingAppAddin support, just comment this out
+       Also define the NOSHARES compile variable, so that there are no dependencies
+       to classes, that don't exist in a normal tomboy installation
+  -->
+       <Extension path="/Tomboy/SharingAddin">
+         <SharingAddin type="Tomboy.PrivateNotes.SharingAppAddin" />
+       </Extension>
+  
   
 </Addin>

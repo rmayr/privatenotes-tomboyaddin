@@ -47,11 +47,14 @@ $(TARGET): $(CSFILES) $(TOMBOY_EXE_PATH)
 addinsdir = $(pkglibdir)/addins
 addins_DATA = 			\
 	$(TARGET)		\
-	$(TARGET).mdb
+	$(TARGET).mdb	\
+	$(top_builddir)/Tomboy/Addins/PrivateNotesAddin/libs/*.dll
 
 EXTRA_DIST =            	\
 	$(CSFILES) \
-	$(srcdir)/PrivateNotes.addin.xml
+	$(srcdir)/PrivateNotes.addin.xml	\
+	$(srcdir)/libs/*.dll
+
 
 CLEANFILES =				\
 	$(TARGET).mdb \

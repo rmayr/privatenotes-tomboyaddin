@@ -73,8 +73,6 @@ namespace Tomboy.PrivateNotes
 			// TODO how to get parent window here? (instead of null)
 			GpgConfigUtility.ConfigureGpg(false, null);
 		}
-		
-		
 			
 		/// <summary>
 		/// callback for when the user wants to register for the note:// protocol
@@ -86,9 +84,7 @@ namespace Tomboy.PrivateNotes
 			// TODO how to get parent window here? (instead of null)
 			if (!NoteProtocolRegisterUtility.Register())
 			{
-				// dummy parent
-				Gtk.Widget wid = new Gtk.Label();
-				GtkUtil.ShowHintWindow(wid, Catalog.GetString("Protocol registration"),
+				GtkUtil.ShowHintWindow(Catalog.GetString("Protocol registration"),
 					Catalog.GetString("The protocol registration failed, sorry."));
 			}
 		}

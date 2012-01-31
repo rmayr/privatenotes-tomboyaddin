@@ -37,9 +37,26 @@ namespace Tomboy.Sync
 	/// </summary>
 	public class EncryptedWebdavSyncServiceAddin : SyncServiceAddin
 	{
-		// TODO: Extract most of the code here and build GenericSyncServiceAddin
-		// that supports a field, a username, and password.	This could be useful
-		// in quickly building SshSyncServiceAddin, FtpSyncServiceAddin, etc.
+		/// <summary>
+		/// we misuse this to start up our XMPP Communicator also
+		/// because we have to do this as soon as possible, and this seems to
+		/// get called always on startup, so it's a good fit
+		/// </summary>
+		public EncryptedWebdavSyncServiceAddin()
+		{
+			Logger.Info("Initializing PrivateNotes Sharing Addin");
+			try
+			{
+				if (!Communicator.Instance.IsActive())
+				{
+					Communicator.Instance.Connect();
+				}
+			}
+			catch (Exception e)
+			{
+				Logger.Warn("cannot initialize Communicator ", e);
+			}
+		}
 
 		#region GUI ELEMENTS
 		//private FileChooserButton pathButton;

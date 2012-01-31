@@ -72,15 +72,6 @@ namespace Tomboy.PrivateNotes
 		public override void Initialize()
 		{
 			initialized = true;
-			Logger.Info("Initializing PrivateNotes Sharing Addin");
-			try
-			{
-				Communicator.Instance.Connect();
-			}
-			catch (Exception e)
-			{
-				Logger.Warn("cannot initialize Communicator ", e);
-			}
 		}
 
 		/// <summary>

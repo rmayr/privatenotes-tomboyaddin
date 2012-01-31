@@ -122,7 +122,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) "C:\xampp\xampp\webdav\PrivateNotes.dll"
-copy $(TargetPath) "C:\xampp\xampp\htdocs\PrivateNotes.dll"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

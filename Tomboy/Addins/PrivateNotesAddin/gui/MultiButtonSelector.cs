@@ -17,7 +17,7 @@ namespace Tomboy.PrivateNotes
 		internal inputDoneObject onOk;
 
 		/// <summary>
-		/// 
+		/// creates the selector window and displays it automatically
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="onFinished">callback function when input is done</param>
@@ -40,7 +40,6 @@ namespace Tomboy.PrivateNotes
 			}
 
 			Response += OnResponse;
-			DeleteEvent += new Gtk.DeleteEventHandler(TextInput_DeleteEvent);
 
 			box.ShowAll();
 			this.VBox.PackStart(box);
@@ -53,6 +52,13 @@ namespace Tomboy.PrivateNotes
 		{
 		}
 
+		/// <summary>
+		/// creates a button to click on
+		/// this can be overridden to place some custom buttons in there
+		/// </summary>
+		/// <param name="idx"></param>
+		/// <param name="forObject"></param>
+		/// <returns></returns>
 		internal virtual Gtk.Button CreateButton(int idx, object forObject)
 		{
 			Gtk.Button btn = new Button();
@@ -107,14 +113,6 @@ namespace Tomboy.PrivateNotes
 			{
 				OnAction(o, null);
 			}
-		}
-
-		// forward other events
-		// react to the [x]-button being pressed
-		void TextInput_DeleteEvent(object o, Gtk.DeleteEventArgs args)
-		{
-			//OnAction(null, null);
-			// do nothing
 		}
 
 	}

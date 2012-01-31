@@ -50,7 +50,6 @@ namespace Tomboy.PrivateNotes
 		/// </summary>
 		public override void OnNoteOpened()
 		{
-#if !NOSHARE
 			// Add the menu item when the window is created
 			shareItem = new Gtk.MenuItem(
 				Catalog.GetString("Share Note"));
@@ -93,7 +92,6 @@ namespace Tomboy.PrivateNotes
 			provider.OnShareRemoved += ShareRemoved;
 
 			CheckUnshareOption();
-#endif
 
 			liveItem = new Gtk.MenuItem(
 				Catalog.GetString("Live Note Editing"));
@@ -255,21 +253,21 @@ namespace Tomboy.PrivateNotes
 				List<XmppEntry> possible = Communicator.Instance.AddressProvider.GetAppropriateForNote(Note.Id);
 				if (possible.Count > 0)
 				{
-					GtkUtil.ShowInfo(possible.Count + " possible live-edit partners");
+					// show a list for the user to select with whom to co-edit
 					List<object> tempList = new List<object>();
 					tempList.AddRange(possible.ToArray());
 					new MultiButtonPartnerSelector("Select cooperation-partner:", tempList, OnSelectEditPartner);
 				}
 				else
 				{
-					GtkUtil.ShowInfo("No one is available to live-edit with!");
+					GtkUtil.ShowHintWindow("Error", "No one is available to live-edit with!");
 				}
 			}
 			else
 			{
 				// commit
 				bool worked = Communicator.Instance.CommitNoteLiveEditing(Note.Id);
-				GtkUtil.ShowInfo(String.Format("Commiting live note editing... {0}",worked?"ok":"error"));
+				Logger.Info(String.Format("Commiting live note editing... {0}", worked ? "ok" : "error"));
 			}
 		}
 
@@ -280,10 +278,19 @@ namespace Tomboy.PrivateNotes
 				XmppEntry partner = resultObj as XmppEntry;
 				if (partner != null)
 				{
-					Logger.Warn("Triggering live note editing! :) with user " + partner.XmppId);
-					bool worked = Communicator.Instance.StartNoteLiveEditing(Note.Id, partner.XmppId);
-					GtkUtil.ShowInfo(String.Format("Live editing on {0} with {1} {2}", Note.Id, partner.XmppId,
-											   ((worked) ? "was started" : "could not be started")));
+					List<String> onlinePartners = Communicator.Instance.GetOnlinePartnerIds();
+					bool online = onlinePartners.Contains(partner.XmppId);
+					if (online)
+					{
+						Logger.Warn("Triggering live note editing! :) with user " + partner.XmppId);
+						bool worked = Communicator.Instance.StartNoteLiveEditing(Note.Id, partner.XmppId);
+						Logger.Info(String.Format("Live editing on {0} with {1} {2}", Note.Id, partner.XmppId,
+						                          ((worked) ? "was started" : "could not be started")));
+					}
+					else
+					{
+						GtkUtil.ShowHintWindow(Catalog.GetString("Error"), Catalog.GetString("Cannot start live editing with offline user."));
+					}
 				}
 			}
 		}

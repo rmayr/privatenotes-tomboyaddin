@@ -44,6 +44,12 @@ namespace Tomboy.PrivateNotes
 			
 		}
 
+		/// <summary>
+		/// present information about a note, if info for this note already exists, it will be overwritten
+		/// </summary>
+		/// <param name="noteId"></param>
+		/// <param name="infoText"></param>
+		/// <param name="editing"></param>
 		public void SetInfo(String noteId, String infoText, bool editing)
 		{
 			if (infos.ContainsKey(noteId))
@@ -54,6 +60,11 @@ namespace Tomboy.PrivateNotes
 			UpdateUi();
 		}
 
+#region private-stuff
+
+		/// <summary>
+		/// update the displayed information
+		/// </summary>
 		private void UpdateUi()
 		{
 			VBox newContent = new VBox(true, 2);
@@ -76,6 +87,13 @@ namespace Tomboy.PrivateNotes
 			Gtk.Application.Invoke(showDelegate);
 		}
 
+		/// <summary>
+		/// create an entry for displaying, constains the indicator if it's live, the note name and an info text
+		/// </summary>
+		/// <param name="live"></param>
+		/// <param name="noteId">note-id, name will be retrieved for it automatically</param>
+		/// <param name="info"></param>
+		/// <returns></returns>
 		private Gtk.Widget CreateEntry(bool live, String noteId, String info)
 		{
 			HBox box = new HBox(false, 0);
@@ -99,6 +117,11 @@ namespace Tomboy.PrivateNotes
 			return box;
 		}
 
+		/// <summary>
+		/// get the name (displayed) for a noteid
+		/// </summary>
+		/// <param name="noteId"></param>
+		/// <returns></returns>
 		private String GetNoteName(String noteId)
 		{
 			string result = noteId;
@@ -116,6 +139,8 @@ namespace Tomboy.PrivateNotes
 			}
 			return result;
 		}
+
+#endregion
 
 	}
 

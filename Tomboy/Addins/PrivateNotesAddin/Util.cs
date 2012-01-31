@@ -361,6 +361,25 @@ namespace Tomboy.PrivateNotes
 	/// </summary>
 	public class GtkUtil
 	{
+		/// <summary>
+		/// creates a dummy-parent for the hint window
+		/// WARNING: this places the window anywhere on the screen, might be confusing for the user
+		/// </summary>
+		/// <param name="caption"></param>
+		/// <param name="text"></param>
+		public static void ShowHintWindow(String caption, String text)
+		{
+			// dummy parent
+			Gtk.Widget wid = new Gtk.Label();
+			ShowHintWindow(wid, caption, text);
+		}
+
+		/// <summary>
+		/// shows a hint window (dialog) with a caption and a text
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <param name="caption"></param>
+		/// <param name="text"></param>
 		public static void ShowHintWindow(Gtk.Widget parent, String caption, String text)
 		{
 			Gtk.Dialog dialog = new Gtk.Dialog();
@@ -387,6 +406,11 @@ namespace Tomboy.PrivateNotes
 			l.Markup = _markup;
 			return l;
 		}
+
+#region infoWindow
+		// the infoWindow should only be used for testing, it displays a window 
+		// with the last 5 messages that you sent to ShowInfo(string)
+		// not very nice, don't use for msgs for the end-user
 
 		private static Gtk.Label infoLabel;
 
@@ -415,6 +439,8 @@ namespace Tomboy.PrivateNotes
 			EventHandler showDelegate = delegate(object s, EventArgs ea) { ((Gtk.Window)infoLabel.Parent).ShowAll(); ((Gtk.Window)infoLabel.Parent).Present(); };
 			Gtk.Application.Invoke(showDelegate);
 		}
+
+#endregion
 
 	}
 	
@@ -542,24 +568,24 @@ namespace Tomboy.PrivateNotes
 			}
 
 			if (foundPath == null) {
-
 				// let user choose				
 				Gtk.FileChooserDialog dialog = new Gtk.FileChooserDialog("Please choose GPG exe", parentWindow,
 					Gtk.FileChooserAction.Open, "Cancel", Gtk.ResponseType.Cancel, "Use", Gtk.ResponseType.Accept);
 
+				// if there is one set already, let the user start from that directory
 				String previous = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SHARE_GPG) as String;
 				if (previous != null)
 				{
 					dialog.SetFilename(previous);
 				}
 
+				// get back the user selection
 				if (dialog.Run() == (int)Gtk.ResponseType.Accept)
 				{
 					foundPath = dialog.Filename;
 				}
 
 				dialog.Destroy();
-
 			}
 
 			Preferences.Set(AddinPreferences.SYNC_PRIVATENOTES_SHARE_GPG, (String)foundPath);

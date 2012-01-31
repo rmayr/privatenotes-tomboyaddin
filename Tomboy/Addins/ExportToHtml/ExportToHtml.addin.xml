@@ -4,7 +4,7 @@
 	author="Tomboy Project"
 	description="Exports individual notes to HTML."
 	category="Tools"
-	defaultEnabled="true"
+	defaultEnabled="false"
 	version="0.2">
 
 	<Runtime>
