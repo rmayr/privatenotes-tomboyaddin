@@ -226,6 +226,12 @@ namespace PrivateNotes.Infinote
 			}
 			
 			xmpp = new EasyXmpp(server, user, pw);
+			if (RetryCount > 1 && RetryCount%2 == 0) 
+			{
+				// try fallback mode every second time
+				xmpp.FallBackMode = true;
+			}
+
 			NoteEditors = new MultiNoteEditor(user + "@" + server, new TomboyNoteProvider());
 			NoteEditors.OnSendMessage += DlgOnNoteEditorsEmitMsg;
 			NoteEditors.OnError += DlgOnError;
@@ -382,8 +388,7 @@ namespace PrivateNotes.Infinote
 
 		private void DlgOnSecureMsg(String from, string msg)
 		{
-			//GtkUtil.ShowHintWindow(new Gtk.Label(), "secure msg from " + from, msg);
-			Logger.Info("IN  " + msg);
+			//Logger.Info("IN  " + msg);
 			string concernedNote;
 			var newlyCreated = NoteEditors.OnMessage(from, msg, out concernedNote);
 			if (newlyCreated != null && concernedNote != null)

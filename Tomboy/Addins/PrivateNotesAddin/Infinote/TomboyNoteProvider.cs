@@ -6,9 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
+using DiffMatchPatch;
+using Gtk;
 using Infinote;
+using PrivateNotes.Infinote;
 using Tomboy;
 using Tomboy.PrivateNotes;
 
@@ -20,6 +22,7 @@ namespace PrivateNotes.Infinote
 	/// </summary>
 	class TomboyNoteProvider : NoteProvider
 	{
+
 		/// <summary>
 		/// fired when a note gets changed
 		/// </summary>
@@ -220,6 +223,9 @@ namespace PrivateNotes.Infinote
 				String newContent = GetNoteText(n);
 				if (!String.IsNullOrEmpty(newContent)) {
 					// sometimes we get an empty string from tomboy, don't know why...
+
+					// save cursor pos:
+					//SaveCursorPos(n);
 					OnNoteChanged(n.Id, newContent);
 				}
 			}
@@ -242,6 +248,19 @@ namespace PrivateNotes.Infinote
 			}
 			return n;
 		}
+
+#region private-methods
+
+		private int GetCursorPos(Note note)
+		{
+			TextMark m = note.Buffer.InsertMark;
+			TextIter it = note.Buffer.GetIterAtMark(m);
+			int pos = it.Offset;
+			String id = note.Id;
+			return pos;
+		}
+
+#endregion
 
 #region methods_for_accessing_note_content
 
@@ -268,7 +287,50 @@ namespace PrivateNotes.Infinote
 				return;
 			}
 
+			String oldText = n.TextContent;
+			int oldCaretPos = GetCursorPos(n);
+			
+			// update actual (formatted) content
 			n.XmlContent = content;
+
+			String newText = n.TextContent;
+			
+			List<Diff> diffs = new diff_match_patch().diff_main(oldText, newText);
+
+            int offset = 0;
+			int posDelta = 0;
+			foreach (var d in diffs)
+			{
+				switch (d.operation)
+				{
+					case Operation.DELETE:
+						//op = new DeleteOp() { Length = d.text.Length, Position = offset };
+						if (offset < oldCaretPos)
+						{
+							posDelta -= d.text.Length;
+						}
+						//don't add it // offset += d.text.Length;
+						break;
+					case Operation.INSERT:
+						if (offset < oldCaretPos)
+						{
+							posDelta += d.text.Length;
+						}
+						offset += d.text.Length;
+						break;
+					case Operation.EQUAL:
+						offset += d.text.Length;
+						break;
+					default:
+						Logger.Warn("unexpected operation");
+						break;
+				}
+			}
+			
+			// update iter pos
+			TextIter lastPosIter = n.Buffer.GetIterAtOffset(oldCaretPos + posDelta);
+			n.Buffer.SelectRange(lastPosIter, lastPosIter);
+
 		}
 
 #endregion
