@@ -3,6 +3,7 @@ include $(top_srcdir)/Makefile.include
 CSFLAGS = 		\
 	-debug 		\
 	-define:DEBUG 	\
+	-define:NOSHARES	\
 	-target:library
 
 ASSEMBLIES = 						\
