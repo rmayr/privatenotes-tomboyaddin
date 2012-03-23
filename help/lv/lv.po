@@ -1,32 +1,26 @@
-# French translation of tomboy documentation.
-# Copyright (C) 2006-2011 Free Software Foundation, Inc.
-# This file is distributed under the same license as the tomboy
-# documentation package.
+# Latvian translation for tomboy.
+# Copyright (C) 2012 tomboy's COPYRIGHT HOLDER
+# This file is distributed under the same license as the tomboy package.
 #
-# Claude Paroz <claude@2xlibre.net>, 2006-2011.
-# Jonathan Ernst <jonathan@ernstfamily.ch>, 2007.
-# Robert-André Mauchin <zebob.m@pengzone.org>, 2007.
-# Bruno Brouard <annoa.b@gmail.com>, 2007.
-# Frédéric Péters <fpeters@0d.be>, 2008.
-# Rémi Peixoto <remi.peixoto@gmail.com>, 2009.
-# Laurent Coudeur <laurentc@iol.ie>, 2010.
-# Luc Pionchon <pionchon.luc@gmail.com>
-#
+# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: tomboy documentation\n"
-"POT-Creation-Date: 2012-02-03 21:19+0000\n"
-"PO-Revision-Date: 2012-02-04 00:29+0200\n"
-"Last-Translator: Luc Pionchon <pionchon.luc@gmail.com>\n"
-"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
+"Project-Id-Version: tomboy master\n"
+"POT-Creation-Date: 2012-03-09 16:56+0000\n"
+"PO-Revision-Date: 2012-03-11 23:27+0200\n"
+"Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
+"Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n>1;\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
+"Language: lv\n"
+"X-Generator: Lokalize 1.2\n"
 
 #: C/whatsnew.page:9(desc)
 msgid "What's new in <app>Tomboy Notes</app>."
-msgstr "Nouveautés de <app>Notes Tomboy</app>."
+msgstr "Kas jauns <app>Tomboy piezīmēs</app>."
 
 #: C/whatsnew.page:13(name) C/sync-setup.page:11(name) C/sync.page:11(name)
 #: C/search.page:12(name) C/problems.page:11(name) C/prefs.page:9(name)
@@ -54,16 +48,15 @@ msgstr "pcutler@gnome.org"
 
 #: C/whatsnew.page:25(title)
 msgid "What's New in <app>Tomboy</app>"
-msgstr "Nouveautés de <app>Tomboy</app>"
+msgstr "Kas jauns <app>Tomboy</app>."
 
 #: C/whatsnew.page:27(p)
 msgid ""
 "<app>Tomboy</app> features a number of new improvements. Tomboy should start "
 "noticeably faster thanks to improvements made in Tomboy's start-up time."
 msgstr ""
-"<app>Tomboy</app> présente un certain nombre d'améliorations. Tomboy se "
-"lance de façon notablement plus rapide grâce aux améliorations apportées à "
-"son processus de démarrage."
+"<app>Tomboy</app> iekļauj sevī vairākus jaunus uzlabojumus. Tomboy vajadzētu "
+"startēties ievērojami ātrāk, pateicoties Tomboy uzsākšanas laika uzlabojumos."
 
 #: C/whatsnew.page:31(p)
 msgid ""
@@ -71,36 +64,36 @@ msgid ""
 "support formatting into other applications that can understand HTML, such as "
 "Evolution, OpenOffice.org and other applications."
 msgstr ""
-"Le copier/coller depuis Tomboy vers d'autres applications est amélioré et "
-"prend en charge le formatage dans les autres applications qui gèrent le "
-"HTML, telles qu'Evolution, OpenOffice.org entre autres."
+"Kopēšana un ielīmēšana no Tomboy uz citām programmām ir uzlabota, lai "
+"atbalstītu formatēšanu citās programmās, kuras saprot HTML, piemēram, "
+"Evolution, OpenOffice.org u.c."
 
 #: C/whatsnew.page:36(p)
 msgid ""
 "<app>Tomboy</app> can now synchronize your notes automatically for you when "
 "you when you have sync enabled."
 msgstr ""
-"<app>Tomboy</app> peut maintenant synchroniser automatiquement vos notes si "
-"vous activez la synchronisation."
+"Tagad <app>Tomboy</app> spēj automātiski sinhronizēt tavas piezīmes, kad tev "
+"ir aktivēta sinhronizācija."
 
-# note jump list non traduit pas trouver de référence en Français
 #: C/whatsnew.page:41(p)
 msgid ""
 "Support for Microsoft Windows 7 jump lists have been added helping you "
 "access your notes, search or create a new note faster directly from the "
 "Windows taskbar."
 msgstr ""
-"L'ajout de la fonctionnalité « jump list » de Windows 7 vous permet d'accéder "
-"à vos notes, de rechercher ou de créer de nouvelles notes plus rapidement "
-"directement depuis la barre des tâches de Windows."
+"Ir pievienots atbalsts Microsoft Windows 7 lēcējsarakstiem, kas palīdzēs "
+"tieši no Windows uzdevumu joslas gūt pieeju tavām piezīmēm, meklēt vai "
+"izveidot "
+"jaunas piezīmes."
 
 #: C/sync-setup.page:8(desc)
 msgid "Configure Tomboy to synchronize your notes."
-msgstr "Configuration de Tomboy pour la synchronisation de vos notes."
+msgstr "Konfigurē Tomboy, lai sinhronizētu savas piezīmes."
 
 #: C/sync-setup.page:15(name) C/delete-notes.page:18(name)
 msgid "GNOME Documentation Project"
-msgstr "Le projet de documentation GNOME"
+msgstr "GNOME Dokumentācijas Projekts"
 
 #: C/sync-setup.page:16(years)
 msgid "2010-2012"
@@ -108,11 +101,11 @@ msgstr "2010-2012"
 
 #: C/sync-setup.page:21(title)
 msgid "Configure and Setup Sync"
-msgstr "Configuration de la synchronisation"
+msgstr "Konfigurē un uzstādi sinhronizāciju"
 
 #: C/sync-setup.page:25(title)
 msgid "Enable Sync"
-msgstr "Activer la synchronisation"
+msgstr "Aktivē sinhronizāciju"
 
 #: C/sync-setup.page:27(p)
 msgid ""
@@ -120,10 +113,9 @@ msgid ""
 "This allows you to have a backup of your notes on another computer or to "
 "share your notes between computers so you always have access to your notes."
 msgstr ""
-"<app>Tomboy</app> peut synchroniser vos notes entre plusieurs ordinateurs. "
-"Cela permet d'avoir une sauvegarde de vos notes sur un autre ordinateur ou "
-"de partager vos notes entre plusieurs ordinateurs pour que vous puissiez "
-"toujours accéder à celles-ci."
+"<app>Tomboy</app> spēj sinhronizēt tavas piezīmes starp vairākiem datoriem. "
+"Tas tev ļauj izveidot piezīmju rezerves kopijas citā datorā vai dalīties ar "
+"piezīmēm starp citiem datoriem tā, lai tev tām vienmēr būtu pieeja."
 
 #: C/sync-setup.page:33(p) C/sync.page:54(p)
 msgid ""
@@ -134,26 +126,24 @@ msgid ""
 "All Notes</gui> dialog. From the menu choose <guiseq><gui>Edit</"
 "gui><gui>Preferences</gui></guiseq>."
 msgstr ""
-"Vous pouvez activer la synchronisation en ouvrant les <gui>Préférences de "
-"Tomboy</gui> à l'aide de la souris par un clic droit sur l'icône Tomboy de "
-"votre tableau de bord, barre des tâches ou dock et en choisissant l'élément "
-"<gui>Préférences</gui>. Sélectionnez ensuite l'onglet <gui>Synchronisation</"
-"gui>. Vous pouvez aussi ouvrir les <gui> Préférences de Tomboy</gui> depuis "
-"la boîte de dialogue <gui>Rechercher dans toutes les notes</gui> ou dans le "
-"menu choisir <guiseq><gui>Édition</gui><gui>Préférences</gui></guiseq>."
+"Tu vari aktivēt sinhronizāciju, atverot <gui>Tomboy Iestatījumi</gui>, "
+"izmantojot savu peli, lai veiktu labo klikšķi uz Tomboy ikonas savā panelī, "
+"uzdevumu joslā vai dokā. Izvēlies <gui>Iestatījumi</gui> un tad izvēlies <gui>"
+"Sinhronizācija</gui> cilni. Tu vari arī atvērt <gui>Tomboy iestatījumi</gui> "
+"no <gui>Meklēt visas piezīmes</gui> izvēlnes. No šīs izvēlnes paņem <guiseq><"
+"gui>Rediģēt</gui><gui>Iestatījumi</gui></guiseq>."
 
 #: C/sync-setup.page:46(title)
 msgid "Managing Note Conflict"
-msgstr "Gestion des conflits entre les notes"
+msgstr "Piezīmju konfliktu pārvaldīšana"
 
 #: C/sync-setup.page:48(p)
 msgid ""
 "You can set the default behavior for Tomboy when a note is discovered to be "
 "a conflict. This can occur when notes are not synced on a regular basis."
 msgstr ""
-"Vous pouvez configurer le comportement par défaut de Tomboy quand une note "
-"pose un problème de conflit. Cela peut arriver si les notes ne sont pas "
-"synchronisées régulièrement."
+"Tu vari uzstādīt noklusēto rīcību Tomboy programmai, kad piezīme ir atklāta "
+"kā konfliktējoša. Tas var notikt, kad piezīmes netiek regulāri sinhronizētas."
 
 #: C/sync-setup.page:53(p)
 msgid ""
@@ -161,9 +151,8 @@ msgid ""
 "You can select from three choices as the default behavior in managing "
 "conflicts:"
 msgstr ""
-"Dans la boîte de dialogue <gui>Préférences</gui>, cliquez sur le bouton "
-"<gui>Avancé</gui>. Vous pouvez choisir le fonctionnement par défaut pour "
-"gérer les conflits parmi trois options :"
+"<gui>Iestatījumi</gui> izvēlnē, nospied <gui>Paplašināti</gui> pogu. Tu vari "
+"izvēlēties 1 no 3 iespējām kā noklusēto konfliktu pārvaldīšanas rīcību."
 
 #: C/sync-setup.page:59(p)
 msgid ""
@@ -172,9 +161,9 @@ msgid ""
 "want to rename the local note or replace your local note with the note the "
 "server has stored."
 msgstr ""
-"<gui>Toujours me demander quoi faire</gui> est l'option par défaut. Quand "
-"Tomboy rencontre un conflit, il demande toujours si vous souhaitez renommer "
-"la note locale ou la remplacer par la note se trouvant sur le serveur."
+"<gui>Vienmēr jautāt man kā rīkoties.</gui>. Šī ir noklusētā rīcība un, kad "
+"Tomboy sastapsies ar konfliktu, tev vienmēr pieprasīs, vai tu vēlies pārsaukt "
+"lokālo piezīmi vai aizvietot to ar piezīmi no servera."
 
 #: C/sync-setup.page:64(p)
 msgid ""
@@ -183,20 +172,19 @@ msgid ""
 "rename the note on your computer so you don't lose your information in your "
 "note."
 msgstr ""
-"<gui>Renommer ma note locale</gui>. Si cette option est sélectionnée, Tomboy "
-"remplace automatiquement la note par une copie de celle de l'ordinateur "
-"distant et renomme la note sur votre ordinateur pour que vous ne perdiez pas "
-"les informations qu'elle contient."
+"<gui>Pārsaukt manu lokālo piezīmi.</gui> Ja ir izvēlēta šī iespēja, Tomboy "
+"automātiski aizvietos piezīmi ar kopiju no attālā datora un pārsauks to, lai "
+"tu nepazaudētu tajā esošo informāciju."
 
 #: C/sync-setup.page:70(p)
 msgid ""
-"<gui>Replace my local note with the server's update. </gui>. If you have "
-"selected this option, when you sync Tomboy will overwrite and replace your "
+"<gui>Replace my local note with the server's update.</gui> If you have "
+"selected this option, when you sync, Tomboy will overwrite and replace your "
 "note stored on your computer with a copy from the remote computer."
 msgstr ""
-"<gui>Remplacer ma note locale avec celle du serveur</gui>. Si vous avez "
-"sélectionné cette option, quand vous synchronisez, Tomboy remplace la note "
-"stockée sur votre ordinateur par celle de l'ordinateur distant."
+"<gui>Aizvietot manu lokālo piezīmi ar servera atjauninājumu.</gui> Ja ir "
+"paņemta šī iespēja, kad tu sinhronizēsi, Tomboy pārrakstīs un aizvietos tavu "
+"piezīmi ar kopiju no attālā datora."
 
 #: C/sync-setup.page:76(p)
 msgid ""
@@ -204,14 +192,13 @@ msgid ""
 "replaced by the copy on the remote computer and you will lose your "
 "information that was stored prior to syncing."
 msgstr ""
-"Remplacer la note automatiquement est définitif. Votre note locale est "
-"remplacée par une copie de celle présente sur l'ordinateur distant et vous "
-"perdez toutes les informations qui étaient stockées dans cette note avant la "
-"synchronisation."
+"Automātiskā piezīmju pārrakstīšana ir neatsaucama. Tava lokālā piezīme tiks "
+"aizvietota ar kopiju no attālā datora un tu pazaudēsi visu informāciju, kura "
+"bija pirms sinhronizēšanas."
 
 #: C/sync-setup.page:90(title)
 msgid "Configure Sync using WebDav"
-msgstr "Configuration de la synchronisation avec WebDav"
+msgstr "Konfigurē sinhronizāciju, izmantojot WebDav"
 
 #: C/sync-setup.page:92(p)
 msgid ""
@@ -220,10 +207,9 @@ msgid ""
 "system to set up FUSE for your user. You will also need the GNOME Keyring "
 "installed."
 msgstr ""
-"Pour synchroniser vos notes avec un serveur WebDAV, vous devez installer le "
-"système de fichiers FUSE wdfs. Référez-vous à la documentation de votre "
-"système d'exploitation pour paramétrer FUSE pour votre compte. Vous avez "
-"également besoin du gestionnaire de trousseaux GNOME."
+"Lai sinhronizētu piezīmes ar WebDAV serveri, tev vajadzēs wdfs FUSE failu "
+"sistēmu. Vadies pēc savas operētājsistēmas dokumentācijas, lai uzstādītu FUSE "
+"uz sava lietotāja konta. Kā arī būs nepieciešams uzstādīts GNOME Keyring."
 
 #: C/sync-setup.page:98(p)
 msgid ""
@@ -231,14 +217,13 @@ msgid ""
 "the connection information for your server, and then select the <gui>Save</"
 "gui> button. You are now ready to synchronize your notes."
 msgstr ""
-"Choisissez <gui>WebDAV</gui> dans la liste déroulante <gui>Service</gui>. "
-"Remplissez les informations de connexion à votre serveur et cliquez ensuite "
-"sur le bouton <gui>Enregistrer</gui>. Vous pouvez désormais synchroniser vos "
-"notes."
+"Izvēlies <gui>WebDAV</gui> no <gui>Serviss</gui> lejupkrītošā saraksta. "
+"Aizpildi savienojuma informāciju savam serverim un nospied <gui>Saglabāt</gui>"
+" pogu. Tagad tu vari sinhronizēt piezīmes."
 
 #: C/sync-setup.page:107(title)
 msgid "Configure Sync using SSH"
-msgstr "Configuration de la synchronisation avec SSH"
+msgstr "Konfigurē sinhronizāciju, izmantojot SSH"
 
 #: C/sync-setup.page:109(p)
 msgid ""
@@ -246,16 +231,15 @@ msgid ""
 "FUSE file system, also called <app>sshfs</app> installed. Follow the "
 "documentation for your operating system to set up FUSE for your user. You "
 "will also need an SSH key for your SSH server account that can be provided "
-"by the <app>GNOME Seahorse</app> application, which is also known as "
+"by the <app>Seahorse</app> application, which is also known as "
 "<app>Passwords and Encryption Keys</app>."
 msgstr ""
-"Pour synchroniser vos notes avec un serveur SSH, vous devez avoir installé "
-"le système de fichiers FUSE, aussi appelé <app>sshfs</app>. Référez-vous à "
-"la documentation de votre système d'exploitation pour paramétrer FUSE pour "
-"votre compte utilisateur. Vous avez également besoin d'une clé SSH pour "
-"votre compte serveur SSH, qui peut être fournie par l'application <app>GNOME "
-"Seahorse</app>, aussi connue sous le nom de <app>Mots de passe et clés de "
-"chiffrement</app>."
+"Lai sinhronizētu piezīmes ar SSH serveri, tev ir nepieciešama FUSE failu "
+"sistēma, saukta arī par <app>sshfs</app>. Vadies pēc savas operētājsistēmas "
+"dokumentācijas, lai uzstādītu FUSE savam lietotāja kontam. Tev būs "
+"nepieciešama arī SSH atslēga savam SSH servera kontam, kuru var nodrošināt <"
+"app>Seahorse</app> programma, kura ir pazīstama arī kā <app>Paroles "
+"un atslēgas</app>."
 
 #: C/sync-setup.page:117(p)
 msgid ""
@@ -263,9 +247,9 @@ msgid ""
 "to store the synchronized notes that are to be synced between multiple "
 "computers."
 msgstr ""
-"Il est conseillé d'utiliser un troisième ordinateur ou serveur comme "
-"ordinateur distant pour stocker les notes qui doivent être synchronisées "
-"entre plusieurs postes."
+"Ir ieteicams izmantot trešo datoru vai serveri kā attālināto datoru, lai "
+"uzglabātu sinhronizētās piezīmes, kuras ir plānots sinhronizēt starp "
+"vairākiem datoriem."
 
 #: C/sync-setup.page:121(p)
 msgid ""
@@ -278,16 +262,14 @@ msgid ""
 "<gui>Login Name:</gui> and press <gui>Set Up</gui>. When prompted, enter the "
 "password and setting up your key will be completed."
 msgstr ""
-"Ouvrez <app>Mots de passe et clés de chiffrement</app> en choisissant "
-"<guiseq><gui>Applications</gui><gui>Accessoires</gui><gui>Mots de passe et "
-"clés de chiffrement</gui></guiseq>. Cliquez sur votre clé et choisissez "
-"<guiseq><gui>Distant</gui><gui>Configurer la clé pour un shell sécurisé</"
-"gui></guiseq> dans le menu, puis saisissez le nom de domaine ou l'adresse IP "
-"de l'ordinateur avec lequel vous souhaitez synchroniser vos notes dans "
-"<gui>Nom de l'ordinateur</gui>. Saisissez le nom d'utilisateur de "
-"l'ordinateur distant dans <gui>Identifiant de connexion</gui> et cliquez sur "
-"<gui>Configurer</gui>. Quand on vous le demande, saisissez le mot de passe "
-"et la configuration de votre clé sera terminée."
+"Atver <app>Passwords and Encryption Keys</app>, izvēloties  <guiseq><gui>"
+"Lietotnes</gui><gui>Piederumi</gui><gui>Passwords and Encryption Keys</gui>"
+"</guiseq>. Nospied uz savas atslēgas un no izvēlnes, izvēlies <guiseq><gui>"
+"Attālināti</gui><gui>Konfigurē atslēgu drošai čaulai</gui></guiseq> un ievadi "
+"datora, ar kuru vēlies sinhronizēt piezīmes, domēna vārdu vai IP adresi, <gui>"
+"Datora Nosaukums</gui> laukā. Ievadi attālinātā datora lietotājvārdu <gui>"
+"Lietotājvārds</gui> laukā un spied <gui>Uzstādīt</gui>. Kad prasīts, ievadi "
+"paroli un atslēgas uzstādīšana tiks pabeigta."
 
 #: C/sync-setup.page:133(p)
 msgid ""
@@ -296,15 +278,14 @@ msgid ""
 "<gui>Save</gui> button. The <gui>Folder Path</gui>, while optional, should "
 "point at an empty folder. You are now ready to synchronize your notes."
 msgstr ""
-"Dans Tomboy, choisissez <gui>SSH</gui> dans la liste déroulante "
-"<gui>Service</gui>. Remplissez les informations de connexion à votre serveur "
-"et cliquez ensuite sur le bouton <gui>Enregistrer</gui>. Le <gui>Chemin du "
-"dossier</gui>, même s'il est facultatif, devrait indiquer un dossier vide. "
-"Vous pouvez désormais synchroniser vos notes."
+"Tomboy programmā, izvēlies <gui>SSH</gui> no <gui>Serviss</gui> lejupkrītošā "
+"saraksta. Aizpildi servera savienojuma datus un nospied <gui>Saglabāt</gui> "
+"pogu. Kā <gui>Mapes Ceļš</gui>, neobligāts lauks, vajadzētu norādīt uz tukšu "
+"mapi. Tu esi gatavs sinhronizēt savas piezīmes."
 
 #: C/sync-setup.page:143(title)
 msgid "Configure Sync to a local folder"
-msgstr "Configuration de la synchronisation dans un dossier local"
+msgstr "Konfigurē sinhronizāciju ar lokālu mapi"
 
 #: C/sync-setup.page:145(p)
 msgid ""
@@ -312,9 +293,8 @@ msgid ""
 "available to your other systems, or if that folder represents a local mount "
 "of a remote server."
 msgstr ""
-"Vous pouvez avoir besoin de synchroniser vos notes avec un dossier local si "
-"celui-ci est disponible depuis vos autres systèmes, ou si ce dossier est un "
-"montage local d'un serveur distant."
+"Tu varētu vēlēties sinhronizēt savas piezīmes ar lokālu mapi, ja šī mape ir "
+"pieejama citām sistēmām, vai, ja šī mape ir attālā servera montējums."
 
 #: C/sync-setup.page:150(p)
 msgid ""
@@ -322,56 +302,53 @@ msgid ""
 "desired synchronization <gui>Folder Path</gui> and then click the <gui>Save</"
 "gui> button. You are now ready to synchronize your notes."
 msgstr ""
-"Choisissez <gui>Dossier local</gui> dans la liste déroulante <gui>Service</"
-"gui>. Choisissez le <gui>Chemin du dossier</gui> souhaité pour la "
-"synchronisation, puis cliquez sur le bouton <gui>Enregistrer</gui>. Vous "
-"pouvez désormais synchroniser vos notes."
+"Izvēlies Lokālo mapi no <gui>Serviss</gui> lejupkrītošā saraksta. Izvēlies "
+"vēlamās sinhronizācijas <gui>Mapes Ceļš</gui> un nospied <gui>Saglabāt</gui> "
+"pogu. Tu esi gatavs piezīmju sinhronizācijai."
 
 #: C/sync.page:8(desc)
 msgid "Sync your Tomboy notes with other computers."
-msgstr "Synchroniser vos notes Tomboy avec d'autres ordinateurs."
+msgstr "Sinhronizē savas Tomboy piezīmes ar citiem datoriem."
 
 #: C/sync.page:23(title)
 msgid "Sync your notes"
-msgstr "Synchronisation de vos notes"
+msgstr "Sinhronizē savas piezīmes"
 
 #: C/sync.page:27(title)
 msgid "Manually Syncing Notes"
-msgstr "Synchronisation manuelle des notes"
+msgstr "Pašrocīga piezīmju sinhronizācija"
 
 #: C/sync.page:29(p)
 msgid "You can sync your notes one of three ways:"
-msgstr "Vous pouvez synchroniser vos notes de trois façons :"
+msgstr "Tu vari sinhronizēt savas piezīmes 3 veidos:"
 
 #: C/sync.page:32(p)
 msgid ""
 "From any note click the <gui>Tools</gui> icon and choose <gui>Synchronize "
 "Notes</gui>."
 msgstr ""
-"Depuis n'importe quelle note, cliquez sur l'icône <gui>Outils</gui> et "
-"choisissez <gui>Synchroniser les notes</gui>."
+"No jebkuras piezīmes, nospied <gui>Rīki</gui> ikonu un nospied <gui>"
+"Sinhronizēt piezīmes</gui>."
 
 #: C/sync.page:34(p)
 msgid ""
 "In the <gui>Search All Notes</gui> dialog choose <guiseq><gui>Tools</"
 "gui><gui>Synchronize Notes</gui></guiseq>."
 msgstr ""
-"Dans la boîte de dialogue <gui>Rechercher dans toutes les notes</gui>, "
-"choisissez <guiseq><gui>Outils</gui><gui>Synchroniser les notes</gui></"
-"guiseq>."
+"<gui>Meklēt visas piezīmes</gui> izvēlnē, paņem <guiseq><gui>Rīki</gui><gui>"
+"Sinhronizēt piezīmes</gui></guiseq>."
 
 #: C/sync.page:37(p)
 msgid ""
 "Using your mouse, right click on the Tomboy icon in your panel, taskbar or "
 "dock and choose <gui>Synchronize All Notes </gui>."
 msgstr ""
-"Avec la souris, faites un clic droit sur l'icône de Tomboy de votre tableau "
-"de bord, barre des tâches ou dock et choisissez <gui>Synchroniser toutes les "
-"notes</gui>."
+"Izmantojot savu peli, spied labo peles pogu uz Tomboy ikonas savā panelī vai "
+"dokā un izvēlies <gui>Sinhronizēt visas piezīmes</gui>."
 
 #: C/sync.page:46(title)
 msgid "Sync Your Notes Automatically"
-msgstr "Synchronisation automatique de vos notes"
+msgstr "Sinhronizē piezīmes automātiski"
 
 #: C/sync.page:48(p)
 msgid ""
@@ -380,19 +357,18 @@ msgid ""
 "syncing automatically. You can learn about handling note conflicts in the "
 "<link xref=\"sync-setup#conflict\"/> page."
 msgstr ""
-"Tomboy peut synchroniser vos notes automatiquement en arrière-plan. Il est "
-"recommandé de configurer la gestion des conflits de notes avant d'activer la "
-"synchronisation automatique. Vous pouvez en savoir plus sur la gestion des "
-"conflits dans la page <link xref=\"sync-setup#conflict\"/>."
+"Tomboy var automātiski fonā sinhronizēt tavas piezīmes. Ir ieteicams uzstādīt "
+"to, kā tu kontrolē piezīmju konfliktus, pirms automātiskās sinhronizācijas "
+"aktivēšanas. Par piezīmju konfliktu kontrolēšanu lasi <link "
+"xref=\"sync-setup#conflict\"/> lapu."
 
 #: C/sync.page:63(p)
 msgid ""
 "To enable autosync, check the <gui>Automatically Sync in Background Every x "
 "Minutes</gui> box at the bottom of the Synchronization tab."
 msgstr ""
-"Pour activer la synchronisation automatique, cochez la case "
-"<gui>Synchroniser automatiquement en arrière-plan toutes les x minutes</gui> "
-"en bas de l'onglet Synchronisation."
+"Lai aktivētu automātisko sinhronizāciju, atzīmē <gui>Sinhronizēt piezīmes "
+"automātiski fonā katras x minūtes</gui> lauku, Sinhronizācijas cilnes lejā."
 
 #: C/sync.page:66(p)
 msgid ""
@@ -400,26 +376,26 @@ msgid ""
 "Tomboy should sync enter the number of minutes in the dialog or use your "
 "mouse to move the time up or down."
 msgstr ""
-"L'option par défaut de Tomboy est de synchroniser automatiquement toutes les "
-"dix minutes. Pour modifier la fréquence de synchronisation de Tomboy "
-"saisissez le nombre de minutes dans la boîte de dialogue ou faites défiler "
-"vers le haut ou le bas avec la souris."
+"Noklusētais automātiskās sinhronizācijas intervāls ir katras 10 minūtes. Lai "
+"pamainītu intervālu, cik bieži Tomboy vajadzētu sinhronizēt piezīmes, ievadi "
+"šo skaitli attiecīgajā laukā vai izmanto peli, lai virzītu laiku uz augšu vai "
+"leju."
 
 #: C/sync.page:70(p)
 msgid ""
 "To disable autosync, uncheck the <gui>Automatically Sync in Background Every "
 "x Minutes</gui> box."
 msgstr ""
-"Pour désactiver la synchronisation automatique, décochez la case "
-"<gui>Synchroniser automatiquement en arrière plan toutes les X minutes</gui>."
+"Lai deaktivētu automātisko sinhronizāciju, atslēdz <gui>Sinhronizēt piezīmes "
+"automātiski fonā katras x minūtes</gui> lauku."
 
 #: C/search.page:9(desc)
 msgid "Search your notes."
-msgstr "Rechercher dans vos notes."
+msgstr "Meklē savās piezīmēs."
 
 #: C/search.page:24(title)
 msgid "Searching notes"
-msgstr "Recherche dans les notes"
+msgstr "Piezīmju meklēšana"
 
 #: C/search.page:27(p)
 msgid ""
@@ -427,20 +403,19 @@ msgid ""
 "tool. Right click the Tomboy icon in your panel or press the <gui>Search</"
 "gui> icon in a note's toolbar to bring up the Search All Notes dialog."
 msgstr ""
-"Vous pouvez trouver un mot ou une phrase dans n'importe laquelle de vos "
-"notes avec l'outil Recherche. Faites un clic droit sur l'icône Tomboy dans "
-"le tableau de bord ou cliquez sur l'icône <gui>Rechercher</gui> dans la "
-"barre d'outils d'une note pour ouvrir la boîte de dialogue Rechercher dans "
-"toutes les notes."
+"Tu vari sameklēt kādu vārdu vai frāzi jebkurā no savām piezīmēm, izmantojot "
+"Meklēšanas rīku. Veic labo peles klikšķi uz Tomboy ikonas savā panelī vai  "
+"spied <gui>Meklēt</gui> ikonu kādas piezīmes rīkjoslā, lai parādītos Meklēt "
+"Visas Piezīmes logu."
 
 #: C/search.page:31(p)
 msgid ""
 "Enter your search term in the <gui>Search</gui> box and press <key>Enter</"
 "key>, and all notes containing your search term will be listed."
 msgstr ""
-"Saisissez le terme recherché dans la boîte <gui>Recherche</gui> et appuyez "
-"sur <key>Entrée</key> ; toutes les notes qui contiennent ce terme sont alors "
-"affichées."
+"Ievadi savu meklējamo vārdu <gui>Meklēt</gui> laukā un spied <key>Enter</key>"
+", "
+"un visas, tavu meklējamo vārdu saturošās piezīmes, tiks uzskaitītas."
 
 #: C/search.page:33(p)
 msgid ""
@@ -448,45 +423,45 @@ msgid ""
 "specific terms only in that notebook by selecting the notebook you want to "
 "search and then entering your search criteria."
 msgstr ""
-"Si vous avez organiser vos notes en bloc-notes, vous pouvez aussi rechercher "
-"des termes spécifiques seulement dans un bloc-notes en sélectionnant d'abord "
-"ce bloc-notes, puis en saisissant votre critère de recherche."
+"Ja tavas piezīmes ir sakārtotas piezīmju blokos, tu vari meklēt konkrētus "
+"vārdus tikai šajos blokos, izvēloties piezīmju bloku, kurā vēlies meklēt, un "
+"tad ievadīt meklēšanas kritēriju."
 
 #: C/problems.page:8(desc)
 msgid "Common Problems."
-msgstr "Problèmes courants."
+msgstr "Biežākās problēmas."
 
 #: C/problems.page:23(title)
 msgid "Common problems"
-msgstr "Problèmes courants"
+msgstr "Biežākās problēmas"
 
 #: C/problems.page:27(title)
 msgid "Backing up and Restoring your notes"
-msgstr "Sauvegarde et restauration de vos notes"
+msgstr "Rezervju kopiju izveidošana un piezīmju atjaunošana"
 
 #: C/prefs.page:21(title) C/prefs.page:36(title) C/index.page:36(title)
 msgid "Tomboy Preferences"
-msgstr "Préférences de Tomboy"
+msgstr "Tomboy iestatījumi"
 
 #: C/prefs.page:24(title)
 msgid "Note editing preferences"
-msgstr "Préférences d'édition de notes"
+msgstr "Piezīmju rediģēšanas iestatījumi"
 
 #: C/prefs.page:28(title)
 msgid "Tomboy hotkeys"
-msgstr "Raccourcis clavier Tomboy"
+msgstr "Tomboy karstie taustiņi"
 
 #: C/prefs.page:32(title) C/index.page:32(title)
 msgid "Syncing Notes"
-msgstr "Synchronisation des notes"
+msgstr "Piezīmju sinhronizācija"
 
 #: C/note-edit-prefs.page:8(desc)
 msgid "Note editing preferences."
-msgstr "Préférences d'édition de notes."
+msgstr "Piezīmju rediģēšanas iestatījumi"
 
 #: C/note-edit-prefs.page:23(title)
 msgid "Note preferences"
-msgstr "Préférences des notes"
+msgstr "Piezīmju iestatījumi"
 
 #: C/note-edit-prefs.page:25(p)
 msgid ""
@@ -498,19 +473,17 @@ msgid ""
 "dialog. From the menu, choose <guiseq><gui>Edit</gui><gui>Preferences</gui></"
 "guiseq>."
 msgstr ""
-"Vous pouvez modifier les paramètres par défaut utilisés lors de la saisie de "
-"notes dans Tomboy. Pour modifier les paramètres de votre note, ouvrez les "
-"<gui>Préférences de Tomboy</gui> à l'aide de la souris en faisant un clic "
-"droit sur l'icône de Tomboy dans votre tableau de bord, barre des tâches ou "
-"dock et choisissez <gui>Préférences</gui> et sélectionnez l'onglet "
-"<gui>Édition</gui>. Vous pouvez aussi ouvrir les <gui>Préférences de Tomboy</"
-"gui> depuis la boîte de dialogue <gui>Rechercher dans toutes les notes</"
-"gui>. Choisissez <guiseq><gui>Édition</gui><gui>Préférences</gui></guiseq> "
-"dans le menu."
+"Tu vari pamainīt noklusētos iestatījumus, kad raksti piezīmes. Lai nomainītu "
+"piezīmju iestatījumus, atver <gui>Tomboy Iestatījumi</gui>, spiežot labo "
+"peles klikšķi uz Tomboy ikonas savā panelī, uzdevumu joslā vai dokā. "
+"Izvēlies <gui>Iestatījumi</gui> un paņem <gui>Rediģēšana</gui> cilni. "
+"Kā arī, tu vari atvērt <gui>Tomboy Iestatījumi</gui> no <gui>Meklēt visās "
+"piezīmēs</gui> loga. No izvēlnes paņem  <guiseq><gui>Rediģēt</gui><gui>"
+"Iestatījumi</gui></guiseq>."
 
 #: C/note-edit-prefs.page:37(title)
 msgid "Spell Check"
-msgstr "Vérification orthographique"
+msgstr "Pareizrakstības pārbaude"
 
 #: C/note-edit-prefs.page:38(p)
 msgid ""
@@ -519,10 +492,11 @@ msgid ""
 "You can see spelling suggestions by using your mouse to right click on the "
 "misspelled word."
 msgstr ""
-"Tomboy peut vérifier l'orthographe des mots lors de la saisie d'une note. La "
-"vérification orthographique est activée par défaut et Tomboy souligne les "
-"mots mal orthographiés. Pour visualiser les suggestions orthographiques à "
-"l'aide de la souris, faites un clic droit sur le mot mal orthographié."
+"Tomboy var pārbaudīt tevis uzrakstīto vārdu pareizrakstību rakstīšanas laikā. "
+"Pareizrakstības "
+"pārbaude ir aktivēta pēc noklusējuma un Tomboy pasvītros visus nepareizi "
+"uzrakstītos vārdus. Pareizrakstības ieteikumi ir redzami, ar peles labo pogu "
+"nospiežot uz nepareizi uzrakstītā vārda."
 
 #: C/note-edit-prefs.page:44(p)
 msgid ""
@@ -530,16 +504,15 @@ msgid ""
 "uncheck <gui>Spell check while typing</gui> in the <gui>Editing</gui> tab of "
 "Tomboy's Preferences."
 msgstr ""
-"Pour désactiver la correction orthographique automatique, utilisez la souris "
-"ou la barre d'espace pour décocher <gui>Vérification orthographique "
-"automatique</gui> dans l'onglet <gui>Édition</gui> des <gui>Préférences de "
-"Tomboy</gui>."
+"Lai deaktivētu automātisko pareizrakstības pārbaudi, izmanto peli vai "
+"atstarpes taustiņu, lai atslēgtu <gui>Pareizrakstības pārbaude rakstīšanas "
+"laikā</gui> <"
+"gui>Rediģēšana</gui> cilnē, Tomboy iestatījumos."
 
 #: C/note-edit-prefs.page:51(title)
 msgid "WikiWords"
-msgstr "Mots Wiki"
+msgstr "WikiWords"
 
-# note à revoir je pense
 #: C/note-edit-prefs.page:52(p)
 msgid ""
 "Tomboy can highlight words that <gui>LookLikeThis</gui>. By capitalizing "
@@ -547,10 +520,11 @@ msgid ""
 "Tomboy will highlight the word and make it a link. Clicking the link will "
 "create a new note with the WikiWord as the note title."
 msgstr ""
-"Tomboy peut surligner les mots <gui>CommeCeluiCi</gui>. En mettant une "
-"majuscule à plusieurs mots sans utiliser d'espace, de la même manière que "
-"dans un wiki, Tomboy surligne le mot et en fait un lien. Cliquez sur le lien "
-"pour créer une nouvelle note dont le titre est le mot Wiki."
+"Tomboy var iezīmēt vārdus, kuri <gui>KasIzskatāsŠādi</gui>. Bez "
+"atstarpēm savienojot kopā vairākus vārdus ar lielajiem sākumburtiem, Tomboy "
+"izcels vārdu "
+"un pārveidos to par saiti, līdzīgi kā strādā Wiki. Uzspiežot uz saites, tiks "
+"izveidota jauna piezīme ar WikiWord kā tās virsrakstu."
 
 #: C/note-edit-prefs.page:58(p)
 msgid ""
@@ -558,14 +532,13 @@ msgid ""
 "the spacebar to check the box to enable <gui>Highlight WikiWords</gui> in "
 "the <gui>Editing</gui> tab of Tomboy's Preferences."
 msgstr ""
-"Les mots Wiki sont désactivés par défaut. Pour activer les mots Wiki, "
-"utilisez la souris ou la barre d'espace pour cocher la case <gui>Surligner "
-"les mots Wiki</gui> dans l'onglet <gui>Édition</gui> des préférences de "
-"Tomboy."
+"WikiWords pēc noklusējuma ir deaktivēts. Lai aktivētu WikiWords, izmanto savu "
+"peli vai atstarpes taustiņu lai atzīmētu <gui>Izcelt WikiWords</gui>, <gui>"
+"Rediģēšana</gui> cilnē, Tomboy iestatījumos."
 
 #: C/note-edit-prefs.page:65(title)
 msgid "Auto-Bulleted Lists"
-msgstr "Listes à puces automatiques"
+msgstr "Automātisko aizzīmju saraksti"
 
 #: C/note-edit-prefs.page:66(p)
 msgid ""
@@ -575,11 +548,12 @@ msgid ""
 "list. After pressing <key>Enter</key>, the next line will start with a "
 "bullet too."
 msgstr ""
-"Tomboy peut créer des listes à puces automatiquement. Cette option est "
-"activée par défaut et quand vous saisissez une note, la saisie de <key>*</"
-"key> suivi du texte et de l'appui sur <key>Entrée</key> crée automatiquement "
-"une liste à puces. Après avoir appuyé sur <key>Entrée</key> la ligne "
-"suivante est aussi précédée d'une puce."
+"Tomboy var automātiski izveidot aizzīmju sarakstus. Šī iespēja ir aktivēta "
+"pēc noklusējuma. Sākot rindu ar <key>*</key> simbolu un pēc teksta "
+"uzrakstīšanas"
+"nospiežot <key>Enter</key>, automātiski tiek izveidots aizzīmju saraksts. Pēc "
+"vēl viena<key>"
+"Enter</key> nospiešanas, nākošā rinda arī sāksies ar aizzīmi."
 
 #: C/note-edit-prefs.page:73(p)
 msgid ""
@@ -587,31 +561,33 @@ msgid ""
 "<gui>Enable auto-bulleted lists</gui> in the <gui>Editing</gui> tab of "
 "Tomboy's Preferences."
 msgstr ""
-"Pour désactiver les listes à puces automatiques, utilisez la souris ou la "
-"barre d'espace pour décocher <gui>Activer les listes à puces automatique</"
-"gui> dans l'onglet <gui>Édition</gui> des <gui>Préférences de Tomboy</gui>."
+"Lai deaktivētu automātisko aizzīmju sarakstu, izmanto peli vai atstarpes "
+"taustiņu, lai atceltu <gui>Aktivizēt automātisko aizzīmju sarakstu</gui>, <"
+"gui>"
+"Rediģēšana</gui> cilnē, Tomboy iestatījumos."
 
 #: C/note-edit-prefs.page:80(title)
 msgid "Custom Fonts"
-msgstr "Polices personnalisées"
+msgstr "Pielāgoti fonti"
 
 #: C/note-edit-prefs.page:81(p)
 msgid ""
 "You can choose to use a font or font size in Tomboy different than the "
 "default font of your desktop. This feature is disabled by default."
 msgstr ""
-"Vous pouvez choisir d'utiliser dans Tomboy une police et une taille de "
-"caractère différente de celle utilisée par défaut par votre bureau. Cette "
-"option est désactivée par défaut."
+"Tu vari izvēlēties izmantot citu fontu vai fonta izmēru Tomboy lietotnē, "
+"atšķirīgu no noklusētās darbvirsmas fonta. Šī iespēja pēc noklusējuma ir "
+"deaktivēta."
 
 #: C/note-edit-prefs.page:85(p)
 msgid ""
 "To enable a different font, use your mouse or the spacebar to check <gui>Use "
 "custom font</gui> in the <gui>Editing</gui> tab of Tomboy's Preferences."
 msgstr ""
-"Pour activer l'utilisation d'une police personnalisée, utilisez la souris ou "
-"la barre d'espace pour cocher <gui>Utiliser une police personnalisée</gui> "
-"dans l'onglet <gui>Édition</gui> des <gui>Préférences de Tomboy</gui>."
+"Lai aktivētu kādu citu fontu, izmanto peli vai atstarpes taustiņu, lai "
+"iezīmētu <gui>Lietot pielāgotu fontu</gui>, <gui>Rediģēšana</gui> cilnē, "
+"Tomboy "
+"iestatījumos."
 
 #: C/note-edit-prefs.page:89(p)
 msgid ""
@@ -620,14 +596,15 @@ msgid ""
 "or italic, and the size of the font. Press <key>Ok</key> to save your "
 "selection."
 msgstr ""
-"Vous pouvez alors cliquer sur le bouton de la police, une boîte de dialogue "
-"s'ouvre pour vous permettre de choisir la police, son style (gras ou "
-"italique) et sa taille. Cliquez sur <key>Valider</key> pour enregistrer "
-"votre sélection."
+"Tad tu vari nospiest fonta pogu un tiks parādīts fonta dialoglodziņš, kurā "
+"var "
+"izvēlēties fontu, kuru vēlies izmantot, stilu, piemēram treknrakstu vai "
+"slīprakstu, kā arī fonta lielumu. Nospied <key>Labi</key>, lai saglabātu "
+"izvēli."
 
 #: C/note-edit-prefs.page:98(title)
 msgid "Renaming a Linked Notes"
-msgstr "Renommage d'une note liée"
+msgstr "Saistīto Piezīmju Pārsaukšana"
 
 #: C/note-edit-prefs.page:99(p)
 msgid ""
@@ -636,35 +613,34 @@ msgid ""
 "links to it in other notes in Tomboy, you can choose the default behavior "
 "Tomboy should use when detecting a change. Your options include:"
 msgstr ""
-"Tomboy crée automatiquement un lien entre les notes lorsque vous saisissez "
-"le titre d'une note enregistrée dans la note actuelle. Si vous essayez de "
-"renommer une note qui possède des liens vers d'autres notes de Tomboy, vous "
-"pouvez choisir le comportement par défaut de Tomboy lorsqu'il détecte un "
-"changement. Les options sont :"
+"Tomboy automātiski izveido saites starp piezīmēm, kad tu ierakstīsi "
+"saglabātas piezīmes virsrakstu pašreizējā piezīmē. Ja tu mēģināsi pārsaukt "
+"piezīmi, kurai ir saites citās piezīmēs, tu vari izvēlēties noklusēto rīcību, "
+"kas jāveic Tomboy šādā gadījumā. Iespējamās rīcības ir šādas:"
 
 #: C/note-edit-prefs.page:106(p)
 msgid ""
 "<gui>Ask me what to do</gui>: Tomboy will prompt you each time it detects a "
 "change with one of the below options."
 msgstr ""
-"<gui>Me demander quoi faire</gui> : chaque fois que Tomboy détecte un "
-"changement, il propose les options qui suivent."
+"<gui>Jautāt man, kā rīkoties</gui>: Katru reizi, kad Tomboy konstatēs "
+"izmaiņas, tas piedāvās kādu no zemāk redzamajām rīcības iespējām."
 
 #: C/note-edit-prefs.page:108(p)
 msgid ""
 "<gui>Never rename links</gui>: Tomboy will leave the other notes as they are "
 "and unlink the notes."
 msgstr ""
-"<gui>Ne jamais renommer les liens</gui> : Tomboy laisse les autres notes "
-"telles qu'elles sont et supprime les liens des notes."
+"<gui>Nekad nepārsaukt saites</gui>: Tomboy nemainīs pārējās piezīmēs un "
+"dzēsīs saites starp šīm piezīmēm."
 
 #: C/note-edit-prefs.page:110(p)
 msgid ""
 "<gui>Always rename links</gui>: Tomboy will automatically rename all the "
 "links in other notes to the note you have renamed."
 msgstr ""
-"<gui>Toujours renommer les liens</gui> : Tomboy renomme automatiquement tous "
-"les liens des autres notes vers la note que vous avez renommé."
+"<gui>Vienmēr pārsaukt saites</gui>: Tomboy automātiski pārsauks saites visās "
+"piezīmēs uz jauno virsrakstu."
 
 #: C/note-edit-prefs.page:115(p)
 msgid ""
@@ -672,21 +648,21 @@ msgid ""
 "<gui>When renaming a linked note:</gui> in the <gui>Editing</gui> tab of "
 "Tomboy's Preferences."
 msgstr ""
-"Choisissez une des options précédentes dans la liste déroulante située à "
-"droite du texte <gui>Lors du renommage d'une note liée :</gui> dans l'onglet "
-"<gui>Édition</gui> des préférences de Tomboy."
+"Izvēlies vienu no iepriekšminētajām iespējām no krītošā saraksta, pa labi no "
+"<gui>Pārsaucot saistīto piezīmi:</gui>  <gui>Rediģēšana</gui> cilnē, Tomboy "
+"Iestatījumos."
 
 #: C/note-edit-prefs.page:122(title)
 msgid "Create a New Note Template"
-msgstr "Création d'un nouveau modèle de notes"
+msgstr "Izveido jaunu piezīmju sagatavi"
 
 #: C/note-edit-prefs.page:123(p)
 msgid ""
 "You can create a new template that is displayed every time you create a new "
 "note."
 msgstr ""
-"Vous pouvez créer un nouveau modèle qui s'affiche à chaque fois que vous "
-"créez une nouvelle note."
+"Tu vari izveidot jaunu sagatavi, kura tiks attēlota katru reizi, kad "
+"izveidosi jaunu piezīmi."
 
 #: C/note-edit-prefs.page:126(p)
 msgid ""
@@ -697,13 +673,12 @@ msgid ""
 "the note to complete creating a new template. Each time you create a new "
 "note that template will be displayed in the new note."
 msgstr ""
-"Cliquez sur le bouton <gui>Ouvrir le modèle de nouvelle note</gui> dans "
-"l'onglet <gui>Édition</gui> des préférences de Tomboy. Un nouveau modèle "
-"s'affiche qui ressemble à une note de Tomboy. Remplacez le texte "
-"<gui>Décrivez votre nouvelle note ici.</gui> de la note par le texte qui "
-"doit s'afficher dans le nouveau modèle. Fermez la note pour terminer la "
-"création du nouveau modèle. Chaque fois que vous créez une nouvelle note, ce "
-"modèle s'affiche dans la nouvelle note."
+"Spied <gui>Atvērt jaunu piezīmes sagatavi</gui> pogu, <gui>Rediģēšana</gui> "
+"cilnē, Tomboy Iestatījumos. Tiks izveidota jauna, Tomboy piezīmei līdzīga "
+"sagatave. Aizvieto <gui>Aprakstiet savu piezīmi šeit.</gui> tekstu "
+"piezīmē ar tekstu, kuram vajadzētu būt jaunajā sagatavē. Aizver piezīmi, lai "
+"pabeigtu sagataves izveidi. Katru reizi, kad atvērsi jaunu piezīmi, šī "
+"sagatave tiks attēlota jaunajā piezīmē."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -713,11 +688,11 @@ msgstr "@@image: 'figures/tomboy.png'; md5=5e3c78a4507fadcaba53b74a0d3f30ae"
 
 #: C/introduction.page:8(desc)
 msgid "Introduction to <app>Tomboy Notes</app>."
-msgstr "Introduction à <app>Notes Tomboy</app>."
+msgstr "Ievads <app>Tomboy piezīmes</app>."
 
 #: C/introduction.page:24(title)
 msgid "Introduction"
-msgstr "Introduction"
+msgstr "Ievads"
 
 #: C/introduction.page:26(p)
 msgid ""
@@ -725,10 +700,9 @@ msgid ""
 "Microsoft Windows, and Mac OS X. <app>Tomboy</app> is easy to use, and helps "
 "you organize the ideas and information you work with everyday."
 msgstr ""
-"<app>Tomboy</app> est une application de prise de notes pour le bureau "
-"GNOME, Microsoft Windows et Mac OS X. <app>Tomboy</app> est simple "
-"d'utilisation et permet d'organiser les idées et les informations de tous "
-"les jours."
+"<app>Tomboy</app> ir piezīmju pierakstīšanas programma GNOME Desktop, "
+"Microsoft Windows un Mac OS X. <app>Tomboy</app> ir vienkārši lietot un "
+"palīdz tev organizēt idejas un informāciju, ar ko strādā katru dienu."
 
 #: C/introduction.page:31(p)
 msgid ""
@@ -737,63 +711,62 @@ msgid ""
 "it easier to find and sort your information. You can also organize multiple "
 "notes in a notebook to make grouping notes together easier."
 msgstr ""
-"<app>Tomboy</app> inclut des fonctionnalités qui vous aident à organiser et "
-"à vous souvenir de vos informations et permettent de relier vos notes entre "
-"elles pour vous aider à les retrouver et les trier. Vous pouvez aussi "
-"organiser plusieurs notes dans un bloc-notes afin de regrouper vos notes "
-"plus facilement."
+"<app>Tomboy</app> ir funkcijas, kas tev palīdz labāk organizēt un "
+"atcerēties informāciju, un ļauj tev sasaistīt piezīmes kopā, lai tev vieglāk "
+"būtu meklēt un sakārtot informāciju. Kā arī tu vari vairākas piezīmes "
+"sakārtot piezīmju blokos, lai piezīmju grupēšana būtu vieglāka."
 
 #: C/introduction.page:36(p)
 msgid ""
 "You can also sync your notes across multiple computers, making it easy to "
 "take your notes with you wherever you are."
 msgstr ""
-"Vous pouvez aussi synchroniser vos notes entre différents ordinateurs ce qui "
-"vous permet d'emporter vos notes avec vous où que vous soyez."
+"Kā arī, tu vari sinhronizēt piezīmes starp vairākiem datoriem, paņemot līdzi "
+"savas piezīmes, lai kur tu būtu."
 
 #: C/introduction.page:42(title)
 msgid "<gui>Tomboy Notes</gui> window"
-msgstr "Fenêtre des <gui>Notes Tomboy</gui>"
+msgstr "<gui>Tomboy piezīmes</gui> logs"
 
 #: C/introduction.page:43(desc)
 msgid "<app>Tomboy Notes</app> main window"
-msgstr "Fenêtre principale des <app>Notes Tomboy</app>"
+msgstr "<app>Tomboy piezīmes</app> galvenais logs"
 
 #: C/introduction.page:45(p)
 msgid "<app>Tomboy</app> default note."
-msgstr "Note par défaut de <app>Tomboy</app>."
+msgstr "<app>Tomboy</app> noklusētā piezīme."
 
 #: C/index.page:21(title)
 msgid "Tomboy Notes"
-msgstr "Notes Tomboy"
+msgstr "Tomboy piezīmes"
 
 #: C/index.page:24(title)
 msgid "Managing Notes"
-msgstr "Gestion des notes"
+msgstr "Piezīmju pārvaldīšana"
 
 #: C/index.page:28(title)
 msgid "Organizing Notes"
-msgstr "Organisation des notes"
+msgstr "Piezīmju organizēšana"
 
 #: C/index.page:40(title)
 msgid "Advanced Actions"
-msgstr "Actions avancées"
+msgstr "Paplašinātas darbības"
 
 #: C/index.page:44(title)
 msgid "Common Problems"
-msgstr "Problèmes courants"
+msgstr "Biežākās problēmas"
 
 #: C/index.page:48(title)
 msgid "What's New"
-msgstr "Nouveautés"
+msgstr "Kas jauns"
 
 #: C/hotkeys.page:8(desc)
 msgid "Preferences for hotkeys and shortcut keys."
-msgstr "Préférences des raccourcis clavier."
+msgstr "Iestatījumi karstajiem taustiņiem un īsinājumtaustiņiem."
 
 #: C/hotkeys.page:23(title)
 msgid "Hotkeys"
-msgstr "Raccourcis clavier"
+msgstr "Karstie taustiņi"
 
 #: C/hotkeys.page:25(p)
 msgid ""
@@ -801,10 +774,9 @@ msgid ""
 "even when using other applications on your desktop. Hotkeys are activated by "
 "pressing multiple keys on your keyboard together."
 msgstr ""
-"Les raccourcis clavier vous permettent d'accéder à vos notes et aux "
-"fonctionnalités de Tomboy de n'importe où, même si vous utilisez d'autres "
-"applications sur votre bureau. Les raccourcis clavier sont activés en "
-"pressant simultanément des touches de votre clavier."
+"Karstie taustiņi ļauj tev piekļūt piezīmēm un Tomboy iespējām no jebkuras "
+"vietas, pat izmantojot citas darbvirsmas programmas. Karstie taustiņi tiek "
+"aktivizēti, nospiežot vairākus tastatūras taustiņus reizē."
 
 #: C/hotkeys.page:31(p)
 msgid ""
@@ -815,96 +787,89 @@ msgid ""
 "All Notes</gui> dialog. From the menu choose <guiseq><gui>Edit</"
 "gui><gui>Preferences</gui></guiseq>."
 msgstr ""
-"Vous pouvez activer les raccourcis clavier dans les <gui>Préférences de "
-"Tomboy</gui> en faisant un clic droit sur l'icône de Tomboy de votre tableau "
-"de bord, de la barre des tâches ou du dock et en choisissant "
-"<gui>Préférences</gui> puis en sélectionnant l'onglet <gui>Raccourcis "
-"clavier</gui>. Vous pouvez aussi ouvrir les <gui>Préférences de Tomboy</gui> "
-"depuis la boîte de dialogue <gui>Rechercher dans toutes les notes</gui>. "
-"Choisissez <guiseq><gui>Édition</gui><gui>Préférences</gui></guiseq> dans le "
-"menu."
+"Tu vari aktivēt karstos taustiņus, atverot <gui>Tomboy iestatījumi</gui>, "
+"izmantojot peli, lai veiktu labo peles klikšķi uz Tomboy ikonas panelī, "
+"uzdevumu joslā vai dokā. Izvēlies <gui>Iestatījumi</gui> un tad izvēlies <gui>"
+"Karstie taustiņi</gui> cilni. Tu vari arī atvērt <gui>Tomboy Iestatījumi</gui>"
+" no <gui>Meklēt visas piezīmes</gui> izvēlnes. No izvēlnes, izvēlies <guiseq>"
+"<gui>Rediģēt</gui><gui>Iestatījumi</gui></guiseq>."
 
 #: C/hotkeys.page:40(p)
 msgid "The actions available in Tomboy to be activated by hotkeys are:"
-msgstr ""
-"Les actions de Tomboy qui peuvent être activées à l'aide des raccourcis "
-"clavier sont :"
+msgstr "Ar karstajiem taustiņiem ir iespējams aktivizēt šādas Tomboy darbības:"
 
 #: C/hotkeys.page:43(p)
 msgid ""
 "<gui>Show notes menu</gui>: <keyseq><key>Alt</key><key>F12</key></keyseq>"
 msgstr ""
-"<gui>Afficher le menu des notes</gui> : <keyseq><key>Alt</key><key>F12</"
-"key></keyseq>"
+"<gui>Parādīt piezīmju izvēlni</gui>: <keyseq><key>Alt</key><key>F12</key><"
+"/keyseq>"
 
 #: C/hotkeys.page:45(p)
 msgid ""
 "<gui>Open \"Start Here\"</gui>: <keyseq><key>Alt</key><key>F11</key></keyseq>"
 msgstr ""
-"<gui>Ouvrir « Démarrer ici »</gui> : <keyseq><key>Alt</key><key>F11</key></"
-"keyseq>"
+"<gui>Atvērt \"Sākt Šeit\" </gui>: <keyseq><key>Alt</key><key>F11</key><"
+"/keyseq>"
 
 #: C/hotkeys.page:47(p)
 msgid ""
 "<gui>Create new note</gui>: Disabled by default. You can enter a key "
 "sequence in this field to create a hotkey."
 msgstr ""
-"<gui>Créer une nouvelle note</gui> : désactivé par défaut. Vous pouvez "
-"saisir une séquence de touches dans ce champ pour créer un raccourci clavier."
+"<gui>Izveidot jaunu piezīmi</gui>: Pēc noklusējuma deaktivēts. Tu vari "
+"ievadīt "
+"taustiņu kombināciju šai funkcijai, lai izveidotu karsto taustiņu."
 
 #: C/hotkeys.page:49(p)
 msgid ""
 "<gui>Open \"Search All Notes\"</gui>: Disabled by default. You can enter a "
 "key sequence in this field to create a hotkey."
 msgstr ""
-"<gui>Ouvrir « Rechercher dans toutes les notes »</gui> : désactivé par "
-"défaut. Vous pouvez saisir une séquence de touches dans ce champ pour créer "
-"un raccourci clavier."
+"<gui>Atvērt \"Meklēt visas piezīmes\"</gui>: Pēc noklusējuma deaktivēts.Tu "
+"vari ievadīt "
+"taustiņu kombināciju šai funkcijai, lai izveidotu karsto taustiņu."
 
 #: C/edit-note.page:10(desc)
 msgid "Edit and format your notes."
-msgstr "Modifier et formater vos notes."
+msgstr "Rediģē un formatē piezīmes."
 
 #: C/edit-note.page:25(title)
 msgid "Edit notes"
-msgstr "Modification de notes"
+msgstr "Rediģē piezīmes"
 
 #: C/edit-note.page:27(p)
 msgid ""
 "Tomboy Notes allows you to format the text within a note in a number of "
 "different ways, including undo and redo, bold, italics, underline, and more."
 msgstr ""
-"Notes Tomboy vous permet de formater le texte d'une note de multiples façons "
-"dont les fonctions annuler et refaire, la mise en gras ou en italique, le "
-"soulignement et plus encore."
+"Tomboy piezīmes ļauj tev formatēt tekstu piezīmē vairākos veidos: "
+"treknrakstu, slīprakstu, pasvītrošanu, atsaukšanu, atsaukšanas atcelšanu u.c."
 
 #: C/edit-note.page:33(title)
 msgid "Undo and Redo"
-msgstr "Fonction annuler et refaire"
+msgstr "Atsaukšana un atsaukšanas atcelšana"
 
 #: C/edit-note.page:35(p)
 msgid ""
 "To undo the last action, including typing a word or formatting text, press "
 "the <gui>Text</gui> icon in the toolbar and choose <gui>Undo</gui>."
 msgstr ""
-"Pour annuler la dernière action, y compris la saisie d'un mot ou le "
-"formatage du texte, cliquez sur l'icône <gui>Texte</gui> dans la barre "
-"d'outils et choisissez <gui>Annuler</gui>."
+"Lai atsauktu iepriekšējo darbību, t.sk. arī vārda ierakstīšanu vai teksta "
+"formatēšanu, spied <gui>Teksts</gui> ikonu rīkjoslā un izvēlies <gui>Atsaukt<"
+"/gui>."
 
-# Note: not ideal suggestion
-# "If you want to redo an action or a text entry after using Undo, press the <gui>Text</gui> icon in the toolbar and choose <gui>Redo</gui>."
 #: C/edit-note.page:39(p)
 msgid ""
 "If you want to redo a word or text after using Undo, press the <gui>Text</"
 "gui> icon in the toolbar and choose <gui>Redo</gui>."
 msgstr ""
-"Si vous souhaitez refaire votre dernière action sur un mot ou un texte, "
-"cliquez sur l'icône <gui>Texte</gui> dans la barre d'outils et choisissez "
-"<gui>Refaire</gui>."
+"Ja tu vēlies atcelt atsaukšanu, nospied <gui>Teksts</gui> ikonu rīkjoslā un "
+"spied <gui>Atcelt atsaukšanu</gui>."
 
 #: C/edit-note.page:47(title)
 msgid "Formatting Text"
-msgstr "Formatage du texte"
+msgstr "Teksta formatēšana"
 
 #: C/edit-note.page:49(p)
 msgid ""
@@ -912,17 +877,17 @@ msgid ""
 "including underlining words, making text bold or italics, highlighting words "
 "or phrases, or striking through text."
 msgstr ""
-"Vous pouvez formater le texte de vos notes de plusieurs façons dont le "
-"soulignement, la mise en gras ou en italique, le surlignage des mots ou des "
-"phrases ou la rature."
+"Tu vari noformēt piezīmju tekstu vairākos veidos, piemēram, vārdu "
+"pasvītrošanu, treknrakstu, slīprakstu, vārdu vai frāžu iezīmēšanu vai "
+"teksta pārsvītrošanu."
 
 #: C/edit-note.page:57(title)
 msgid "Changing the Text Size"
-msgstr "Modification de la taille du texte"
+msgstr "Teksta izmēra maiņa"
 
 #: C/edit-note.page:59(p)
 msgid "You can change the size of the text in your notes one of two ways."
-msgstr "Vous pouvez modifier la taille du texte dans vos notes de deux façons."
+msgstr "Tu vari mainīt teksta izmēru piezīmēs vienā no diviem veidiem."
 
 #: C/edit-note.page:60(p)
 msgid ""
@@ -930,30 +895,31 @@ msgid ""
 "<keyseq><key>Ctrl</key><key>+</key></keyseq> to make your text bigger or "
 "<keyseq><key>Ctrl</key><key>-</key></keyseq> to make your text smaller."
 msgstr ""
-"Sélectionnez le texte que vous souhaitez agrandir ou diminuer et appuyez sur "
-"les touches <keyseq><key>Ctrl</key><key>+</key></keyseq> pour agrandir ou "
-"<keyseq><key>Ctrl</key><key>-</key></keyseq> pour diminuer."
+"Iezīmē tekstu, kura izmēru vēlies mainīt, un spied <keyseq><key>Ctrl</key><"
+"key>"
+"+</key></keyseq>, lai to padarītu lielāku, vai <keyseq><key>Ctrl</key><key>-<"
+"/key></keyseq>, lai samazinātu tā izmēru."
 
 #: C/edit-note.page:63(p)
 msgid ""
 "Alternatively, you can press the <gui>Text</gui> icon in the toolbar and "
 "choose from one of four preset sizes including small, normal, large and huge."
 msgstr ""
-"Vous pouvez également cliquer sur l'icône <gui>texte</gui> dans la barre "
-"d'outils et choisir l'une des quatre tailles prédéfinies, petite, normale, "
-"grande et énorme."
+"Alternatīvi, tu vari nospiest <gui>Teksts</gui> ikonu rīkjoslā un izvēlēties "
+"vienu no četriem iepriekšnoteiktajiem izmēriem: mazu, normālu, lielu un "
+"milzīgu."
 
 #: C/edit-note.page:71(title)
 msgid "Formatting Bullets"
-msgstr "Formatage des puces"
+msgstr "Aizzīmju formatēšana"
 
 #: C/edit-note.page:73(p)
 msgid ""
 "Bullets can be created by using the keyboard or the <gui>Text</gui> icon in "
 "the toolbar."
 msgstr ""
-"Les puces peuvent être créées à l'aide du clavier ou en cliquant sur l'icône "
-"<gui>texte</gui> dans la barre d'outils."
+"Aizzīmes var tikt izveidotas, izmantojot tastatūru vai <gui>Teksts</gui> "
+"ikonu rīkjoslā."
 
 #: C/edit-note.page:75(p)
 msgid ""
@@ -963,12 +929,13 @@ msgid ""
 "formatted as a bullet as well. If you want to create a sub-bullet, press "
 "<key>Tab</key> immediately after pressing <key>Enter</key>."
 msgstr ""
-"Pour créer une puce manuellement, saisissez la clé astérisque <key>*</key> "
-"et ensuite votre texte. Après avoir appuyé sur la touche Entrée, Tomboy "
-"convertit automatiquement les lignes commençant par un astérisque en puce et "
-"la ligne suivante commence aussi par une puce. Si vous souhaitez créer une "
-"sous-puce, appuyez sur <key>Tab</key> immédiatement après avoir appuyé sur "
-"<key>Entrée</key>."
+"Lai pašrocīgi izveidotu aizzīmi, ieraksti zvaigznītes simbolu <key>*</key>, "
+"pēc tam "
+" savu tekstu. Pēc Enter nospiešanas, Tomboy automātiski pārveidos "
+"teksta rindu tā, lai zvaigznītes vietā būtu aizzīme un nākamās rindas arī "
+"tiks iesāktas arī ar aizzīmi. Ja vēlies izveidot zemāka līmeņa aizzīmi, "
+"nospied <key>"
+"Tab</key> uzreiz pēc <key>Enter</key> nospiešanas."
 
 #: C/edit-note.page:82(p)
 msgid ""
@@ -976,13 +943,14 @@ msgid ""
 "in the toolbar check the <gui>Bullets</gui> checkbox to change a specific "
 "line to be bulleted."
 msgstr ""
-"Vous pouvez aussi sélectionner une ligne spécifique et choisir l'icône "
-"<gui>Texte</gui> dans la barre d'outils, puis cocher la case <gui>Puces</"
-"gui> pour ajouter une puce à une ligne."
+"Kā arī tu vari iezīmēt kādu teksta rindu un izvēlēties <gui>Teksts</gui> "
+"ikonu "
+"rīkjoslā un atzīmēt <gui>Aizzīmes</gui> izvēles rūtiņu, lai pievienotu šai "
+"rindai aizzīmi."
 
 #: C/delete-notes.page:10(desc)
 msgid "Delete a note in Tomboy."
-msgstr "Suppression de notes dans Tomboy."
+msgstr "Izdzēst piezīmi Tomboy programmā."
 
 #: C/delete-notes.page:19(years)
 msgid "2010"
@@ -990,38 +958,38 @@ msgstr "2010"
 
 #: C/delete-notes.page:24(title)
 msgid "Delete a note"
-msgstr "Suppression d'une note"
+msgstr "Izdzēst piezīmi"
 
 #: C/delete-notes.page:26(p)
 msgid ""
 "You can delete a note by pressing the <gui>Delete</gui> icon in the toolbar "
 "of the note you wish to delete."
 msgstr ""
-"Pour supprimer une note cliquez sur l'icône <gui>Supprimer</gui> de la barre "
-"d'outils de la note que vous voulez supprimer."
+"Tu vari izdzēst piezīmi, nospiežot <gui>Izdzēst</gui> ikonu, piezīmes, kuru "
+"vēlies izdzēst, rīkjoslā."
 
 #: C/delete-notes.page:30(p)
 msgid ""
 "Deleting a note is permanent. After deletion, the note is not recoverable."
 msgstr ""
-"La suppression d'une note est permanente. Après sa suppression, la note "
-"n'est plus récupérable."
+"Piezīmju dzēšana ir neatgriezeniska un pēc dzēšanas piezīme nav atgūstama."
 
 #: C/delete-notes.page:31(p)
 msgid ""
 "You will be prompted <gui>Really delete this note?</gui> when deleting a "
 "note."
 msgstr ""
-"Lorsque vous supprimez une note, il vous sera demandé <gui>Voulez-vous "
-"vraiment supprimer cette note ?</gui>"
+"Tev vaicās pēc apstiprinājuma <gui>Vai tiešām izdzēst šo piezīmi?</gui> pirms "
+"piezīmes "
+"dzēšanas."
 
 #: C/create-note.page:10(desc)
 msgid "Create a new note in Tomboy."
-msgstr "Créer une nouvelle note dans Tomboy."
+msgstr "Izveidot jaunu piezīmi Tomboy programmā."
 
 #: C/create-note.page:25(title)
 msgid "Create a new note"
-msgstr "Création d'une nouvelle note"
+msgstr "Izveidot jaunu piezīmi"
 
 #: C/create-note.page:27(p)
 msgid ""
@@ -1030,11 +998,11 @@ msgid ""
 "New Note</gui>. You can also use the keyboard shortcuts by pressing "
 "<keyseq><key>Alt + F12</key></keyseq>."
 msgstr ""
-"Vous pouvez créer une nouvelle note en cliquant sur l'icône Tomboy dans le "
-"tableau de bord de GNOME, la barre de taches de Windows ou le dock d'OS X, "
-"puis en choisissant <gui>Créer une nouvelle note</gui>. Vous pouvez aussi "
-"utiliser le raccourcis clavier et presser <keyseq><key>Alt + F12</key></"
-"keyseq>."
+"Tu vari izveidot jaunu piezīmi, nospiežot uz Tomboy ikonas GNOME panelī, OS X "
+"dokā vai Windows uzdevumu joslā, un tad izvēloties <gui>Izveidot Jaunu "
+"Piezīmi<"
+"/gui>. Tu arī vari izmantot tastatūras saīsni, nospiežot <keyseq><key>Alt + "
+"F12</key></keyseq>."
 
 #: C/create-note.page:32(p)
 msgid ""
@@ -1043,53 +1011,50 @@ msgid ""
 "format the text within a note, and more. For more information, see <link "
 "xref=\"edit-notes\"/>."
 msgstr ""
-"La nouvelle note s'affiche dans une nouvelle fenêtre avec le titre Nouvelle "
-"note <em>N</em>. La note contient une barre d'outils, avec des options de "
-"recherche dans vos notes, de liaison de notes, de formatage du texte dans "
-"une note et plus encore. Pour plus d'informations, consultez la section "
-"<link xref=\"edit-notes\"/>."
+"Jaunā piezīme tiks attēlota jaunā logā ar virsrakstu \"Jauna Piezīme\" <em>N<"
+"/em>. "
+"Piezīme satur rīkjoslu ar iespējām meklēt piezīmes, sasaistīt piezīmes, "
+"formatēt tekstu u.c. Vairāk informācijai, lasi <link xref=\"edit-notes\"/>."
 
 #: C/create-notebook.page:10(desc)
 msgid "Create a new notebook in Tomboy."
-msgstr "Créer un nouveau bloc-notes dans Tomboy."
+msgstr "Izveidot jaunu piezīmju bloku Tomboy programmā."
 
 #: C/create-notebook.page:25(title)
 msgid "Create a notebook"
-msgstr "Création d'un bloc-notes"
+msgstr "Izveidot piezīmju bloku"
 
 #: C/create-notebook.page:27(p)
 msgid ""
 "Notebooks allow you to group related notes together. You can add a note to a "
 "notebook in the Search All Notes window or directly inside of a Note."
 msgstr ""
-"Les blocs-notes vous permettent de regrouper les notes qui sont reliées "
-"entre elles. Vous pouvez ajouter une note dans un bloc-notes dans la fenêtre "
-"« Rechercher dans toutes les notes » ou directement depuis une note."
+"Piezīmju bloki ļauj tev sagrupēt piezīmes kopā. Tu vari pievienot piezīmi "
+"piezīmju blokam, \"Meklēt visas piezīmes\" logā vai no pašas piezīmes loga."
 
 #: C/create-notebook.page:33(p)
 msgid ""
 "Click on the Tomboy note icon present in the GNOME Panel, the taskbar in "
 "Microsoft Windows, or the dock in Mac OS X. A menu will appear."
 msgstr ""
-"Cliquez sur l'icône de Tomboy dans le tableau de bord de GNOME, la barre des "
-"tâches sous Microsoft Windows ou le dock sous Mac OS X. Un menu apparaît."
+"Spied uz Tomboy piezīmes ikonu GNOME panelī, Microsoft Windows rīkjoslā vai "
+"Mac OS X dokā un parādīsies izvēlne."
 
 #: C/create-notebook.page:43(p)
 msgid "Select <guiseq><gui>Notebooks</gui><gui>New Notebook</gui></guiseq>."
 msgstr ""
-"Choisissez <guiseq><gui>Bloc-notes</gui><gui>Nouveau bloc-notes</gui></"
-"guiseq>."
+"Izvēlies <guiseq><gui>Piezīmju bloki</gui><gui>Jauns piezīmju bloks</gui>"
+"</guiseq>."
 
 #: C/create-notebook.page:47(p) C/create-notebook.page:66(p)
 #: C/create-notebook.page:79(p)
 msgid "Enter a name for the new notebook."
-msgstr "Saisissez un nom pour le nouveau bloc-notes."
+msgstr "Ievadi jaunā piezīmju bloka nosaukumu."
 
 #: C/create-notebook.page:51(p)
 msgid "To create a new notebook from the <gui>Search All Notes</gui> dialog:"
 msgstr ""
-"Pour créer un nouveau bloc-notes depuis la fenêtre <gui>Rechercher dans "
-"toutes les notes</gui> :"
+"Lai izveidotu jaunu piezīmju bloku no <gui>Meklēt visas piezīmes</gui> loga:"
 
 #: C/create-notebook.page:56(p)
 msgid ""
@@ -1097,84 +1062,84 @@ msgid ""
 "GNOME Panel, the taskbar in Microsoft Windows, or the dock in Mac OS X, or "
 "click on Search from an open note."
 msgstr ""
-"Ouvrez <gui>Rechercher dans toutes les notes</gui> depuis l'icône Tomboy du "
-"tableau de bord de GNOME, de la barre des tâches de Microsoft Windows ou du "
-"dock de Mac OS X ou cliquez sur « Rechercher » dans une note ouverte."
+"Atver <gui>Meklēt visas piezīmes</gui>, izvēloties to no Tomboy ikonas GNOME "
+"panelī, Microsoft Windows rīkjoslā vai Mac OS X dokā, vai spied Meklēt jau "
+"atvērtā piezīmē."
 
 #: C/create-notebook.page:62(p)
 msgid ""
 "Using your mouse, right click in the left hand box and choose <gui>New "
 "Notebook</gui>."
 msgstr ""
-"Avec la souris, faites un clic droit dans la zone à gauche et choisissez "
-"<gui>Nouveau bloc-notes</gui>."
+"Izmantojot savu peli, veic labo peles klikšķi uz kreisās puses laukā un "
+"izvēlies <gui>Jauns piezīmju bloks</gui>."
 
 #: C/create-notebook.page:70(p)
 msgid "Or:"
-msgstr "ou :"
+msgstr "Vai:"
 
 #: C/create-notebook.page:74(p)
 msgid ""
 "With <gui>Search All Notes</gui> open, choose <guiseq><gui>File</"
 "gui><gui>Notebooks</gui><gui>New Notebook</gui></guiseq>."
 msgstr ""
-"Avec la fenêtre <gui>Rechercher dans toutes les notes</gui> ouverte, "
-"choisissez <guiseq><gui>Fichier</gui><gui>Bloc-notes</gui><gui>Nouveau bloc-"
-"notes</gui></guiseq>."
+"Ar <gui>Meklēt visas piezīmes</gui> logu atvēru, izvēlies <guiseq><gui>Fails<"
+"/gui><gui>Piezīmju bloki</gui><gui>Jauns piezīmju bloks</gui><"
+"/guiseq>."
 
 #: C/advanced.page:8(desc)
 msgid "Advanced actions and help."
-msgstr "Actions avancées et aide."
+msgstr "Paplašinātas darbības un palīdzība."
 
 #: C/advanced.page:23(title)
 msgid "Advanced actions"
-msgstr "Actions avancées"
+msgstr "Paplašinātas darbības"
 
 #: C/advanced.page:27(title)
 msgid "Creating a Note Template"
-msgstr "Création d'un modèle de note"
+msgstr "Piezīmju veidnes izveidošana"
 
 #: C/advanced.page:33(title)
 msgid "Tomboy Notes Location"
-msgstr "Emplacement des notes Tomboy"
+msgstr "Tomboy piezīmes atrašanās vieta"
 
 #: C/addins-tools.page:7(desc)
 msgid "Enable additional note functionality."
-msgstr "Activer des fonctionnalités de note supplémentaires."
+msgstr "Aktivē papildu piezīmju funkcionalitāti."
 
 #: C/addins-tools.page:22(title)
 msgid "Tomboy Tools Addins"
-msgstr "Greffons d'outils Tomboy"
+msgstr "Tomboy Tools pievienojumprogrammas"
 
 #: C/addins-tools.page:24(p)
 msgid "Tools addins add additional functionality to your Tomboy notes."
 msgstr ""
-"Les greffons outils ajoutent des fonctionnalités supplémentaires à votre "
-"application Tomboy."
+"Rīku pievienojumprogrammas papildina funkcionalitāti tavām Tomboy "
+"piezīmēm."
 
 #: C/addins-tools.page:27(title)
 msgid "Backlinks"
-msgstr "Backlinks"
+msgstr "Atpakaļsaites"
 
 #: C/addins-tools.page:28(p)
 msgid ""
 "The <gui>Backlinks</gui> addin is enabled by default and allows you to see "
 "which notes link to the note you are currently viewing."
 msgstr ""
-"Le greffon <gui>Backlinks</gui> est activé par défaut et permet de voir "
-"quelles notes sont liées à celle que vous visualisez actuellement."
+"<gui>Atpakaļsaites</gui> pievienojumprogramma pēc noklusējuma ir aktivēta un "
+"ļauj redzēt, kuras piezīmes ir piesaistītas piezīmei, kuru pašreiz skaties."
 
 #: C/addins-tools.page:33(title)
 msgid "Export to HTML"
-msgstr "Exportation en HTML"
+msgstr "Eksportēt uz HTML"
 
 #: C/addins-tools.page:34(p)
 msgid ""
 "The <gui>Export to HTML</gui> addin is enabled by default and will export an "
 "individual note to HTML."
 msgstr ""
-"Le greffon <gui>Exporter en HTML</gui> est activé par défaut et exporte une "
-"note individuelle dans un fichier HTML."
+"<gui>Eksportēt uz HTML</gui> pievienojumprogramma pēc noklusējuma ir "
+"aktivēta un eksportē individuālu piezīmi uz HTML."
 
 #: C/addins-tools.page:36(p)
 msgid ""
@@ -1185,17 +1150,17 @@ msgid ""
 "to be different than the note name. The note will then be saved as an HTML "
 "file and automatically displayed in your browser."
 msgstr ""
-"Pour exporter une note en HTML, cliquez sur l'icône <gui>Outils</gui> dans "
-"la barre d'outils et choisissez <gui>Exporter en HTML</gui>. Une boîte de "
-"dialogue s'ouvre pour vous permettre d'enregistrer la note. Choisissez le "
-"répertoire dans lequel vous souhaitez enregistrer le fichier et modifiez le "
-"nom du nouveau fichier html de la note si vous voulez qu'il soit différent "
-"du nom de la note. La note est alors enregistrée en tant que fichier HTML et "
-"automatiquement affichée dans votre navigateur."
+"Lai eksportētu piezīmi uz HTML, spied <gui>Rīki</gui> ikonu, piezīmju "
+"rīkjoslā, un izvēlies <gui>Eksportēt uz HTML</gui>. Tev uzreiz tiks dots "
+"piezīmes saglabāšanas logs. Izvēlies mapi, kurā saglabāt piezīmi un izmaini "
+"nosaukumu, ja tu vēlies, lai tas būtu citādāks, nekā piezīmes faila nosaukums."
+" "
+"Piezīme tiks saglabāta HTML formātā un automātiski tiks attēlota tavā "
+"pārlūkprogrammā."
 
 #: C/addins-tools.page:45(title)
 msgid "Insert Timestamp"
-msgstr "Insertion de date"
+msgstr "Ievietot laika spiedogu"
 
 #: C/addins-tools.page:46(p)
 msgid ""
@@ -1203,9 +1168,10 @@ msgid ""
 "choose the <gui>Insert Timestamp</gui> addin and then press <gui>Enable</"
 "gui> in the Tomboy Preferences."
 msgstr ""
-"Le greffon <gui>Insérer la date</gui> est désactivé par défaut. Pour "
-"l'activer, choisissez le greffon <gui>Insérer la date</gui> dans les "
-"préférences Tomboy et cliquez sur <gui>Activer</gui>."
+"<gui>Ievietot laika spiedogu</gui> pievienojumprogramma pēc noklusējuma ir "
+"deaktivēta. Lai to aktivētu, Tomboy iestatījumu logā izvēlies <gui>Ievietot "
+"laika spiedogu</gui> "
+"pievienojumprogrammu un tad nospied <gui>Aktivēt</gui>."
 
 #: C/addins-tools.page:49(p)
 msgid ""
@@ -1213,13 +1179,13 @@ msgid ""
 "note toolbar and choose <gui>Insert Timestamp</gui> or press <key>Ctrl + D</"
 "key>."
 msgstr ""
-"Pour insérer la date dans vos notes, cliquez sur l'icône <gui>Outils</gui> "
-"dans la barre d'outils de la note et choisissez <gui>Insérer la date</gui> "
-"ou pressez <key>Ctrl + D</key>."
+"Lai piezīmē ievietotu laika spiedogu, spied <gui>Rīki</gui> ikonu rīkjoslā "
+"un izvēlies <gui>Ievietot laika spiedogu</gui> vai nospied <key>Ctrl + D</key>"
+"."
 
 #: C/addins-tools.page:55(title)
 msgid "Note of the Day"
-msgstr "Note du jour"
+msgstr "Dienas piezīme"
 
 #: C/addins-tools.page:56(p)
 msgid ""
@@ -1227,9 +1193,9 @@ msgid ""
 "choose the <gui>Note of the Day</gui> addin and then press <gui>Enable</gui> "
 "in the Tomboy Preferences."
 msgstr ""
-"Le greffon <gui>Note du jour</gui> est désactivé par défaut. Pour l'activer, "
-"choisissez le greffon <gui>Note du jour</gui> dans les préférences Tomboy et "
-"cliquez sur <gui>Activer</gui>."
+"<gui>Dienas piezīme</gui> pievienojumprogramma pēc noklusējuma ir deaktivēta. "
+"Lai to aktivētu, Tomboy iestatījumos izvēlies <gui>Dienas Piezīme</gui> "
+"pievienojumprogrammu un nospied <gui>Aktivēt</gui>."
 
 #: C/addins-tools.page:59(p)
 msgid ""
@@ -1237,13 +1203,15 @@ msgid ""
 "<em>Today: Thursday, January 21 2010</em> for example. The note will also "
 "add rows for <em>Tasks</em> and <em>Appointment</em> automatically."
 msgstr ""
-"Le greffon <gui>Note du jour</gui> crée une nouvelle note avec par exemple "
-"le titre <em>Aujourd'hui : jeudi 21 janvier 2010</em>. La note contient "
-"aussi automatiquement les lignes <em>Tâches</em> et <em>Rendez-vous</em>."
+"<gui>Dienas piezīme</gui> pievienojumprogramma izveidos jaunu piezīmi katru "
+"dienu ar tās dienas datuma virsrakstu, piemēram, <em>Šodien: Sestdiena, 25. "
+"decembris, 2011</em>."
+" Piezīmē arī automātiski ievietos tās dienas <em>Uzdevumus</em> un <em>"
+"Tikšanās</em>."
 
 #: C/addins-tools.page:65(title)
 msgid "Note Directory Watcher"
-msgstr "Surveillance de dossier de notes"
+msgstr "Piezīmju direktorija uzraugs"
 
 #: C/addins-tools.page:66(p)
 msgid ""
@@ -1253,22 +1221,21 @@ msgid ""
 "typically used with 3rd party sync services such as Dropbox. Setting up 3rd "
 "party sync services is outside the scope of this help."
 msgstr ""
-"Le greffon de surveillance de dossier surveille le répertoire où vos notes "
-"Tomboy sont enregistrées. Si le greffon détecte des modifications dans les "
-"notes, il applique ses modifications et elles sont reproduites dans vos "
-"notes. Ce greffon est employé en général avec un service de synchronisation "
-"tierce tel que Dropbox. Configurer un service de synchronisation tierce "
-"n'est pas le propos de ce manuel."
+"Piezīmju direktorija uzraugs pievienojumprogramma novēro tavu Tomboy "
+"piezīmju direktoriju. Ja pievienojumprogramma konstatē izmaiņas piezīmēs, tā "
+"automātiski piemēros izmaiņas un tās tiks attēlotas tavās piezīmēs. Šī "
+"pievienojumprogramma parasti tiek izmantota ar 3. puses sinhronizācijas "
+"servisiem, piemēram, Dropbox. 3. pušu sinhronizācijas servisu uzstādīšanas "
+"pamācības "
+"neietilpst šajā Palīdzībā."
 
 #: C/addins-sync.page:7(desc)
 msgid "Enable additional ways to sync your notes with other devices."
-msgstr ""
-"Activer d'autres moyens de synchronisation de vos notes avec d'autres "
-"périphériques."
+msgstr "Iespējo papildu veidus, kā sinhronizēt piezīmes ar citām ierīcēm."
 
 #: C/addins-sync.page:22(title)
 msgid "Sync Addins"
-msgstr "Greffons de synchronisation"
+msgstr "Sinhronizācijas pievienojumprogrammas"
 
 #: C/addins-sync.page:24(p)
 msgid ""
@@ -1276,13 +1243,14 @@ msgid ""
 "Tomboy notes. For more information on configuring sync, visit the <link xref="
 "\"sync-notes\"/> help page."
 msgstr ""
-"Les greffons de synchronisation vous permettent de choisir différentes "
-"méthodes et emplacements pour synchroniser vos notes Tomboy. Pour plus "
-"d'informations, consultez la page d'aide <link xref=\"sync-notes\"/>."
+"Sinhronizācijas pievienojumprogrammas ļauj tev izvēlēties vairākas dažādus "
+"veidus un vietas piezīmju sinhronizācijai. Vairāk informācijai par "
+"sinhronizācijas konfigurēšanu, lasi <link xref=\"sync-notes\"/> palīdzības "
+"lapu."
 
 #: C/addins-sync.page:30(title)
 msgid "Local Directory Sync Service"
-msgstr "Service de synchronisation de dossiers locaux"
+msgstr "Vietējā direktorija sinhronizācijas serviss"
 
 #: C/addins-sync.page:31(p)
 msgid ""
@@ -1290,15 +1258,14 @@ msgid ""
 "sync its notes to another directory on your computer. This is helpful to "
 "create a backup of your notes."
 msgstr ""
-"Le service de synchronisation de dossiers locaux est activé par défaut et "
-"permet à Tomboy de synchroniser ses notes avec un autre dossier sur votre "
-"ordinateur. Cela facilite la création d'une sauvegarde de vos notes."
+"Vietējā direktorija sinhronizācijas serviss pēc noklusējuma ir aktivēts un "
+"ļauj Tomboy sinhronizēt tā piezīmes ar citu direktoriju tavā datorā. Tas ir "
+"noderīgi kopiju izveidošanai datorā."
 
 #: C/addins-sync.page:37(title)
 msgid "SSH Sync Service"
-msgstr "Service de synchronisation SSH"
+msgstr "SSH sinhronizācijas serviss"
 
-# note typo in source Package
 #: C/addins-sync.page:38(p)
 msgid ""
 "The SSH Sync Service allows you to sync your notes with another computer via "
@@ -1306,17 +1273,16 @@ msgid ""
 "install the <em>sshfs</em> package for your Linux distribution to make this "
 "addin work, which is outside the scope of this help document."
 msgstr ""
-"Le service de synchronisation SSH vous permet de synchroniser vos notes avec "
-"un autre ordinateur via le protocole SSH. Ce greffon est désactivé par "
-"défaut. Il se peut que vous ayez besoin d'installer sur votre distribution "
-"Linux le paquet <em>sshfs</em> pour que ce greffon fonctionne, ce qui n'est "
-"pas le propos de ce manuel."
+"SSH sinhronizācijas serviss ļauj tev sinhronizēt piezīmes ar citu datoru caur "
+"SSH protokolu. Šis spraudnis pēc noklusējuma ir deaktivēts. Tev, iespējams, "
+"vajadzēs instalēt <em>sshfs</em> paku tavai Linux distribūcijai, lai "
+"šī pievienojumprogramma strādātu, bet tā uzstādīšanas pamācības apraksts nav "
+"iekļauts šajā palīdzības dokumentā."
 
 #: C/addins-sync.page:46(title)
 msgid "WebDav Sync Service"
-msgstr "Service de synchronisation Webdav"
+msgstr "WebDav Sinhronizācijas Serviss"
 
-# Note: Typo in source allows
 #: C/addins-sync.page:47(p)
 msgid ""
 "The WebDav Sync Service addin is enabled by default and allows you to sync "
@@ -1324,15 +1290,15 @@ msgid ""
 "FUSE file system</em> package installed for your Linux distribution to make "
 "this addin work which is outside the scope of this help document."
 msgstr ""
-"Le service de synchronisation WebDav est activé par défaut et permet de "
-"synchroniser vos notes avec un serveur distant WebDav. Il se peut que vous "
-"ayez besoin d'installer sur votre distribution Linux le paquet <em>système "
-"de fichiers FUSE wdfs</em> pour que ce greffon fonctionne, ce qui n'est pas "
-"le propos de ce manuel."
+"WebDav sinhronizācijas servisa pievienojumprogramma pēc noklusējuma ir "
+"aktivēta un ļauj tev sinhronizēt piezīmes ar attālu WebDav serveri. Tev, "
+"iespējams, būs nepieciešama <em>wdfs FUSE failu sistēmas</em> paka, instalēta "
+"tavai Linux distribūcijai, lai šī pievienojumprogramma strādātu, bet "
+"tās uzstādīšanas pamācības apraksts nav iekļauts šajā palīdzības failā."
 
 #: C/addins-sync.page:55(title)
 msgid "Web Sync Service"
-msgstr "Service de synchronisation Web"
+msgstr "Tīmekļa sinhronizācijas serviss"
 
 #: C/addins-sync.page:56(p)
 msgid ""
@@ -1340,34 +1306,34 @@ msgid ""
 "server or service, such as Tomboy Online. At the time of writing, the Tomboy "
 "Online service has not launched."
 msgstr ""
-"Le service de synchronisation Web vous permet de synchroniser vos notes vers "
-"un serveur ou un service Web distant, comme Tomboy Online. Au moment de la "
-"rédaction de ce document, le service Tomboy Online n'est pas encore lancé."
+"Tīmekļa sinhronizācijas servisa pievienojumprogramma ļauj tev sinhronizēt "
+"tavas "
+"piezīmes ar attālu web serveri vai servisu, piemēram Tomboy Online. Pašreiz "
+"Tomboy Online serviss vēl nav palaists."
 
 #: C/addins.page:8(desc)
 msgid "Add additional functionality to Tomboy."
-msgstr "Ajouter des fonctionnalités à Tomboy."
+msgstr "Pievieno papildus funkcionalitāti Tomboy programmai."
 
 #: C/addins.page:23(title) C/addins.page:27(title)
 msgid "Tomboy Addins"
-msgstr "Greffons de Tomboy"
+msgstr "Tomboy pievienojumprogrammas"
 
 #: C/addins.page:29(title)
 msgid "Manage addins for Tomboy"
-msgstr "Gestion des greffons de Tomboy"
+msgstr "Pārvaldi Tomboy pievienojumprogrammas"
 
 #: C/addins-formatting.page:7(desc)
 msgid "Plugins to add addition note formatting."
-msgstr ""
-"Greffons pour ajouter des outils supplémentaires de mise en forme de notes."
+msgstr "Spraudņi papildus piezīmju formatēšanas iespējām."
 
 #: C/addins-formatting.page:22(title)
 msgid "Formatting Addins"
-msgstr "Greffon de formatage"
+msgstr "Formatēšanas pievienojumprogrammas"
 
 #: C/addins-formatting.page:25(title)
 msgid "Fixed Width Addin"
-msgstr "Greffon chasse fixe"
+msgstr "Fixed Width pievienojumprogramma"
 
 #: C/addins-formatting.page:26(p)
 msgid ""
@@ -1375,13 +1341,13 @@ msgid ""
 "note. This addin is disabled by default. To enable, press the <gui>Enable</"
 "gui> button."
 msgstr ""
-"Le greffon chasse fixe change la police de texte en chasse fixe dans les "
-"notes de Tomboy. Ce greffon est désactivé par défaut. Pour l'activer cliquez "
-"sur le bouton <gui>Activer</gui>."
+"Fixed Width pievienojumprogramma maina tavu tekstu uz fiksētu platumu Tomboy "
+"piezīmēs. Šī pievienojumprogramma pēc noklusējuma ir deaktivēta. Lai "
+"aktivētu, spied <gui>Aktivēt</gui> pogu."
 
 #: C/addins-formatting.page:31(title)
 msgid "Underline Addin"
-msgstr "Greffon de soulignement"
+msgstr "Underline pievienojumprogramma"
 
 #: C/addins-formatting.page:32(p)
 msgid ""
@@ -1392,32 +1358,32 @@ msgid ""
 "toolbar, and choose <gui>Underline</gui> or press <keyseq><key>CONTROL + U</"
 "key></keyseq>."
 msgstr ""
-"Le greffon de soulignement permet de souligner spécifiquement du texte dans "
-"votre note à l'aide de l'icône <gui>texte</gui> de la barre d'outils de la "
-"note. Ce greffon est désactivé par défaut. Pour l'activer cliquez sur le "
-"bouton <gui>Activer</gui>. Sélectionnez le texte que vous voulez souligner, "
-"cliquez sur l'icône <gui>texte</gui> dans la barre d'outils, et choisissez "
-"<gui>Souligner</gui> ou pressez <keyseq><key>Ctrl + U</key></keyseq>."
+"Underline pievienojumprogramma ļauj tev pasvītrot teksta daļas tavā piezīmē, "
+"izmantojot <gui>Teksts</gui> ikonu rīkjoslā. Šī pievienojumprogramma pēc "
+"noklusējuma ir deaktivēta. Lai aktivētu, spied <gui>Aktivēt</gui> pogu. "
+"Iezīmē tekstu, kuru vēlies pasvītrot, spied <gui>Teksts</gui> ikonu rīkjoslā "
+"un izvēlies <gui>Pasvītrot</gui> vai nospied <keyseq><key>CONTROL + U</key><"
+"/keyseq>."
 
 #: C/addins-desktop.page:7(desc)
 msgid "Plugins to integrate with other applications and websites."
-msgstr "Greffons pour l'intégration avec d'autres applications et sites Web."
+msgstr "Spraudņi integrācijai ar citām programmām un tīmekļa lapām."
 
 #: C/addins-desktop.page:22(title)
 msgid "Desktop Integration Addins"
-msgstr "Greffons d'intégration dans le bureau"
+msgstr "Darbvirsmas integrācijas pievienojumprogrammas"
 
 #: C/addins-desktop.page:24(p)
 msgid ""
 "Desktop Integration addins interact with other applications or websites and "
 "Tomboy."
 msgstr ""
-"Les greffons d'intégration dans le bureau permettent l'interaction entre "
-"d'autres applications ou des sites Web et Tomboy."
+"Darbvirsmas integrācijas pievienojumprogrammas sadarbojas starp citām "
+"programmām vai tīmekļa lapām un Tomboy."
 
 #: C/addins-desktop.page:28(title)
 msgid "Bugzilla Links"
-msgstr "Liens Bugzilla"
+msgstr "Bugzilla Links"
 
 #: C/addins-desktop.page:29(p)
 msgid ""
@@ -1427,15 +1393,15 @@ msgid ""
 "Bugzilla link. Clicking the link in the Tomboy note will open a browser "
 "window taking you to that Bugzilla page."
 msgstr ""
-"Le greffon de lien avec Bugzilla vous permet de faire glisser une URL "
-"Bugzilla depuis votre navigateur vers Tomboy. Après avoir fait glisser un "
-"lien dans une note, Tomboy affiche le numéro du bogue comme un lien actif et "
-"l'icône de bogue pour montrer qu'il s'agit d'un lien Bugzilla. Un clic sur "
-"le lien de la note Tomboy ouvre une fenêtre du navigateur à la page Bugzilla."
+"Bugzilla Links pievienojumprogramma ļauj tev pārvilkt Bugzilla URL no tavas "
+"pārlūkprogrammas uz Tomboy. Pēc saites pārvilkšanas uz Tomboy piezīmi, Tomboy "
+"attēlos kļūdas numuru kā aktīvu saiti blakus kļūdas ikonai, tādējādi norādot, "
+"ka tā ir Bugzilla saite. Nospiežot uz saites Tomboy piezīmē, tiks atvērts "
+"pārlūks ar Bugzilla lapu."
 
 #: C/addins-desktop.page:37(title)
 msgid "Evolution Mail Integration"
-msgstr "Intégration avec la messagerie Evolution"
+msgstr "Evolution Mail Integrācija"
 
 #: C/addins-desktop.page:38(p)
 msgid ""
@@ -1444,32 +1410,29 @@ msgid ""
 "the subject of the note will be displayed as a link. Clicking this link will "
 "open the email using Evolution."
 msgstr ""
-"Le greffon d'intégration avec Evolution permet de faire glisser un courriel "
-"depuis Evolution dans une note Tomboy. Votre note affiche alors une icône "
-"d'enveloppe et le sujet de la note s'affiche comme un lien. Un clic sur ce "
-"lien ouvre le courriel dans Evolution."
+"Evolution Mail integrācijas spraudnis ļauj tev pārvilkt e-pastu no Evolution "
+"uz Tomboy piezīmi. Tavai piezīmei būs vēstules ikona un piezīmes tēma tiks "
+"norādīta kā saite. Nospiežot uz saites tiks atvērts šis e-pasts Evolution "
+"programmā."
 
 #: C/addins-desktop.page:45(title)
 msgid "Printing Support"
-msgstr "Prise en charge de l'impression"
+msgstr "Drukāšanas atbalsts"
 
 #: C/addins-desktop.page:46(p)
 msgid ""
 "This addin is enabled by default and allows you print notes out. If you "
 "disable this addin you will no longer be able to print notes."
 msgstr ""
-"Ce greffon est activé par défaut et vous permet d'imprimer les notes. Si "
-"vous désactivez ce greffon vous ne pourrez plus imprimer de notes."
+"Šī pievienojumprogramma pēc noklusējuma ir aktivēta un ļauj tev izdrukāt "
+"piezīmes. Ja tu deaktivēsi šo pievienojumprogrammu, piezīmju drukāšana nebūs "
+"pieejama."
 
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
 msgid "translator-credits"
 msgstr ""
-"Claude Paroz <claude@2xlibre.net>, 2006-2011\n"
-"Jonathan Ernst <jonathan@ernstfamily.ch>, 2007\n"
-"Robert-André Mauchin <zebob.m@pengzone.org>, 2007\n"
-"Bruno Brouard <annoa.b@gmail.com>, 2007,2010\n"
-"Frédéric Péters <fpeters@0d.be>, 2008\n"
-"Rémi Peixoto <remi.peixoto@gmail.com>, 2009\n"
-"Laurent Coudeur <laurentc@iol.ie>,2010\n"
-"Luc Pionchon <pionchon.luc@gmail.com>"
+"Viesturs Ružāns; viesty@exs.lv; December, 2011.\n"
+"Aija Jauntēva\n"
+"Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
+
