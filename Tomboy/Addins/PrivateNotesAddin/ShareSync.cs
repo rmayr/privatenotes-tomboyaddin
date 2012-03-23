@@ -353,6 +353,10 @@ namespace Tomboy.PrivateNotes
 		/// <param name="basePath"></param>
 		/// <returns></returns>
 		public static bool ParseFromLink(String link, out String user, out String password, out String server, out String basePath) {
+			if (link.StartsWith(AddinPreferences.NOTESHARE_URL_PREFIX))
+			{
+				link = link.Substring(AddinPreferences.NOTESHARE_URL_PREFIX.Length);
+			}
 			Uri url = new Uri(link);
 			string[] userInfo = url.UserInfo.Split(new char[] { ':' }, 2);
 			user = (userInfo.Length==2)?(userInfo[0]):("");

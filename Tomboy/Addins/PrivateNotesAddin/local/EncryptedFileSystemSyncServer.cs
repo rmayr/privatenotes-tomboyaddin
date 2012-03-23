@@ -238,47 +238,56 @@ namespace Tomboy.Sync
 						// Copy the file from the server to the temp directory
 						string revDir = GetRevisionDirPath(rev);
 						string serverNotePath = GetNotePath(revDir, id);
-						//string noteTempPath = Path.Combine(tempPath, id + ".note");
-						// DON'T ENCRYPT HERE because we are getting the already encrypted file from the server
-						//SecurityWrapper.CopyAndEncrypt(serverNotePath, noteTempPath, myKey);
-						//File.Copy(serverNotePath, noteTempPath, true);
-
-						// Get the title, contents, etc.
-						string noteTitle = string.Empty;
-						string noteXml = null;
-
+						if (File.Exists(serverNotePath))
 						{
-							// decrypt the note:
-							bool ok;
-							byte[] contents = null;
+							//string noteTempPath = Path.Combine(tempPath, id + ".note");
+							// DON'T ENCRYPT HERE because we are getting the already encrypted file from the server
+							//SecurityWrapper.CopyAndEncrypt(serverNotePath, noteTempPath, myKey);
+							//File.Copy(serverNotePath, noteTempPath, true);
 
-							// TODO: there is currently absolutely no difference between the two versions!
-							// do we need them? change sth, or can we remove the if/else and just use one version?!
-							if (shareCopies.ContainsKey(id))
+							// Get the title, contents, etc.
+							string noteTitle = string.Empty;
+							string noteXml = null;
+
 							{
-								// use shared decrypt
-								contents = SecurityWrapper.DecryptFromSharedFile(serverNotePath, out ok);
-							} else {
-								// normal decrypt
-								using (FileStream fin = File.Open(serverNotePath, FileMode.Open))
+								// decrypt the note:
+								bool ok;
+								byte[] contents = null;
+
+								// TODO: there is currently absolutely no difference between the two versions!
+								// do we need them? change sth, or can we remove the if/else and just use one version?!
+								if (shareCopies.ContainsKey(id))
 								{
-									contents = SecurityWrapper.DecryptFromFile(serverNotePath, fin, myKey, out ok);
-									//CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
-									//contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
+									// use shared decrypt
+									contents = SecurityWrapper.DecryptFromSharedFile(serverNotePath, out ok);
 								}
-							}
-							noteXml = Util.FromBytes(contents);
+								else
+								{
+									// normal decrypt
+									using (FileStream fin = File.Open(serverNotePath, FileMode.Open))
+									{
+										contents = SecurityWrapper.DecryptFromFile(serverNotePath, fin, myKey, out ok);
+										//CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
+										//contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
+									}
+								}
+								noteXml = Util.FromBytes(contents);
 
-							// solve nasty BOM problem -__-
-							int index = noteXml.IndexOf('<');
-							if (index > 0)
-							{
-								noteXml = noteXml.Substring(index, noteXml.Length - index);
-							}
+								// solve nasty BOM problem -__-
+								int index = noteXml.IndexOf('<');
+								if (index > 0)
+								{
+									noteXml = noteXml.Substring(index, noteXml.Length - index);
+								}
 
+							}
+							NoteUpdate update = new NoteUpdate(noteXml, noteTitle, id, rev);
+							noteUpdates[id] = update;
 						}
-						NoteUpdate update = new NoteUpdate(noteXml, noteTitle, id, rev);
-						noteUpdates[id] = update;
+						else
+						{
+							Logger.Info("File {0} doesn't exist, skipping", serverNotePath);
+						}
 					}
 				}
 
@@ -810,6 +819,18 @@ namespace Tomboy.Sync
 							}
 						}
 					}
+				}
+
+				// filter out those with lower rev-id again:
+				List<String> toRemove = new List<String>();
+				foreach (KeyValuePair<String, int> entry in updates)
+				{
+					if (entry.Value <= revision)
+						toRemove.Add(entry.Key);
+				}
+				foreach (String key in toRemove)
+				{
+					updates.Remove(key);
 				}
 
 				return updates;
