@@ -293,7 +293,13 @@ namespace PrivateNotes.Infinote
 			// update actual (formatted) content
 			n.XmlContent = content;
 
-			String newText = n.TextContent;
+#region caret-position-restore-hack
+            // the following code is a hack to get the caret position back to where it was
+            // before the notes content was updated. It's quite complex because we can't simply
+            // set the same pos as before because there may have been modifications, simply adding/substracting
+            // the amount of characters that were inserted/removed also doesn't work because some chars
+            // aren't displayed (formatting) and are therefore not counted
+            String newText = n.TextContent;
 			
 			List<Diff> diffs = new diff_match_patch().diff_main(oldText, newText);
 
@@ -330,7 +336,7 @@ namespace PrivateNotes.Infinote
 			// update iter pos
 			TextIter lastPosIter = n.Buffer.GetIterAtOffset(oldCaretPos + posDelta);
 			n.Buffer.SelectRange(lastPosIter, lastPosIter);
-
+#endregion
 		}
 
 #endregion

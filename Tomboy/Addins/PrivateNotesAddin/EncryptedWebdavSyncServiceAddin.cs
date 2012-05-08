@@ -162,6 +162,7 @@ namespace Tomboy.Sync
 		/// will be used in the Synchronization Preferences.	Preferences should
 		/// not automatically be saved by a GConf Property Editor.	Preferences
 		/// should be saved when SaveConfiguration () is called.
+        /// <param name="requiredPrefChanged">this has to be assigned to any handles that indicate change, only if this handler is invoked, the "save" button will be activated</param>
 		/// </summary>
 		public override Gtk.Widget CreatePreferencesControl (EventHandler requiredPrefChanged)
 		{
@@ -294,7 +295,7 @@ namespace Tomboy.Sync
 		public override string Name
 		{
 			get {
-				return Mono.Unix.Catalog.GetString ("Encrypted WebDav Sync");
+				return Mono.Unix.Catalog.GetString ("PrivateNotes Synchronization");
 			}
 		}
 
@@ -464,6 +465,7 @@ namespace Tomboy.Sync
 			
 			// assign event-listener
 			rbt_storePw.Toggled += PasswordMethodChanged;
+            rbt_storePw.Toggled += requiredPrefChanged;
 
 			// init with values from preferences
 			object value = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_ASKEVERYTIME);
@@ -479,6 +481,8 @@ namespace Tomboy.Sync
 			// assign event-listeners
 			stored_pw.Changed += PasswordChanged;
 			stored_pw2.Changed += PasswordChanged;
+            stored_pw.Changed += requiredPrefChanged;
+            stored_pw2.Changed += requiredPrefChanged;
 		}
 
 		/// <summary>
@@ -507,6 +511,7 @@ namespace Tomboy.Sync
 			customBox.Attach(server_path, 1, 2, 0, 1);
 			string serverPath = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERPATH) as String;
 			server_path.Text = serverPath;
+		    server_path.Changed += requiredPrefChanged;
 			// NO EDITOR! because we only save when "SaveConfiguration" is called
 			//IPropertyEditor serverEditor = Services.Factory.CreatePropertyEditorEntry(
 			//	AddinPreferences.SYNC_PRIVATENOTES_SERVERPATH, server_path);
@@ -516,6 +521,7 @@ namespace Tomboy.Sync
 			customBox.Attach(server_user, 1, 2, 1, 2);
 			string serverUser = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERUSER) as String;
 			server_user.Text = serverUser;
+		    server_user.Changed += requiredPrefChanged;
 			// NO EDITOR! because we only save when "SaveConfiguration" is called
 			//IPropertyEditor userEditor = Services.Factory.CreatePropertyEditorEntry(
 			// AddinPreferences.SYNC_PRIVATENOTES_SERVERUSER, server_user);
@@ -527,6 +533,7 @@ namespace Tomboy.Sync
 			customBox.Attach(server_pass, 1, 2, 2, 3);
 			string serverpass = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERPASS) as String;
 			server_pass.Text = serverpass;
+		    server_pass.Changed += requiredPrefChanged;
 			// NO EDITOR! because we only save when "SaveConfiguration" is called
 			//IPropertyEditor passEditor = Services.Factory.CreatePropertyEditorEntry(
 			// AddinPreferences.SYNC_PRIVATENOTES_SERVERPASS, server_pass);
@@ -539,7 +546,9 @@ namespace Tomboy.Sync
 			object value = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERCHECKSSLCERT);
 			if (value == null || value.Equals(true))
 				check_ssl.Active = true;
-			
+
+		    check_ssl.Activated += requiredPrefChanged;
+
 		}
 
 		/// <summary>
@@ -567,6 +576,7 @@ namespace Tomboy.Sync
 			string server = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPSERVER) as String;
 			string user = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_XMPPUSER) as String;
 			xmpp_user_at_server.Text = user + "@" + server;
+            xmpp_user_at_server.Changed += requiredPrefChanged;
 
 			xmpp_pw = new Gtk.Entry();
 			customBox.Attach(xmpp_pw, 1, 2, 1, 2);
@@ -574,6 +584,7 @@ namespace Tomboy.Sync
 			xmpp_pw.InvisibleChar = '*';
 			xmpp_pw.Visibility = false;
 			xmpp_pw.Text = pw;
+            xmpp_pw.Changed += requiredPrefChanged;
 		}
 
 		#endregion

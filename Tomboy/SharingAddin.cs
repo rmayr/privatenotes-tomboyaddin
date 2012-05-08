@@ -3,8 +3,8 @@
 namespace Tomboy
 {
 	/// <summary>
-	/// A SyncServiceAddin provides Tomboy Note Synchronization to a
-	/// service such as WebDav, SSH, FTP, etc.
+    /// A SharingAddin provides an addin (typically a sync addin) with the means
+    /// to import additional notes which are shared with the user
 	/// <summary>
 	public abstract class SharingAddin : ApplicationAddin
 	{
