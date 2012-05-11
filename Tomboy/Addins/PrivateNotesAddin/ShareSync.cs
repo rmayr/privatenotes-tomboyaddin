@@ -223,7 +223,9 @@ namespace Tomboy.PrivateNotes
 				dav.UploadFile(Path.Combine(shareBuffer[noteId].FullName, "manifest.xml"));
 			}
 			else
+            {
 				Logger.Warn("Note {0} is not part of the shared notes!", noteId);
+            }
 		}
 
 		/// <summary>

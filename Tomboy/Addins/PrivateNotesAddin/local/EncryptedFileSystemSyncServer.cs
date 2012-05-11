@@ -788,13 +788,15 @@ namespace Tomboy.Sync
 			{
 				Dictionary<String, int> updates = GetNoteRevisionsFromManifest(false, manifestPath, revision);
 				List<String> processedFiles = new List<string>();
-				foreach (DirectoryInfo dir in shareCopies.Values)
+				foreach (KeyValuePair<String, DirectoryInfo> shareEntry in shareCopies)
 				{
+                    DirectoryInfo dir = shareEntry.Value;
 					String path = Path.Combine(dir.FullName, "manifest.xml");
 					if (!processedFiles.Contains(path))
 					{
 						// only processed if not already done
 						processedFiles.Add(path);
+                        //TODO: change to individual max-rev per share, like so:  int latestShareRevision = shareProvider.GetShareLastRevision(shareEntry.Key);
 						Dictionary<String, int> addme = GetNoteRevisionsFromManifest(true, path, revision);
 						foreach (String key in addme.Keys)
 						{
@@ -809,13 +811,15 @@ namespace Tomboy.Sync
 							else
 							{
 								// it's ok, it's a shared note we know about
-								if (updates.ContainsKey(key))
-								{
-									if (updates[key] < addme[key]) // overwrite if the one from the shared folder is newer
-										updates[key] = addme[key];
-								}
-								else
-									updates.Add(key, addme[key]);
+                                if (updates.ContainsKey(key))
+                                {
+                                    if (updates[key] < addme[key]) // overwrite if the one from the shared folder is newer
+                                        updates[key] = addme[key];
+                                }
+                                else
+                                {
+                                    updates.Add(key, addme[key]);
+                                }
 							}
 						}
 					}

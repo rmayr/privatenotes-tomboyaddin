@@ -44,6 +44,10 @@ namespace Tomboy.PrivateNotes
 				Logger.Warn("we should import {0}, which isnt a valid share-url,"
 				+"they look like this: {1}SOMETHING", info, AddinPreferences.NOTESHARE_URL_PREFIX);
 			}
+		    GtkUtil.ShowHintWindow("Sharing",
+		                           success
+		                               ? "Share successfully imported. Synchronize now to get access to the note."
+		                               : "Error while importing share. Please try again later.");
 			return success;
 		}
 

@@ -179,7 +179,7 @@ namespace Tomboy.PrivateNotes.Crypto
 
 			// build the commandline arguments
 			StringBuilder args = new StringBuilder();
-			args.Append("--batch -e"); // batch encrypt
+			args.Append("--batch -e --always-trust"); // batch encrypt, make it possible to use any keys, so there won't be a warning for the user
 			args.Append(" --personal-cipher-preferences AES");
 			foreach (String r in _recipients)
 			{

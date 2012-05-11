@@ -52,7 +52,7 @@ namespace Tomboy.Sync
 			Logger.Info("Initializing PrivateNotes Sharing Addin");
 			try
 			{
-				if (!Communicator.Instance.IsActive())
+				if ((!Communicator.Instance.IsActive()) && Communicator.Instance.IsConfigured())
 				{
 					Communicator.Instance.Connect();
 				}
