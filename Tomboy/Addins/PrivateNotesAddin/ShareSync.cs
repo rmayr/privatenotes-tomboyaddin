@@ -71,8 +71,9 @@ namespace Tomboy.PrivateNotes
 		/// </summary>
 		/// <param name="fromFile"></param>
 		/// <param name="sharedwith"></param>
+		/// <param name="revision">the current revision number</param>
 		/// <returns>true if operation was successful</returns>
-		bool GetSharePartners(String fromFile, out List<String> sharedwith);
+		bool GetSharePartners(String fromFile, out List<String> sharedwith, out int revision);
 
 		/// <summary>
 		/// cleaning up at the end
@@ -186,7 +187,7 @@ namespace Tomboy.PrivateNotes
 			{
 				throw new Exception("TODO handle lockfile correctly!");
 			}
-			// TODO create/put lock file
+            // we don't put any lock file here, because we only read from there
 			String randomName = System.Guid.NewGuid().ToString();
 			String localpath = Path.Combine(basePath, "import_" + randomName);
 			Directory.CreateDirectory(localpath);
@@ -265,7 +266,7 @@ namespace Tomboy.PrivateNotes
 		/// <summary>
 		/// <inheritdoc />
 		/// </summary>
-		public bool GetSharePartners(String fromFile, out List<String> sharedwith)
+		public bool GetSharePartners(String fromFile, out List<String> sharedwith, out int revision)
 		{
 			bool ok = false;
 			String dir = Path.GetDirectoryName(fromFile);
@@ -279,6 +280,9 @@ namespace Tomboy.PrivateNotes
 			{	
 				XmlDocument doc = new XmlDocument();
 				doc.Load(plainStream);
+			    XmlNode docNode = doc.SelectSingleNode("/sync");
+			    revision = Int32.Parse(docNode.Attributes["revision"].Value);
+
 				XmlNodeList nodes = doc.SelectNodes("//with");
 				foreach (XmlNode n in nodes)
 				{
@@ -316,17 +320,7 @@ namespace Tomboy.PrivateNotes
 		/// </summary>
 		public void CleanUp()
 		{
-			foreach(DirectoryInfo di in shareBuffer.Values) {
-				if (di.Exists)
-				{
-					Util.DelelteFilesInDirectory(di.FullName);
-					di.Delete(true);
-				}
-				else
-				{
-					Logger.Info("trying to clean up after share sync, but directory '{0}' didn't exist", di.Name);
-				}
-			}
+			// cleanup of files is handled by addin itself
 			shareBuffer.Clear();
 
 			// now purge the servers

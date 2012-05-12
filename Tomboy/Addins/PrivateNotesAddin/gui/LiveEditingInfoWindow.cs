@@ -80,15 +80,15 @@ namespace Tomboy.PrivateNotes
 			}
 
 			EventHandler showDelegate = delegate(object s, EventArgs ea)
-			                            	{
+											{
 												if (Child != null)
 												{
 													Remove(Child);
 												}
-			                            		Add(newContent);
+												Add(newContent);
 												newContent.ShowAll();
 												Present();
-			                            	};
+											};
 			Gtk.Application.Invoke(showDelegate);
 		}
 

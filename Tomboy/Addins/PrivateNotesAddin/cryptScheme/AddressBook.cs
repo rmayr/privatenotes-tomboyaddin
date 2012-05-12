@@ -58,7 +58,7 @@ namespace Tomboy.PrivateNotes.Adress
 				return instances[forBook];
 
 			var instance = new AddressBookHelper(forBook);
-            instances.Add(forBook, instance);
+			instances.Add(forBook, instance);
 			return instance;
 		}
 

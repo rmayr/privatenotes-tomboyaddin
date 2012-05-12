@@ -149,21 +149,37 @@ namespace Tomboy.PrivateNotes
 		public bool DownloadNotes(String toPath)
 		{
 			// fetch list of all files to download
+		    String listErrorMsg = "exception while getting remote listing of basepath " + client.BasePath;
 			client.List();
 			autoReset.WaitOne();
-			CheckException("exception while getting remote listing of basepath " + client.BasePath);
+            if (CheckException(listErrorMsg, false) != null)
+            {
+                // error occurred, try again
+                client.List();
+                autoReset.WaitOne();
+            }
+            CheckException(listErrorMsg);
 			foreach (String file in dirListing) {
 				if (!file.EndsWith("/"))
 				{
 					// not for dirs
 					client.Download(file, Path.Combine(toPath, file));
 					autoReset.WaitOne();
+                    // retry if failed:
+                    if (CheckException("", false) != null)
+                    {
+                        // error occurred, try again
+                        client.Download(file, Path.Combine(toPath, file));
+                        autoReset.WaitOne();
+                    }
 					CheckException("exception while downloading note " + file);
-					// TODO check statuscode
-					Console.WriteLine("downloaded with code " + lastStatusCode);
+					// FIXME maybe check statuscode here additionally?
+                    if (lastStatusCode != 200)
+                    {
+                        Console.WriteLine("downloaded with code " + lastStatusCode);
+                    }
 				}
 			}
-			// TODO error checking
 			return true;
 		}
 
@@ -233,14 +249,33 @@ namespace Tomboy.PrivateNotes
 		/// <param name="msgOnError">error-message of the exception that will be thrown (if there was one)</param>
 		private void CheckException(String msgOnError)
 		{
-			if (lastStatusCode == WebDAVClient.EXCEPTION_RESPONSE_CODE
+            CheckException(msgOnError, true);
+		}
+
+        /// <summary>
+        /// same as CheckException(String) but allows to suppress the throwing and return it instead
+        /// </summary>
+        /// <param name="msgOnError"></param>
+        /// <param name="autoThrow"></param>
+        /// <returns></returns>
+        private Exception CheckException(String msgOnError, bool autoThrow)
+        {
+            if (lastStatusCode == WebDAVClient.EXCEPTION_RESPONSE_CODE
 					&& client.LastException != null)
 			{
 				Exception e = client.LastException;
 				client.ResetException();
-				throw new WebDavException(msgOnError, e);
+                if (autoThrow)
+                {
+                    throw new WebDavException(msgOnError, e);
+                }
+                else
+                {
+                    return new WebDavException(msgOnError, e);
+                }
 			}
-		}
+            return null;
+        }
 
 	}
 

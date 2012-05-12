@@ -27,8 +27,9 @@ namespace Tomboy.PrivateNotes
 			bool ok = ParseResponse(response, out user, out pass);
 
 			if (!ok)
+			{
 				throw new Exception("Could not obtain new share path from PrivateNotes server!");
-
+			}
 
 			String sharePath = "https://" + user + ":" + pass + "@" + privateNotesServer + "/webdav2/" + user;
 			return new NoteShare(noteuid, shareWith, sharePath);

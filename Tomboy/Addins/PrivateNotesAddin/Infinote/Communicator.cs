@@ -142,9 +142,9 @@ namespace PrivateNotes.Infinote
 			NoteEditors.DestroyEditorStateMachine(noteId);
 			var esm = NoteEditors.GetOrCreateEditorStateMachine(noteId, withUser);
 			esm.OnStateChanged += delegate(EditorStateMachine.SmState state)
-			                      	{
+									{
 										DlgOnEditorStateChanged(noteId, state);
-			                      	};
+									};
 			return esm.InitCooperation();
 		}
 
@@ -396,9 +396,9 @@ namespace PrivateNotes.Infinote
 				// a new esm was created, save it:
 				currentCooperations.Add(concernedNote, from);
 				newlyCreated.OnStateChanged += delegate(EditorStateMachine.SmState state)
-                      	{
+						{
 							DlgOnEditorStateChanged(concernedNote, state);
-                      	};
+						};
 			}
 		}
 

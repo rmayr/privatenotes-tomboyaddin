@@ -94,7 +94,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			}
 			if (tempDir == null)
 			{
-				tempDir = Path.Combine(Services.NativeApplication.CacheDirectory, "gpg_" + System.Guid.NewGuid().ToString());
+				tempDir = Path.Combine(Services.NativeApplication.CacheDirectory, "gp/g_" + System.Guid.NewGuid().ToString());
 				Directory.CreateDirectory(tempDir);
 			}
 		}
@@ -112,7 +112,8 @@ namespace Tomboy.PrivateNotes.Crypto
 			fout.Write(_content, 0, _content.Length);
 			fout.Close();
 
-			InvokeGpg("--batch --symmetric --personal-cipher-preferences AES --passphrase " + Util.FromBytes(_key) + " --output \"" + _filename + "\" \"" + tempFileName + '"');
+			// --yes is for confirming overwriting a possibly already existant file
+			InvokeGpg("--batch --yes --symmetric --personal-cipher-preferences AES --passphrase " + Util.FromBytes(_key) + " --output \"" + _filename + "\" \"" + tempFileName + '"');
 
 			File.Delete(tempFileName);
 
@@ -179,7 +180,7 @@ namespace Tomboy.PrivateNotes.Crypto
 
 			// build the commandline arguments
 			StringBuilder args = new StringBuilder();
-			args.Append("--batch -e --always-trust"); // batch encrypt, make it possible to use any keys, so there won't be a warning for the user
+			args.Append("--batch --yes -e --always-trust"); // batch encrypt, make it possible to use any keys, so there won't be a warning for the user
 			args.Append(" --personal-cipher-preferences AES");
 			foreach (String r in _recipients)
 			{
@@ -222,7 +223,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			args.Append("\" \"");
 			args.Append(_filename);
 			args.Append('"');
-      
+
 			InvokeGpg(args.ToString());
 			
 			_recipients = new List<String>();
@@ -265,15 +266,17 @@ namespace Tomboy.PrivateNotes.Crypto
 				proc.Start();
 				String data = proc.StandardOutput.ReadToEnd();
 				String errdata = proc.StandardError.ReadToEnd();
-				Logger.Info(data);
-				if (!String.IsNullOrEmpty(errdata))
-				{
-					Logger.Info("ERRORS:");
-					Logger.Info(errdata);
-				}
 				proc.WaitForExit();
 				if (proc.ExitCode != 0)
+				{
+					Logger.Info(data);
+					if (!String.IsNullOrEmpty(errdata))
+					{
+						Logger.Info("ERRORS:");
+						Logger.Info(errdata);
+					}
 					throw new Exception("openPgp invocation exception: " + errdata);
+				}
 		}
 
 

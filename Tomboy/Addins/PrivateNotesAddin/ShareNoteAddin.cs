@@ -366,26 +366,7 @@ namespace Tomboy.PrivateNotes
 			if (ok && !String.IsNullOrEmpty(sharepath))
 			{
 				Logger.Info("sharepath add request: {0}", sharepath);
-				try
-				{
-					bool success = SecureSharingFactory.Get().GetShareProvider().ImportShare(sharepath);
-
-					// DUMMY PARENT
-					Gtk.Widget wid = new Gtk.Label();
-					String message = Catalog.GetString("Notes successfully imported. Please execute note synchronization to get the new notes.");
-					if (!success)
-						message = Catalog.GetString("Import failed. Could not get the note(s) from the specified location.");
-					GtkUtil.ShowHintWindow(wid, Catalog.GetString("Import"), message);
-				}
-				catch (Exception _e)
-				{
-					Logger.Warn("could not import share", _e);
-					// DUMMY PARENT
-					Gtk.Widget wid = new Gtk.Label();
-					String message = Catalog.GetString("Could not import note because of the following error:\n");
-					message += _e.Message;
-					GtkUtil.ShowHintWindow(wid, Catalog.GetString("Import"), message);
-				}
+			    SharingAppAddin.ImportShareFromShareUrl(sharepath);
 			}
 			else
 			{

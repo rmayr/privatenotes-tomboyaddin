@@ -19,6 +19,7 @@ namespace Tomboy.PrivateNotes
 		public String noteId;
 		public List<String> sharedWith = new List<string>();
 		public String shareTarget;
+	    public int revision = -1;
 
 		/// <summary>
 		/// constructor
@@ -36,16 +37,18 @@ namespace Tomboy.PrivateNotes
 			noteId = id;
 			sharedWith.Add(with);
 			shareTarget = target;
+			revision = -1;
 		}
 
 		/// <summary>
 		/// constructor
 		/// </summary>
-		public NoteShare(String id, List<String> with, String target)
+		public NoteShare(String id, List<String> with, String target, int revision)
 		{
 			noteId = id;
 			sharedWith.AddRange(with);
 			shareTarget = target;
+			this.revision = revision;
 		}
 
 		/// <summary>
@@ -69,6 +72,7 @@ namespace Tomboy.PrivateNotes
 			writer.WriteStartElement(null, "noteshare", null);
 			writer.WriteAttributeString("id", noteId);
 			writer.WriteAttributeString("target", shareTarget);
+			writer.WriteAttributeString("rev", revision.ToString());
 			foreach (String with in sharedWith)
 			{
 				writer.WriteStartElement(null, "with", null);
@@ -87,12 +91,15 @@ namespace Tomboy.PrivateNotes
 		{
 			String id = share.Attributes["id"].Value;
 			String target = share.Attributes["target"].Value;
+			XmlNode revNode = share.Attributes.GetNamedItem("rev");
+			int revision = -1;
+			Int32.TryParse(revNode == null ? ("-1") : (share.Attributes["rev"].Value), out revision);
 			List<String> with = new List<string>();
 			foreach (XmlNode n in share.ChildNodes)
 			{
 				with.Add(n.Attributes["partner"].Value);
 			}
-			return new NoteShare(id, with, target);
+			return new NoteShare(id, with, target, revision);
 		}
 
 
@@ -312,7 +319,9 @@ namespace Tomboy.PrivateNotes
 				String filePath = Path.Combine(imported[id].FullName, id + ".note");
 				List<String> sharers = new List<string>();
 
-				if (sync.GetSharePartners(filePath, out sharers))
+				int revision = -1;
+
+				if (sync.GetSharePartners(filePath, out sharers, out revision))
 				{
 					// TODO check sharers
 					if (IsNoteShared(id))
@@ -324,7 +333,9 @@ namespace Tomboy.PrivateNotes
 					}
 					else
 					{
-						NoteShare s = new NoteShare(id, sharers, share);
+						// we would have the correct revision number, but since it is new, we put -1 so we will download it for sure
+						// on next sync!
+						NoteShare s = new NoteShare(id, sharers, share, -1);
 						shares.Add(s);
 					}
 				}

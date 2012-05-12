@@ -22,7 +22,12 @@ namespace Tomboy.Sync
 			private byte[] myKey;
 			// for synchronization with shared storages
 			internal ShareSync shareSync;
+
+			/// <summary>
+			/// contains note-id and the directory where this shares objects are handled
+			/// </summary>
 			internal Dictionary<String, DirectoryInfo> shareCopies = null;
+			internal Dictionary<String, int> updatedShareRevisions = null;
 
 			private List<string> updatedNotes;
 			private List<string> deletedNotes;
@@ -44,7 +49,8 @@ namespace Tomboy.Sync
 
 			public EncryptedFileSystemSyncServer(string localSyncPath, byte[] _password, object _initParam)
 			{
-				shareProvider = new WebDavShareProvider();
+				shareProvider = SecureSharingFactory.Get().GetShareProvider();
+				//shareProvider = new WebDavShareProvider();
 
 				myKey = _password;
 				serverPath = localSyncPath;
@@ -101,7 +107,9 @@ namespace Tomboy.Sync
 			/// </summary>
 			private void GetFromShares()
 			{
+				updatedShareRevisions = new Dictionary<string, int>();
 				shareSync = SecureSharingFactory.Get().GetShareSync();
+				shareCopies = shareSync.GetShareCopies();
 
 				shareSync.FetchAllShares();
 			}
@@ -146,6 +154,22 @@ namespace Tomboy.Sync
 				{
 					try
 					{
+						if (!File.Exists(note.FilePath))
+						{
+							// fix strange tomboy sync bug, by forcing save here
+							/*GuiUtils.GtkInvokeAndWait(() =>
+							{
+								note.QueueSave(ChangeType.NoChange);
+								note.Save();
+							});*/
+							if (!File.Exists(note.FilePath))
+							{
+								Logger.Warn("note is refusing to get saved... bad note... bad");
+								Logger.Error("Will not upload note " + note.Id + " because of disobedience");
+								continue;
+							}
+						}
+
 						string serverNotePath = Path.Combine(newRevisionPath, Path.GetFileName(note.FilePath));
 						if (shareCopies.ContainsKey(note.Id))
 						{
@@ -153,9 +177,11 @@ namespace Tomboy.Sync
 							// TODO: is this necessary? should it be stored only in the folder where we move it now?
 							// .... figure it out
 							File.Copy(serverNotePath, Path.Combine(shareCopies[note.Id].FullName, new FileInfo(serverNotePath).Name), true);
-						} 
+						}
 						else
+						{
 							SecurityWrapper.CopyAndEncrypt(note.FilePath, serverNotePath, myKey);
+						}
 
 						//File.Copy(note.FilePath, serverNotePath, true);
 
@@ -166,6 +192,7 @@ namespace Tomboy.Sync
 					catch (Exception e)
 					{
 						Logger.Error("Sync: Error uploading note \"{0}\": {1}", note.Title, e.Message);
+						throw;
 					}
 				}
 			}
@@ -193,29 +220,6 @@ namespace Tomboy.Sync
 
 				Dictionary<string, int> updates = GetNoteUpdatesIdsSince(-1);
 				noteUUIDs.AddRange(updates.Keys);
-				/* // THIS IS THE OLD VERSION, DON'T USE THIS
-				if (IsValidXmlFile(manifestPath))
-				{
-					// TODO: Permission errors
-					using (FileStream fs = new FileStream(manifestPath, FileMode.Open))
-					{
-						bool ok;
-						Stream plainStream = SecurityWrapper.DecryptFromStream(manifestPath, fs, myKey, out ok);
-						if (!ok)
-							throw new EncryptionException("ENCRYPTION ERROR");
-
-						XmlDocument doc = new XmlDocument();
-						doc.Load(plainStream);
-
-						XmlNodeList noteIds = doc.SelectNodes("//note/@id");
-						Logger.Debug("GetAllNoteUUIDs has {0} notes", noteIds.Count);
-						foreach (XmlNode idNode in noteIds)
-						{
-							noteUUIDs.Add(idNode.InnerText);
-						}
-					}
-				}
-				*/
 				return noteUUIDs;
 			}
 
@@ -230,6 +234,7 @@ namespace Tomboy.Sync
 				Dictionary<string, int> updates = new Dictionary<string, int>();
 				updates = GetNoteUpdatesIdsSince(revision);
 
+				// now decrypt and construct NoteUpdate objects
 				foreach (string id in updates.Keys)
 				{
 					int rev = updates[id];
@@ -254,12 +259,12 @@ namespace Tomboy.Sync
 								bool ok;
 								byte[] contents = null;
 
-								// TODO: there is currently absolutely no difference between the two versions!
-								// do we need them? change sth, or can we remove the if/else and just use one version?!
 								if (shareCopies.ContainsKey(id))
 								{
 									// use shared decrypt
 									contents = SecurityWrapper.DecryptFromSharedFile(serverNotePath, out ok);
+									// since it's shared it uses its own revision number, but this should not be forewarded to Tomboy:
+									rev = revision + 1;
 								}
 								else
 								{
@@ -267,8 +272,6 @@ namespace Tomboy.Sync
 									using (FileStream fin = File.Open(serverNotePath, FileMode.Open))
 									{
 										contents = SecurityWrapper.DecryptFromFile(serverNotePath, fin, myKey, out ok);
-										//CryptoFormat ccf = SecureSharingFactory.Get().GetCrypto();
-										//contents = ccf.DecryptFile(serverNotePath, myKey, out ok);
 									}
 								}
 								noteXml = Util.FromBytes(contents);
@@ -365,9 +368,8 @@ namespace Tomboy.Sync
 
 				if (updatedNotes.Count > 0 || deletedNotes.Count > 0)
 				{
-					// TODO: error-checking, etc
-					string manifestFilePath = Path.Combine(newRevisionPath,
-																									"manifest.xml");
+					// TODO: better error-checking
+					string manifestFilePath = Path.Combine(newRevisionPath, "manifest.xml");
 					if (!Directory.Exists(newRevisionPath))
 					{
 						DirectoryInfo info = Directory.CreateDirectory(newRevisionPath);
@@ -413,54 +415,22 @@ namespace Tomboy.Sync
 					// also, add all updated notes:
 					foreach (String id in updatedNotes)
 					{
+						int revision = newRevision;
+						if (shareCopies.ContainsKey(id))
+						{
+							// shared one, use that updated
+							int currentServerRev = -1;
+							updatedShareRevisions.TryGetValue(id, out currentServerRev);
+							// get the highest current version
+							currentServerRev = Math.Max(currentServerRev, shareProvider.GetNoteShare(id).revision);
+							// because we changed the note locally, the new version is even 1 higher
+							revision = currentServerRev + 1;
+							Util.PutInDict(updatedShareRevisions, id, revision);
+						}
 						// overwrite if already in there, else add
-						if (allNotes.ContainsKey(id))
-							allNotes[id] = newRevision;
-						else
-							allNotes.Add(id, newRevision);
+						Util.PutInDict(allNotes, id, revision);
 					}
 
-
-					/* ****** REMOVE THIS AS SOON AS WE KNOW THAT IT WORKS
-					XmlWriter xml = XmlWriter.Create(plainBuf, XmlEncoder.DocumentSettings);
-					try
-					{
-						xml.WriteStartDocument();
-						xml.WriteStartElement(null, "sync", null);
-						xml.WriteAttributeString("revision", newRevision.ToString());
-						xml.WriteAttributeString("server-id", serverId);
-
-						foreach (XmlNode node in noteNodes)
-						{
-							string id = node.SelectSingleNode("@id").InnerText;
-							string rev = node.SelectSingleNode("@rev").InnerText;
-
-							// Don't write out deleted notes
-							if (deletedNotes.Contains(id))
-								continue;
-
-							// Skip updated notes, we'll update them in a sec
-							if (updatedNotes.Contains(id))
-								continue;
-
-							xml.WriteStartElement(null, "note", null);
-							xml.WriteAttributeString("id", id);
-							xml.WriteAttributeString("rev", rev);
-							xml.WriteEndElement();
-						}
-
-						// Write out all the updated notes
-						foreach (string uuid in updatedNotes)
-						{
-							xml.WriteStartElement(null, "note", null);
-							xml.WriteAttributeString("id", uuid);
-							xml.WriteAttributeString("rev", newRevision.ToString());
-							xml.WriteEndElement();
-						}
-
-						xml.WriteEndElement();
-						xml.WriteEndDocument();
-					 */
 					bool manifestCreated = CreateManifestFile(manifestFilePath, newRevision, serverId, allNotes);
 					if (!manifestCreated)
 						throw new Exception("could not create manifest file, cannot recover from this error.");
@@ -471,72 +441,7 @@ namespace Tomboy.Sync
 					// only use this if we use the revision-folder-mode
 					if (!manifestFilePath.Equals(manifestPath))
 					{
-#region DIR_VERSION
-						// WARNING! THIS VERSION IS NO LONGER SUPPORTED...
-						// SINCE WE DON'T NEED IT FOR OUR CURRENT WEBDAV SYNC
-						// IT IS PROBABLY OUT OF DATE! IF YOU WANT TO USE IT AGAIN
-						// MAKE SURE EVERYTHING WORKS
-						// Rename original /manifest.xml to /manifest.xml.old
-						string oldManifestPath = manifestPath + ".old";
-						if (File.Exists(manifestPath) == true)
-						{
-							if (File.Exists(oldManifestPath))
-							{
-								File.Delete(oldManifestPath);
-							}
-							File.Move(manifestPath, oldManifestPath);
-						}
-
-
-						// * * * Begin Cleanup Code * * *
-						// TODO: Consider completely discarding cleanup code, in favor
-						//			 of periodic thorough server consistency checks (say every 30 revs).
-						//			 Even if we do continue providing some cleanup, consistency
-						//			 checks should be implemented.
-
-						// Copy the /${parent}/${rev}/manifest.xml -> /manifest.xml
-						// don't encrypt here because file is already encrypted!
-						//SecurityWrapper.CopyAndEncrypt(manifestFilePath, manifestPath, myKey);
-						File.Copy(manifestFilePath, manifestPath, true);
-						AdjustPermissions(manifestPath);
-
-						try
-						{
-							// Delete /manifest.xml.old
-							if (File.Exists(oldManifestPath))
-								File.Delete(oldManifestPath);
-
-							string oldManifestFilePath = Path.Combine(GetRevisionDirPath(newRevision - 1),
-																					 "manifest.xml");
-
-							if (File.Exists(oldManifestFilePath))
-							{
-								// TODO: Do step #8 as described in http://bugzilla.gnome.org/show_bug.cgi?id=321037#c17
-								// Like this?
-								FileInfo oldManifestFilePathInfo = new FileInfo(oldManifestFilePath);
-								foreach (FileInfo file in oldManifestFilePathInfo.Directory.GetFiles())
-								{
-									string fileGuid = Path.GetFileNameWithoutExtension(file.Name);
-									if (deletedNotes.Contains(fileGuid) ||
-																	updatedNotes.Contains(fileGuid))
-										File.Delete(file.FullName);
-									// TODO: Need to check *all* revision dirs, not just previous (duh)
-									//			 Should be a way to cache this from checking earlier.
-								}
-
-								// TODO: Leaving old empty dir for now.	Some stuff is probably easier
-								//			 when you can guarantee the existence of each intermediate directory?
-
-							}
-						}
-						catch (Exception e)
-						{
-							Logger.Error("Exception during server cleanup while committing. " +
-														"Server integrity is OK, but there may be some excess " +
-														"files floating around.	Here's the error:\n" +
-														e.Message);
-						}
-#endregion
+						throw new Exception("unsupported sync type!");
 					}
 					else
 					{
@@ -557,6 +462,10 @@ namespace Tomboy.Sync
 								{
 									File.Delete(file.FullName);
 									OnDeleteFile(file.FullName);
+									if (shareCopies.ContainsKey(fileGuid))
+									{
+										shareProvider.RemoveShare(fileGuid);
+									}
 								}
 
 								if (updatedNotes.Contains(fileGuid))
@@ -565,12 +474,13 @@ namespace Tomboy.Sync
 									OnUploadFile(file.FullName);
 								}
 							}
+							commitSucceeded = true;
 						}
 						catch (Exception e)
 						{
-							Logger.Error("Exception during server cleanup while committing. " +
-														"Server integrity is OK, but there may be some excess " +
-														"files floating around.	Here's the error:\n" +
+							Logger.Error("Exception during committing to server. " +
+														"Some files may have not been brought up to the latest version." + 
+														"Here's the error:\n" +
 														e.Message);
 						}
 
@@ -579,15 +489,26 @@ namespace Tomboy.Sync
 				else
 				{
 					// no changes (no updates/deletes)
+				    commitSucceeded = true;
 				}
 
 				lockTimeout.Cancel();
 				RemoveLockFile(lockPath);
-				commitSucceeded = true;// TODO: When return false?
+				// update local share sync revs:
+				foreach (KeyValuePair<string, int> shareUpd in updatedShareRevisions)
+				{
+					NoteShare shareInfoObj = shareProvider.GetNoteShare(shareUpd.Key);
+					if (shareInfoObj != null)
+					{
+						shareInfoObj.revision = shareUpd.Value;
+					}
+				}
+				shareProvider.SaveShares();
+				
 				return commitSucceeded;
 			}
 
-			// TODO: Return false if this is a bad time to cancel sync?
+			// FIXME: Return false if this is a bad time to cancel sync?
 			public virtual bool CancelSyncTransaction()
 			{
 				lockTimeout.Cancel();
@@ -609,70 +530,6 @@ namespace Tomboy.Sync
 					int latestRev = -1;
 					int latestRevDir = -1;
 					latestRev = GetRevisionFromManifestFile(false, manifestPath);
-
-					// now check the shared notes
-					shareCopies = shareSync.GetShareCopies();
-					foreach (DirectoryInfo di in shareCopies.Values)
-					{
-						int revision = GetRevisionFromManifestFile(true, Path.Combine(di.FullName, "manifest.xml"));
-
-						if (revision > latestRev)
-							latestRev = revision;
-					}
-
-					bool foundValidManifest = false;
-					while (!foundValidManifest)
-					{
-						if (latestRev < 0)
-						{
-							// Look for the highest revision parent path
-							foreach (string dir in Directory.GetDirectories(serverPath))
-							{
-								try
-								{
-									int currentRevParentDir = Int32.Parse(Path.GetFileName(dir));
-									if (currentRevParentDir > latestRevDir)
-										latestRevDir = currentRevParentDir;
-								}
-								catch { }
-							}
-
-							if (latestRevDir >= 0)
-							{
-								foreach (string revDir in Directory.GetDirectories(
-																 Path.Combine(serverPath, latestRevDir.ToString())))
-								{
-									try
-									{
-										int currentRev = Int32.Parse(revDir);
-										if (currentRev > latestRev)
-											latestRev = currentRev;
-									}
-									catch { }
-								}
-							}
-
-							if (latestRev >= 0)
-							{
-								// Validate that the manifest file inside the revision is valid
-								// TODO: Should we create the /manifest.xml file with a valid one?
-								string revDirPath = GetRevisionDirPath(latestRev);
-								string revManifestPath = Path.Combine(revDirPath, "manifest.xml");
-								if (IsValidXmlFile(revManifestPath))
-									foundValidManifest = true;
-								else
-								{
-									// TODO: Does this really belong here?
-									Directory.Delete(revDirPath, true);
-									// Continue looping
-								}
-							}
-							else
-								foundValidManifest = true;
-						}
-						else
-							foundValidManifest = true;
-					}
 
 					return latestRev;
 				}
@@ -783,23 +640,40 @@ namespace Tomboy.Sync
 					return Path.Combine(defaultbasepath, noteid + ".note");
 				}
 			}
-			
+
+			/// <summary>
+			/// Gets updated notes from private and shared locations
+			/// </summary>
+			/// <param name="revision"></param>
+			/// <returns></returns>
 			virtual internal Dictionary<String, int> GetNoteUpdatesIdsSince(int revision)
 			{
+				// private ones
 				Dictionary<String, int> updates = GetNoteRevisionsFromManifest(false, manifestPath, revision);
 				List<String> processedFiles = new List<string>();
+
+				// now process all shared manifests
 				foreach (KeyValuePair<String, DirectoryInfo> shareEntry in shareCopies)
 				{
-                    DirectoryInfo dir = shareEntry.Value;
+					DirectoryInfo dir = shareEntry.Value;
 					String path = Path.Combine(dir.FullName, "manifest.xml");
 					if (!processedFiles.Contains(path))
 					{
+						if (updates.ContainsKey(shareEntry.Key))
+						{
+							// somehow this is in the normal manifest, but since it's shared
+							// it doesn't belong there, remove that info
+							updates.Remove(shareEntry.Key);
+						}
 						// only processed if not already done
 						processedFiles.Add(path);
-                        //TODO: change to individual max-rev per share, like so:  int latestShareRevision = shareProvider.GetShareLastRevision(shareEntry.Key);
-						Dictionary<String, int> addme = GetNoteRevisionsFromManifest(true, path, revision);
+						// use individual max-rev per share
+						// but if -1 is used (get all note ids) we use that!
+						int shareRevision = revision == -1 ? -1 : shareProvider.GetNoteShare(shareEntry.Key).revision;
+						Dictionary<String, int> addme = GetNoteRevisionsFromManifest(true, path, shareRevision);
 						foreach (String key in addme.Keys)
 						{
+						    int updatedRev = addme[key];
 							if (!shareCopies.ContainsKey(key))
 							{
 								// o_O this is a shared note we totally didn't know about?! it was somehow
@@ -810,36 +684,36 @@ namespace Tomboy.Sync
 							}
 							else
 							{
-								// it's ok, it's a shared note we know about
-                                if (updates.ContainsKey(key))
-                                {
-                                    if (updates[key] < addme[key]) // overwrite if the one from the shared folder is newer
-                                        updates[key] = addme[key];
-                                }
-                                else
-                                {
-                                    updates.Add(key, addme[key]);
-                                }
+								// it's ok, it's a shared note we knew about
+								if (updates.ContainsKey(key))
+								{
+									if (updates[key] < updatedRev) // overwrite if the one from the shared folder is newer
+										updates[key] = updatedRev;
+								}
+								else
+								{
+									updates.Add(key, updatedRev);
+								}
+								// save new share revision for saving on commit
+								if (updatedRev > shareRevision)
+								{
+									Util.PutInDict(updatedShareRevisions, key, updatedRev);
+								}
 							}
 						}
 					}
 				}
 
-				// filter out those with lower rev-id again:
-				List<String> toRemove = new List<String>();
-				foreach (KeyValuePair<String, int> entry in updates)
-				{
-					if (entry.Value <= revision)
-						toRemove.Add(entry.Key);
-				}
-				foreach (String key in toRemove)
-				{
-					updates.Remove(key);
-				}
-
 				return updates;
 			}
 
+			/// <summary>
+			/// Gets all notes from the manifest that have a revision bigger than the supplied revision
+			/// </summary>
+			/// <param name="shared">true for shared manifests</param>
+			/// <param name="filePath">manifest file path</param>
+			/// <param name="revision">only notes with bigger rev than this are returned</param>
+			/// <returns></returns>
 			virtual internal Dictionary<String, int> GetNoteRevisionsFromManifest(bool shared, String filePath, int revision)
 			{
 				Dictionary<String, int> updates = new Dictionary<String, int>();
@@ -877,7 +751,7 @@ namespace Tomboy.Sync
 						string id = node.SelectSingleNode("@id").InnerText;
 						int rev = Int32.Parse(node.SelectSingleNode("@rev").InnerText);
 						updates.Add(id, rev);
-					}	
+					}
 				}
 				return updates;
 			}
@@ -1120,6 +994,7 @@ namespace Tomboy.Sync
 
 			internal bool CreateManifestFile(String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)
 			{
+				Dictionary<String, int> privateNotes = new Dictionary<string, int>(notes);
 				// the key is the path of the manifest file
 				// the value is a list of notes which have to be written to there
 				Dictionary<String, List<String>> additionalManifests = new Dictionary<string, List<string>>();
@@ -1137,6 +1012,8 @@ namespace Tomboy.Sync
 						}
 						List<string> itsNotes = additionalManifests[shareManifestPath];
 						itsNotes.Add(note);
+						// since it's shared, it doesn't belong to the private notes manifest file
+						privateNotes.Remove(note);
 					}
 				}
 
@@ -1147,13 +1024,16 @@ namespace Tomboy.Sync
 					{
 						Dictionary<String, int> theNotes = new Dictionary<string, int>();
 						List<String> ids = additionalManifests[shareManifest];
+						int shareRevision = 0;
 						foreach (String id in ids)
 						{
+							int noteRev = notes[id];
+							shareRevision = Math.Max(shareRevision, noteRev);
 							theNotes.Add(id, notes[id]);
 						}
 						// TODO FIXME FATAL this doesn't work, because base.CreateManifestFile puts ALL the updated notes in!!!!
 						// THIS SHOULD BE FIXED NOW!
-						WriteManifestFile(true, shareManifest, newRevision, serverid, theNotes);
+						WriteManifestFile(true, shareManifest, shareRevision, serverid, theNotes);
 					}
 					catch (Exception e)
 					{
@@ -1161,9 +1041,9 @@ namespace Tomboy.Sync
 					}
 				}
 
-				// XXX: currently we only return the status of the "normal" manifest.. maybe that's bad :S
+				// FIXME: currently we only return the status of the "normal" manifest.. maybe that's bad :S
 				// now the "normal" thing
-				return WriteManifestFile(false, manifestFilePath, newRevision, serverid, notes);
+				return WriteManifestFile(false, manifestFilePath, newRevision, serverid, privateNotes);
 			}
 
 			internal bool WriteManifestFile(bool shared, String manifestFilePath, int newRevision, String serverid, Dictionary<String, int> notes)

@@ -67,6 +67,23 @@ namespace Tomboy.PrivateNotes
 		}
 
 		/// <summary>
+		/// tries to remove a directory, fails siltently
+		/// </summary>
+		/// <param name="_path"></param>
+		public static void TryDeleteDirectory(String _path)
+		{
+			try
+			{
+				Directory.Delete(_path, true);
+			}
+			catch (Exception)
+			{
+				// noone cares
+			}
+			
+		}
+
+		/// <summary>
 		/// convert from a unix timestamp to a c# dateTime object
 		/// </summary>
 		/// <param name="timestamp"></param>
@@ -288,6 +305,28 @@ namespace Tomboy.PrivateNotes
 			}
 			return success;
 		}
+
+        /// <summary>
+        /// convenience method that allows updating of dictionaries no matter if
+        /// the item (by key) already exists or not.
+        /// </summary>
+        /// <typeparam name="KT"></typeparam>
+        /// <typeparam name="VT"></typeparam>
+        /// <param name="dict">dictionary to update</param>
+        /// <param name="key">key to put it under</param>
+        /// <param name="value">value to insert (or update if key already exists)</param>
+        public static void PutInDict<KT,VT>(Dictionary<KT,VT> dict, KT key, VT value)
+        {
+            if (dict.ContainsKey(key))
+            {
+                dict[key] = value;
+            }
+            else
+            {
+                dict.Add(key, value);
+            }
+        }
+
 	}
 
 #if WIN32 && DPAPI
