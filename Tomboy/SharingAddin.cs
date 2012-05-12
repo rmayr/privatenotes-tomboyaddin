@@ -3,8 +3,8 @@
 namespace Tomboy
 {
 	/// <summary>
-    /// A SharingAddin provides an addin (typically a sync addin) with the means
-    /// to import additional notes which are shared with the user
+	/// A SharingAddin provides an addin (typically a sync addin) with the means
+	/// to import additional notes which are shared with the user
 	/// <summary>
 	public abstract class SharingAddin : ApplicationAddin
 	{
