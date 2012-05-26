@@ -73,6 +73,20 @@ namespace Tomboy.PrivateNotes.Crypto
 		}
 	}
 
+	class GpgInvocationException : Exception
+	{
+		public int ExitCode { get; set; }
+		public String ErrorData { get; set; }
+
+		public GpgInvocationException(int code, String errData, String msg)
+			: base(msg)
+		{
+			ExitCode = code;
+			ErrorData = errData;
+		}
+
+	}
+
 	/// <summary>
 	/// a crypto format which uses the gpg utility (program) for encryption and decryption
 	/// </summary>
@@ -133,7 +147,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			}
 			fout.Close();
 
-			// ERROR FIXME: this would normally not work, because the filename is different now!!!
+			//FIXME: this would normally not work, because the filename is different now!!!
 			byte[] decrypted = DecryptFile(tempfile, _key, out _wasOk);
 			
 			File.Delete(tempfile);
@@ -148,20 +162,9 @@ namespace Tomboy.PrivateNotes.Crypto
 
 			InvokeGpg("--batch -d --passphrase " + Util.FromBytes(_key) + " --output \"" + tempfile + "\" \"" + _filename + "\"");
 
-			BufferedStream fin = new BufferedStream(File.OpenRead(tempfile));
-			long len = fin.Length;
-			if (len > Int32.MaxValue)
-			{
-				File.Delete(tempfile);
-				throw new Exception("huge files not supported!!!");
-			}
-			byte[] buffer = new byte[len];
-			int read = fin.Read(buffer, 0, (int)len);
-			fin.Close();
+			byte[] buffer = readFile(tempfile, out _wasOk);
 
-			File.Delete(tempfile);
-
-			if (read != len)
+			if (buffer == null)
 			{
 				throw new Exception("not the whole file was read!");
 			}
@@ -228,24 +231,7 @@ namespace Tomboy.PrivateNotes.Crypto
 			
 			_recipients = new List<String>();
 
-			BufferedStream fin = new BufferedStream(File.OpenRead(tempFileName));
-			long len = fin.Length;
-			if (len > Int32.MaxValue)
-			{
-				File.Delete(tempFileName);
-				throw new Exception("huge files not supported!!!");
-			}
-			byte[] buffer = new byte[len];
-			int read = fin.Read(buffer, 0, (int)len);
-			fin.Close();
-
-			File.Delete(tempFileName);
-
-			if (read != len)
-			{
-				_wasOk = false;
-				return null;
-			}
+			byte[] buffer = readFile(tempFileName, out _wasOk);
 
 			// TODO: parse recipients!
 			_recipients.Add("not implemented yet");
@@ -255,7 +241,115 @@ namespace Tomboy.PrivateNotes.Crypto
 
 		}
 
-		private static void InvokeGpg(String _arguments) {
+		public String SignData(String data)
+		{
+			String unique = Guid.NewGuid().ToString();
+			String tempFileName = Path.Combine(tempDir, unique + ".clear");
+			FileStream fout = File.Create(tempFileName);
+			byte[] content = Util.GetBytes(data);
+			fout.Write(content, 0, content.Length);
+			fout.Close();
+
+			String outputFile = tempFileName + ".sig";
+
+			StringBuilder args = new StringBuilder("--batch --clearsign ");
+			args.Append("--output \"");
+			args.Append(outputFile);
+			args.Append("\" \"");
+			args.Append(tempFileName);
+			args.Append("\"");
+
+			InvokeGpg(args.ToString());
+
+			bool ok = false;
+			byte[] encoded = readFile(outputFile, out ok);
+
+			File.Delete(tempFileName);
+			File.Delete(outputFile);
+
+			String result = Util.FromBytes(encoded);
+
+			return result;
+		}
+
+		public bool VerifySigned(String data, String expectedData, String signer)
+		{
+			String unique = Guid.NewGuid().ToString();
+			String tempFileName = Path.Combine(tempDir, unique + ".signed");
+			FileStream fout = File.Create(tempFileName);
+			byte[] content = Util.GetBytes(data);
+			fout.Write(content, 0, content.Length);
+			fout.Close();
+
+			String outputFile = tempFileName + ".clear";
+
+			StringBuilder args = new StringBuilder("--batch --decrypt ");
+			args.Append("--output \"");
+			args.Append(outputFile);
+			args.Append("\" \"");
+			args.Append(tempFileName);
+			args.Append("\"");
+
+			try
+			{
+				String gpgOutput = InvokeGpg(args.ToString());
+
+				if (!gpgOutput.Contains(signer))
+				{
+					Logger.Warn("Wrong signature, not signed by " + signer);
+					File.Delete(tempFileName);
+					File.Delete(outputFile);
+					return false;
+				}
+			}
+			catch (GpgInvocationException _e)
+			{
+				if (_e.ExitCode == 1)
+				{
+					Logger.Warn("Wrong signature, changed or not signed by " + signer);
+				}
+				File.Delete(tempFileName);
+				File.Delete(outputFile);
+				return false;
+			}
+
+			bool ok = false;
+			byte[] encoded = readFile(outputFile, out ok);
+			File.Delete(tempFileName);
+			File.Delete(outputFile);
+
+			String result = Util.FromBytes(encoded);
+
+			// trimming needed because signing can add a new line at the end
+			return result.Trim().Equals(expectedData.Trim());
+		}
+
+		private static byte[] readFile(String _fileName, out bool _wasOk)
+		{
+			BufferedStream fin = new BufferedStream(File.OpenRead(_fileName));
+			long len = fin.Length;
+			if (len > Int32.MaxValue)
+			{
+				File.Delete(_fileName);
+				throw new Exception("huge files not supported!!!");
+			}
+			byte[] buffer = new byte[len];
+			int read = fin.Read(buffer, 0, (int)len);
+			fin.Close();
+
+			File.Delete(_fileName);
+
+			if (read != len)
+			{
+				_wasOk = false;
+				return null;
+			}
+
+			_wasOk = true;
+			return buffer;
+		}
+
+		private static String InvokeGpg(String _arguments) {
 			Statistics.Instance.StartCrypto();
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = gpgExe;
@@ -277,10 +371,10 @@ namespace Tomboy.PrivateNotes.Crypto
 					Logger.Info("ERRORS:");
 					Logger.Info(errdata);
 				}
-				throw new Exception("openPgp invocation exception: " + errdata);
+				throw new GpgInvocationException(proc.ExitCode, errdata, "openPgp invocation exception: " + errdata);
 			}
+			return errdata;
 		}
-
 
 		public int Version()
 		{

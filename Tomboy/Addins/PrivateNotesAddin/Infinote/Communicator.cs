@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Infinote;
 using Tomboy;
 using Tomboy.PrivateNotes;
+using Tomboy.Sync;
 using XmppOtrLibrary;
 using Logger = Tomboy.Logger;
 
@@ -62,6 +63,11 @@ namespace PrivateNotes.Infinote
 		/// </summary>
 		private LiveEditingInfoWindow infoWindow = new LiveEditingInfoWindow();
 
+		/// <summary>
+		/// holds information about which peers have been authenticated successfully
+		/// </summary>
+		private Authenticator authenticator;
+
 #endregion
 
 
@@ -87,6 +93,9 @@ namespace PrivateNotes.Infinote
 			AddressProvider = new XmppAddressProvider();
 			AddressProvider.Load();
 			AddressProvider.UpdateAddressBookFile();
+			authenticator = new Authenticator(this);
+			// allow authenticator to emit a message
+			authenticator.OnSendAuthMsg += SendMessageToUser;
 		}
 
 #region public-methods
@@ -164,7 +173,10 @@ namespace PrivateNotes.Infinote
 			return result;
 		}
 
-
+		/// <summary>
+		/// gets all online (and already authenticated) users
+		/// </summary>
+		/// <returns></returns>
 		public List<String> GetOnlinePartnerIds()
 		{
 			List<String> results = new List<string>();
@@ -177,7 +189,10 @@ namespace PrivateNotes.Infinote
 			{
 				if (partner.IsOnline)
 				{
-					results.Add(partner.Name);
+					if (authenticator.IsAuthenticated(partner.Name))
+					{
+						results.Add(partner.Name);
+					}
 				}
 			}
 			return results;
@@ -203,8 +218,27 @@ namespace PrivateNotes.Infinote
 
 #region privates
 
+		/// <summary>
+		/// sends a message via the encrypted channel to another user
+		/// </summary>
+		/// <param name="to"></param>
+		/// <param name="msg"></param>
+		private void SendMessageToUser(String to, String msg)
+		{
+			var com = xmpp.GetSecureCommunicator(to);
+			if (com != null && com.ConnectionEstablished)
+			{
+				com.SendSecuredMessage(msg);
+			}
+			else
+			{
+				Tomboy.Logger.Warn("cannot send msg to {0} because connection currently not secured.", to);
+			}
+		}
+
 		private void ConnectXmpp()
 		{
+			authenticator.Reset();
 			RetryCount++;
 			if (RetryCount > MAX_RETRIES)
 			{
@@ -317,7 +351,7 @@ namespace PrivateNotes.Infinote
 
 #endregion
 
-		#region delegate-implementations
+#region delegate-implementations
 
 		/// <summary>
 		/// the state of an editorStateMachine of any note has changed, react to it
@@ -369,16 +403,7 @@ namespace PrivateNotes.Infinote
 		/// <param name="msg"></param>
 		private void DlgOnNoteEditorsEmitMsg(String to, String msg)
 		{
-			var com = xmpp.GetSecureCommunicator(to);
-			if (com != null && com.ConnectionEstablished)
-			{
-				//Logger.Info("OUT " + msg);
-				com.SendSecuredMessage(msg);
-			}
-			else
-			{
-				Tomboy.Logger.Warn("cannot send msg to {0} because connection currently not secured.", to);
-			}
+			SendMessageToUser(to, msg);
 		}
 
 		private void DlgOnError(String error)
@@ -388,6 +413,19 @@ namespace PrivateNotes.Infinote
 
 		private void DlgOnSecureMsg(String from, string msg)
 		{
+			if (msg.StartsWith("AUTH"))
+			{
+				// verify the remote key stuff
+				var secureCom = xmpp.GetSecureCommunicator(from);
+				byte[] remoteKeyData = secureCom.EncodedRemoteKey;
+				authenticator.OnAuthMsgReceived(from, remoteKeyData, msg);
+				return;
+			}
+			if (!authenticator.IsAuthenticated(from))
+			{
+				Logger.Error("Message from unauthenticated user " + from);
+			}
+
 			//Logger.Info("IN  " + msg);
 			string concernedNote;
 			var newlyCreated = NoteEditors.OnMessage(from, msg, out concernedNote);
@@ -418,6 +456,7 @@ namespace PrivateNotes.Infinote
 				infoMsg += "\nActive editing sessions were destoryed";
 			}
 
+			authenticator.RemoveUser(partnerId);
 			Logger.Info(infoMsg);
 		}
 
@@ -446,7 +485,17 @@ namespace PrivateNotes.Infinote
 
 		private void DlgOnPartnerOnline(String partnerId)
 		{
-			Logger.Info(partnerId + " came online...");
+			var secureCom = xmpp.GetSecureCommunicator(partnerId);
+			byte[] local = secureCom.EncodedLocalKey;
+			byte[] remote = secureCom.EncodedRemoteKey;
+			if (local == null || remote == null)
+			{
+				Logger.Error("a key is not set, cannot authenticate!");
+				return;
+			}
+
+			authenticator.Authenticate(partnerId, local, remote);
+			Logger.Info(partnerId + " came online... authenticating...");
 		}
 
 		private void DlgOnConnectionEstablished(bool success)

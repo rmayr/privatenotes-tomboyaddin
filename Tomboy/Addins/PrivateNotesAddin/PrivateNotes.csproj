@@ -91,6 +91,7 @@
     <Compile Include="gui\LiveEditingInfoWindow.cs" />
     <Compile Include="gui\MultiButtonPartnerSelector.cs" />
     <Compile Include="gui\MultiButtonSelector.cs" />
+    <Compile Include="Infinote\Authenticator.cs" />
     <Compile Include="Infinote\Communicator.cs" />
     <Compile Include="cryptScheme\AddressBook.cs" />
     <Compile Include="gui\ItemSelector.cs" />

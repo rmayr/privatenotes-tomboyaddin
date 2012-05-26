@@ -107,6 +107,19 @@ namespace Tomboy.PrivateNotes
 		}
 
 		/// <summary>
+		/// converts a byte array to a hex string
+		/// </summary>
+		/// <param name="ba"></param>
+		/// <returns></returns>
+		public static string ByteArrayToHexString(byte[] ba)
+		{
+			StringBuilder hex = new StringBuilder(ba.Length * 2);
+			foreach (byte b in ba)
+				hex.AppendFormat("{0:x2}", b);
+			return hex.ToString();
+		}
+
+		/// <summary>
 		/// string to bytes (to have one central place where the codepage is defined)
 		/// </summary>
 		/// <param name="_s"></param>
@@ -253,6 +266,13 @@ namespace Tomboy.PrivateNotes
 		{
 			string[] elements = id.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
 			return (elements.Length > 1) ? elements[1].Trim() : id.Trim();
+		}
+
+		public static String GetUserIdFromGpgId(String id)
+		{
+			String fingerPrint = GetFingerprintFromGpgId(id);
+			fingerPrint = fingerPrint.Replace(" ", "").Trim();
+			return fingerPrint.Substring(fingerPrint.Length - 8);
 		}
 
 		public static String GetCleanText(String text)

@@ -18,6 +18,8 @@ namespace Tomboy.PrivateNotes
 		//private static int MAXREPETITIONS = 100;
 		private static int WAITTORESET = 500;
 		private static int MAXREPETITIONS = 20;
+		private static bool VIOLATIONS_THROW = false;
+		private static bool WRITE_LOGS = false;
 		
 
 		private int repetitions = 0;
@@ -44,9 +46,9 @@ namespace Tomboy.PrivateNotes
 				                            "_" + DateTime.Now.ToString("MMdd_HHmm") + "stats" + path + ".txt");
 			newFile = statsPath != newPath;
 			statsPath = newPath;
-			
 
-			if (newFile)
+
+			if (WRITE_LOGS && newFile)
 			{
 				using (StreamWriter w = File.AppendText(statsPath))
 				{
@@ -88,7 +90,7 @@ namespace Tomboy.PrivateNotes
 
 		public void FinishSyncRun(bool? successful)
 		{
-			if (comSw.IsRunning || cryptSw.IsRunning)
+			if (VIOLATIONS_THROW && (comSw.IsRunning || cryptSw.IsRunning))
 			{
 				throw new Exception("FinishSyncRun while none is in progress");
 			}
@@ -111,7 +113,7 @@ namespace Tomboy.PrivateNotes
 
 		public void StartCommunication()
 		{
-			if (!syncStart.HasValue || comSw.IsRunning)
+			if (VIOLATIONS_THROW && (!syncStart.HasValue || comSw.IsRunning))
 			{
 				throw new Exception("StartCommunication while previous was not finished");
 			}
@@ -121,7 +123,7 @@ namespace Tomboy.PrivateNotes
 
 		public void EndCommunication()
 		{
-			if (!syncStart.HasValue || !comSw.IsRunning || cryptSw.IsRunning)
+			if (VIOLATIONS_THROW && (!syncStart.HasValue || !comSw.IsRunning || cryptSw.IsRunning))
 			{
 				throw new Exception("EndCommunication while none is in progress");
 			}
@@ -131,7 +133,7 @@ namespace Tomboy.PrivateNotes
 
 		public void StartCrypto()
 		{
-			if (!syncStart.HasValue || cryptSw.IsRunning || comSw.IsRunning)
+			if (VIOLATIONS_THROW && (!syncStart.HasValue || cryptSw.IsRunning || comSw.IsRunning))
 			{
 				throw new Exception("StartCrypto while previous was not finished");
 			}
@@ -141,7 +143,7 @@ namespace Tomboy.PrivateNotes
 
 		public void EndCrypto()
 		{
-			if (!syncStart.HasValue || !cryptSw.IsRunning || comSw.IsRunning)
+			if (VIOLATIONS_THROW && (!syncStart.HasValue || !cryptSw.IsRunning || comSw.IsRunning))
 			{
 				throw new Exception("EndCrypto while none is in progress");
 			}
@@ -152,6 +154,10 @@ namespace Tomboy.PrivateNotes
 		private int blockSaves = 0;
 		private void Save(bool successful)
 		{
+			if (!WRITE_LOGS)
+			{
+				return;
+			}
 			if (blockSaves > 0)
 			{
 				blockSaves--;

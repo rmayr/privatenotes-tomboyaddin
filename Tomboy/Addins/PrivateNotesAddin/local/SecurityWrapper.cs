@@ -85,6 +85,45 @@ namespace Tomboy.Sync
 			ccf.WriteCompatibleFile(AddressBookFactory.Instance().GetDefault(), _fileName, _data, _recipients);
 		}
 
+		public static byte[] DecryptFromSharedFile(String _file, out bool _wasOk)
+		{
+			ShareCryptoFormat ccf = SecureSharingFactory.Get().GetShareCrypto();
+			if (ccf == null)
+			{
+				Logger.Warn("wrong encryption format!");
+				throw new Exception("For sharing, the crypto format has to be a ShareCryptoFormat instance!");
+			}
+			List<String> ignored = new List<string>();
+			byte[] contents = ccf.DecryptFile(AddressBookFactory.Instance().GetDefault(), _file, out ignored, out _wasOk);
+			if (!_wasOk)
+				return null;
+			return contents;
+		}
+
+		public static String Sign(String data)
+		{
+			GpgCryptoFormat ccf = SecureSharingFactory.Get().GetShareCrypto() as GpgCryptoFormat;
+			if (ccf == null)
+			{
+				Logger.Warn("wrong encryption format!");
+				throw new Exception("For sharing, the crypto format has to be a ShareCryptoFormat instance!");
+			}
+
+			return ccf.SignData(data);
+		}
+
+		public static bool VerifySignature(String signedData, String expected, String signer)
+		{
+			GpgCryptoFormat ccf = SecureSharingFactory.Get().GetShareCrypto() as GpgCryptoFormat;
+			if (ccf == null)
+			{
+				Logger.Warn("wrong encryption format!");
+				throw new Exception("For sharing, the crypto format has to be a ShareCryptoFormat instance!");
+			}
+
+			return ccf.VerifySigned(signedData, expected, signer);
+		}
+
 #endregion
 
 #region normal wrappers
@@ -146,21 +185,6 @@ namespace Tomboy.Sync
 				return null;
 
 			return data;
-		}
-
-		public static byte[] DecryptFromSharedFile(String _file, out bool _wasOk)
-		{
-			ShareCryptoFormat ccf = SecureSharingFactory.Get().GetShareCrypto();
-			if (ccf == null)
-			{
-				Logger.Warn("wrong encryption format!");
-				throw new Exception("For sharing, the crypto format has to be a ShareCryptoFormat instance!");
-			}
-			List<String> ignored = new List<string>();
-			byte[] contents = ccf.DecryptFile(AddressBookFactory.Instance().GetDefault(), _file, out ignored, out _wasOk);
-			if (!_wasOk)
-				return null;
-			return contents;
 		}
 
 #endregion
