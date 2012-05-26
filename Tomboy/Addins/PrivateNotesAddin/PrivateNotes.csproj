@@ -121,13 +121,16 @@
     <Compile Include="ShareNoteAddin.cs" />
     <Compile Include="ShareProvider.cs" />
     <Compile Include="SharingAppAddin.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WebDAVClient.cs" />
     <Compile Include="WebDAVInterface.cs" />
     <Compile Include="ShareSync.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="PrivateNotes.addin.xml" />
+    <EmbeddedResource Include="PrivateNotes.addin.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Tomboy.csproj">

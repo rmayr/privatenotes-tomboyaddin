@@ -89,6 +89,7 @@ namespace Tomboy.Sync
 		{
 			initialized = true;
 			GpgConfigUtility.ConfigureIfNecessary(null);
+			Statistics.Init();
 		}
 
 		public override void Shutdown ()
@@ -111,6 +112,7 @@ namespace Tomboy.Sync
 		/// </summary>
 		public override SyncServer CreateSyncServer ()
 		{
+			Statistics.Instance.StartSyncRun();
 			SyncServer server = null;
 
 			String password;
@@ -138,10 +140,10 @@ namespace Tomboy.Sync
 				catch (WebDavException wde)
 				{
 					Exception inner = wde.InnerException;
-					for (int i = 0; i < 10 && (inner.InnerException != null); i++) // max 10
+					for (int i = 0; i < 10 && (inner != null && inner.InnerException != null); i++) // max 10
 						inner = inner.InnerException;
 
-					GtkUtil.ShowHintWindow(Tomboy.SyncDialog, "WebDav Error", "Error while communicating with server:\n" + inner.Message);
+					GtkUtil.ShowHintWindow(Tomboy.SyncDialog, "WebDav Error", "Error while communicating with server:\n" + (inner==null?wde.Message:inner.Message) + "\nPlease try again later.");
 					throw;
 				}
 			} else {
@@ -153,6 +155,7 @@ namespace Tomboy.Sync
 
 		public override void PostSyncCleanup ()
 		{
+			Statistics.Instance.FinishSyncRun(null);
 			Util.TryDeleteDirectory(Path.Combine(Services.NativeApplication.CacheDirectory, "sync_temp"));
 			Util.TryDeleteDirectory(Path.Combine(Services.NativeApplication.CacheDirectory, "gp"));
 			Util.TryDeleteDirectory(Path.Combine(Services.NativeApplication.CacheDirectory, "sharedSync"));
@@ -177,7 +180,7 @@ namespace Tomboy.Sync
 			SetupGuiEncryptionRelated(container, 4, requiredPrefChanged);
 
 			container.PackStart(new Gtk.Label());
-			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Xmpp Settings:</span>")));
+			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Xmpp Settings:</span>  <span size='small'>(optional)</span>")));
 			SetupGuiXmppRelated(container, 4, requiredPrefChanged);
 
 			container.ShowAll();

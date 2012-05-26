@@ -71,13 +71,11 @@ namespace Tomboy.PrivateNotes
 		/// <returns></returns>
 		public bool CheckForLockFile()
 		{
+			Statistics.Instance.StartCommunication();
 			Logger.Debug("checking for lock file");
 			client.List();
-			Logger.Debug("starting wait");
 			autoReset.WaitOne();
-			Logger.Debug("waiting is over :), check if ok");
 			CheckException("error while checking for lockfile");
-			Logger.Debug("checking for lockfile was ok");
 			return dirListing.Contains("lock");
 		}
 
@@ -88,11 +86,14 @@ namespace Tomboy.PrivateNotes
 		/// <returns></returns>
 		public bool DownloadLockFile(String toFile)
 		{
+			Statistics.Instance.StartCommunication();
 			client.Download("lock", toFile);
 			autoReset.WaitOne();
 			CheckException("error while downloading lockfile");
-			Console.WriteLine("STATUS for lockfile download=" + lastStatusCode);
-			// TODO return true/false depending on statuscode
+			if (lastStatusCode != 200)
+			{
+				Console.WriteLine("STATUS for lockfile download=" + lastStatusCode);
+			}
 			return true;
 		}
 
@@ -102,11 +103,11 @@ namespace Tomboy.PrivateNotes
 		/// <returns></returns>
 		public bool RemoveLock()
 		{
+			Statistics.Instance.StartCommunication();
 			client.Delete("lock");
 			autoReset.WaitOne();
 			CheckException("error while removing lock");
 			Console.WriteLine("STATUS for delete=" + lastStatusCode);
-			// TODO return true/false depending on statuscode
 			return true;
 		}
 
@@ -117,11 +118,11 @@ namespace Tomboy.PrivateNotes
 		/// <returns></returns>
 		public bool RemoveFile(String name)
 		{
+			Statistics.Instance.StartCommunication();
 			client.Delete(name);
 			autoReset.WaitOne();
 			CheckException("error while removing file " + name);
 			Console.WriteLine("STATUS for delete=" + lastStatusCode);
-			// TODO return true/false depending on statuscode
 			return true;
 		}
 
@@ -132,6 +133,7 @@ namespace Tomboy.PrivateNotes
 		/// <returns></returns>
 		public bool UploadFile(String path)
 		{
+			Statistics.Instance.StartCommunication();
 			Logger.Debug("uploading file {0}", path);
 			client.Upload(path, Path.GetFileName(path));
 			autoReset.WaitOne();
@@ -150,11 +152,13 @@ namespace Tomboy.PrivateNotes
 		{
 			// fetch list of all files to download
 		    String listErrorMsg = "exception while getting remote listing of basepath " + client.BasePath;
+			Statistics.Instance.StartCommunication();
 			client.List();
 			autoReset.WaitOne();
             if (CheckException(listErrorMsg, false) != null)
             {
                 // error occurred, try again
+				Statistics.Instance.StartCommunication();
                 client.List();
                 autoReset.WaitOne();
             }
@@ -163,12 +167,14 @@ namespace Tomboy.PrivateNotes
 				if (!file.EndsWith("/"))
 				{
 					// not for dirs
+					Statistics.Instance.StartCommunication();
 					client.Download(file, Path.Combine(toPath, file));
 					autoReset.WaitOne();
                     // retry if failed:
                     if (CheckException("", false) != null)
                     {
                         // error occurred, try again
+						Statistics.Instance.StartCommunication();
                         client.Download(file, Path.Combine(toPath, file));
                         autoReset.WaitOne();
                     }
@@ -198,6 +204,7 @@ namespace Tomboy.PrivateNotes
 				if (!file.EndsWith("/")
 					&& !file.EndsWith("lock"))
 				{
+					Statistics.Instance.StartCommunication();
 					Logger.Debug("uploading note {0}", fromPath);
 					// not for dirs and don't upload lockfile again
 					String toPath = Path.GetFileName(file);
@@ -260,8 +267,13 @@ namespace Tomboy.PrivateNotes
         /// <returns></returns>
         private Exception CheckException(String msgOnError, bool autoThrow)
         {
-            if (lastStatusCode == WebDAVClient.EXCEPTION_RESPONSE_CODE
+			if (autoThrow)
+			{
+				Statistics.Instance.EndCommunication();
+			}
+        	if ((lastStatusCode == WebDAVClient.EXCEPTION_RESPONSE_CODE
 					&& client.LastException != null)
+					|| lastStatusCode == 0)
 			{
 				Exception e = client.LastException;
 				client.ResetException();
@@ -271,6 +283,8 @@ namespace Tomboy.PrivateNotes
                 }
                 else
                 {
+					// not autothrow but exception occured, so we stop here
+					Statistics.Instance.EndCommunication();
                     return new WebDavException(msgOnError, e);
                 }
 			}

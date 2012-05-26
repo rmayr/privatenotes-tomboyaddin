@@ -256,27 +256,29 @@ namespace Tomboy.PrivateNotes.Crypto
 		}
 
 		private static void InvokeGpg(String _arguments) {
+			Statistics.Instance.StartCrypto();
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
-				proc.StartInfo.FileName = gpgExe;
-				proc.StartInfo.Arguments = _arguments;
-				proc.StartInfo.UseShellExecute = false;
-				proc.StartInfo.CreateNoWindow = true;
-				proc.StartInfo.RedirectStandardOutput = true;
-				proc.StartInfo.RedirectStandardError = true;
-				proc.Start();
-				String data = proc.StandardOutput.ReadToEnd();
-				String errdata = proc.StandardError.ReadToEnd();
-				proc.WaitForExit();
-				if (proc.ExitCode != 0)
+			proc.StartInfo.FileName = gpgExe;
+			proc.StartInfo.Arguments = _arguments;
+			proc.StartInfo.UseShellExecute = false;
+			proc.StartInfo.CreateNoWindow = true;
+			proc.StartInfo.RedirectStandardOutput = true;
+			proc.StartInfo.RedirectStandardError = true;
+			proc.Start();
+			String data = proc.StandardOutput.ReadToEnd();
+			String errdata = proc.StandardError.ReadToEnd();
+			proc.WaitForExit();
+			Statistics.Instance.EndCrypto();
+			if (proc.ExitCode != 0)
+			{
+				Logger.Info(data);
+				if (!String.IsNullOrEmpty(errdata))
 				{
-					Logger.Info(data);
-					if (!String.IsNullOrEmpty(errdata))
-					{
-						Logger.Info("ERRORS:");
-						Logger.Info(errdata);
-					}
-					throw new Exception("openPgp invocation exception: " + errdata);
+					Logger.Info("ERRORS:");
+					Logger.Info(errdata);
 				}
+				throw new Exception("openPgp invocation exception: " + errdata);
+			}
 		}
 
 

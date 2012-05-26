@@ -504,7 +504,8 @@ namespace Tomboy.Sync
 					}
 				}
 				shareProvider.SaveShares();
-				
+
+				Statistics.Instance.SetSyncStatus(commitSucceeded);
 				return commitSucceeded;
 			}
 
@@ -520,6 +521,7 @@ namespace Tomboy.Sync
 					shareSync.CleanUp();
 				}
 
+				Statistics.Instance.SetSyncStatus(false);
 				return true;
 			}
 
