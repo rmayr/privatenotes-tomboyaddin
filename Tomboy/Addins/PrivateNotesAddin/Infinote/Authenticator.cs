@@ -9,6 +9,16 @@ using XmppOtrLibrary;
 
 namespace PrivateNotes.Infinote
 {
+
+	/// <summary>
+	/// Used to authenticate XMPP users via their GPG keys.
+	/// The XMPP communication (OTR layer) uses own, generated DSA key pairs, the Authenticator
+	/// makes sure that the XMPP users are who they claim to be (they have the private key
+	/// of the public key that we know from them).
+	/// It also makes sure that there is no man in the middle. This is done via signing the
+	/// public key of the OTR layer, thereby a man in the middle would have to know the private
+	/// key of the communication partner.
+	/// </summary>
 	class Authenticator
 	{
 		private Communicator com;
@@ -29,6 +39,13 @@ namespace PrivateNotes.Infinote
 
 		public void Authenticate(String toUser, byte[] localAuthData, byte[] remoteAuthData)
 		{
+			// auth may get sent twice, but not more
+			var a = GetAuthdObj(toUser);
+			if (a.AuthSent > 1)
+				return;
+
+			a.AuthSent++;
+			//Logger.Debug("Sending auth data " + a.AuthSent + "st/nd time.");
 			var creator = new SelfAuthenticator(toUser, localAuthData);
 			creator.OnDone += new UserAuthenticationDone(selfAuth_OnDone);
 			ThreadPool.QueueUserWorkItem(creator.DoWork);
@@ -43,10 +60,15 @@ namespace PrivateNotes.Infinote
 			}
 			// success
 			var a = GetAuthdObj(user);
+			bool before = a.Done;
 			a.Local = true;
-			if (a.Done)
+			if (!before && a.Done)
 			{
 				Logger.Info("Authenticating user " + user + " finished");
+			}
+			else
+			{
+				Logger.Info("Sending our auth information.");
 			}
 			OnSendAuthMsg(user, "AUTH:" + authMsg);
 		}
@@ -56,14 +78,19 @@ namespace PrivateNotes.Infinote
 		/// </summary>
 		/// <param name="fromUser"></param>
 		/// <param name="remoteKeyData">the remote key data</param>
+		/// <param name="localAuthData">the local key data, not explicitly necessary for verifying the remote host
+		/// but we may send our auth info again here, if the other host hasn't yet got it</param>
 		/// <param name="msg">the received auth msg (including "AUTH:")</param>
-		public void OnAuthMsgReceived(String fromUser, byte[] remoteKeyData, String msg)
+		public void OnAuthMsgReceived(String fromUser, byte[] localAuthData, byte[] remoteKeyData, String msg)
 		{
 			// verify
 			msg = msg.Substring("AUTH:".Length);
 			var creator = new UserAuthenticator(fromUser, remoteKeyData, msg);
 			creator.OnDone += remoteAuth_OnDone;
 			ThreadPool.QueueUserWorkItem(creator.DoWork);
+
+			// also, send our auth data again (is done twice at most, checked by function)
+			Authenticate(fromUser, localAuthData, remoteKeyData);
 		}
 
 		void remoteAuth_OnDone(string user, bool success, string authMsg)
@@ -78,8 +105,9 @@ namespace PrivateNotes.Infinote
 			}
 			// success
 			var a = GetAuthdObj(user);
+			bool before = a.Done;
 			a.Remote = true;
-			if (a.Done)
+			if (!before && a.Done)
 			{
 				Logger.Info("Authenticating user " + user + " finished");
 			}
@@ -139,6 +167,8 @@ namespace PrivateNotes.Infinote
 			get { return Local && Remote; }
 		}
 
+		public int AuthSent { get; set; }
+
 		public bool Local { get; set; }
 		public bool Remote { get; set; }
 	}
@@ -168,6 +198,8 @@ namespace PrivateNotes.Infinote
 
 		public void DoWork(Object threadContext)
 		{
+			// we don't send instantly, can lead to problems when other side has not finished
+			//Thread.Sleep(500);
 			String signMe = Util.ByteArrayToHexString(data);
 			String signed = SecurityWrapper.Sign(signMe);
 			OnDone(user, true, signed);

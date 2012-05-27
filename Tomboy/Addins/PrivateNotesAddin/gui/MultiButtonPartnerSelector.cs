@@ -32,7 +32,7 @@ namespace Tomboy.PrivateNotes
 			Gdk.Color.Parse("green", ref colorGreen);
 		}
 
-		public MultiButtonPartnerSelector(String message, List<object> items, inputDoneObject onFinished) : base(message, items, onFinished)
+		public MultiButtonPartnerSelector(String message, List<object> items, inputDoneObject onFinished, Gtk.Window parent) : base(message, items, onFinished, parent)
 		{
 			
 		}

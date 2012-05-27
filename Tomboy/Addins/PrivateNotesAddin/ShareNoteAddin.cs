@@ -261,7 +261,7 @@ namespace Tomboy.PrivateNotes
 					// show a list for the user to select with whom to co-edit
 					List<object> tempList = new List<object>();
 					tempList.AddRange(possible.ToArray());
-					new MultiButtonPartnerSelector("Select cooperation-partner:", tempList, OnSelectEditPartner);
+					new MultiButtonPartnerSelector("Select cooperation-partner:", tempList, OnSelectEditPartner, (Gtk.Window)Note.Window.Toplevel);
 				}
 				else
 				{

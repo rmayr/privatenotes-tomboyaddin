@@ -26,12 +26,14 @@ namespace Tomboy.PrivateNotes
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="onFinished">callback function when input is done</param>
-		public MultiButtonSelector(String message, List<object> items, inputDoneObject onFinished)
+		public MultiButtonSelector(String message, List<object> items, inputDoneObject onFinished, Gtk.Window parent)
+			: base(Catalog.GetString("Selector"), parent, DialogFlags.Modal, new object(){})
 		{
 			// onOk must not be null
 			onOk = onFinished ?? delegate(bool ok, object obj) {/*just ignore*/};
 			allItems = items;
-			Title = Catalog.GetString("Selector");
+			SetPosition(parent==null?WindowPosition.Center:WindowPosition.CenterOnParent);
+			//Title = Catalog.GetString("Selector"); // title set by constructor
 			Init();
 			Gtk.VBox box = new Gtk.VBox(false, 6);
 

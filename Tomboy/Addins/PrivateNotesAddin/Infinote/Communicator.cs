@@ -418,7 +418,8 @@ namespace PrivateNotes.Infinote
 				// verify the remote key stuff
 				var secureCom = xmpp.GetSecureCommunicator(from);
 				byte[] remoteKeyData = secureCom.EncodedRemoteKey;
-				authenticator.OnAuthMsgReceived(from, remoteKeyData, msg);
+				byte[] localKeyData = secureCom.EncodedLocalKey;
+				authenticator.OnAuthMsgReceived(from, localKeyData, remoteKeyData, msg);
 				return;
 			}
 			if (!authenticator.IsAuthenticated(from))
