@@ -45,7 +45,7 @@ namespace PrivateNotes.Infinote
 				return;
 
 			a.AuthSent++;
-			//Logger.Debug("Sending auth data " + a.AuthSent + "st/nd time.");
+			Logger.Debug("Sending auth data " + a.AuthSent + "st/nd time.");
 			var creator = new SelfAuthenticator(toUser, localAuthData);
 			creator.OnDone += new UserAuthenticationDone(selfAuth_OnDone);
 			ThreadPool.QueueUserWorkItem(creator.DoWork);
@@ -83,6 +83,14 @@ namespace PrivateNotes.Infinote
 		/// <param name="msg">the received auth msg (including "AUTH:")</param>
 		public void OnAuthMsgReceived(String fromUser, byte[] localAuthData, byte[] remoteKeyData, String msg)
 		{
+			var a = GetAuthdObj(fromUser);
+			if (a.Done)
+			{
+				// nothing to do, we already got this, other side simply sent it a second time
+				// to be sure that we received it
+				return;
+			}
+
 			// verify
 			msg = msg.Substring("AUTH:".Length);
 			var creator = new UserAuthenticator(fromUser, remoteKeyData, msg);
@@ -105,9 +113,8 @@ namespace PrivateNotes.Infinote
 			}
 			// success
 			var a = GetAuthdObj(user);
-			bool before = a.Done;
 			a.Remote = true;
-			if (!before && a.Done)
+			if (a.Done)
 			{
 				Logger.Info("Authenticating user " + user + " finished");
 			}

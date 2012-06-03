@@ -90,6 +90,17 @@ namespace Tomboy.Sync
 			initialized = true;
 			GpgConfigUtility.ConfigureIfNecessary(null);
 			Statistics.Init();
+			Logger.Warn("INITING SYNC SERVICE ADDIN!");
+			string syncServiceId =
+					Preferences.Get(Preferences.SYNC_SELECTED_SERVICE_ADDIN) as String;
+			if (syncServiceId == this.Id)
+			{
+				// we are the configured addin! *party*
+				if (AddinPreferences.IsFirstRun(true))
+				{
+					GtkUtil.ShowFirstLaunchWindow();
+				}
+			}
 		}
 
 		public override void Shutdown ()
@@ -170,9 +181,22 @@ namespace Tomboy.Sync
 		/// </summary>
 		public override Gtk.Widget CreatePreferencesControl (EventHandler requiredPrefChanged)
 		{
+			if (AddinPreferences.IsFirstRun(true))
+			{
+				GtkUtil.ShowFirstLaunchWindow();
+			}
 			Gtk.VBox container = new Gtk.VBox(false, 0);
 
-			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Server Settings:</span>")));
+			// small extra container for help btn
+			Gtk.HBox c2 = new Gtk.HBox(false, 0);
+			c2.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span weight='bold'>Server Settings:</span>")));
+
+			LinkButton btn = new Gtk.LinkButton(AddinPreferences.PROJECT_HELP,
+									Catalog.GetString("Need Help?"));
+			btn.Clicked += delegate(object sender, EventArgs e) { System.Diagnostics.Process.Start(AddinPreferences.PROJECT_HELP); };
+			c2.PackStart(btn, false, false, 0);
+			container.PackStart(c2);
+
 			SetupGuiServerRelated(container, 4, requiredPrefChanged);
 
 			container.PackStart(new Gtk.Label());
@@ -514,6 +538,10 @@ namespace Tomboy.Sync
 			server_path = new Gtk.Entry();
 			customBox.Attach(server_path, 1, 2, 0, 1);
 			string serverPath = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERPATH) as String;
+			if (String.IsNullOrEmpty(serverPath))
+			{
+				serverPath = "https://193.170.124.44/webdav2/";
+			}
 			server_path.Text = serverPath;
 			server_path.Changed += requiredPrefChanged;
 			// NO EDITOR! because we only save when "SaveConfiguration" is called
@@ -548,7 +576,7 @@ namespace Tomboy.Sync
 
 			// set up check-ssl certificate stuff
 			object value = Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERCHECKSSLCERT);
-			if (value == null || value.Equals(true))
+			if (value != null && value.Equals(true))
 				check_ssl.Active = true;
 
 			check_ssl.Activated += requiredPrefChanged;

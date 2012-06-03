@@ -49,9 +49,10 @@ namespace Tomboy
 
 			InitializeMonoAddins (old_tomboy_conf_dir);
 		}
-    
-    public SharingAddin ShareAddin {
-		 get {
+
+		public SharingAddin ShareAddin {
+			get
+			{
 				return share_addin;
 			}
 		}

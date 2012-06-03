@@ -2,7 +2,7 @@
 	namespace="Tomboy"
 	name="PrivateNotes sync, share, collaborate"
 	author="Paul Klingelhuber privateNotesHgb@gmail.com"
-	description="Synchronization with WebDav. Notes encrypted with AES. Supports secure note sharing with multiple people and live cooperative editing."
+	description="Synchronization with WebDav. Notes encrypted with AES. Supports secure note sharing with multiple people and live cooperative editing.       Uses some icons from Mark James (http://www.famfamfam.com)."
 	category="Synchronization"
 	defaultEnabled="true"
 	version="3.5">

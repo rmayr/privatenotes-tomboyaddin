@@ -12,6 +12,7 @@ ASSEMBLIES = 						\
 	$(LINK_MONO_ADDINS)				\
 	-r:$(top_builddir)/Tomboy/Addins/PrivateNotesAddin/libs/XmppOtrLibrary.dll	\
 	-r:$(top_builddir)/Tomboy/Addins/PrivateNotesAddin/libs/Infinote.dll		\
+	-r:$(top_builddir)/Tomboy/Addins/PrivateNotesAddin/libs/zxing.dll		\
 	-r:Mono.Posix
 
 TARGET = $(top_builddir)/bin/addins/PrivateNotes.dll

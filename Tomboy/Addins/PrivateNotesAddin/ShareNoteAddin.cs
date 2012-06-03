@@ -3,6 +3,8 @@
 // Authors: 
 //      Paul Klingelhuber <s1010455009@students.fh-hagenberg.at>
 // 
+
+using System.Drawing;
 using Infinote;
 using PrivateNotes;
 using PrivateNotes.Infinote;
@@ -11,6 +13,9 @@ using System;
 using Mono.Unix;
 using System.Collections.Generic;
 using Tomboy.PrivateNotes.Adress;
+using com.google.zxing;
+using com.google.zxing.common;
+using com.google.zxing.qrcode;
 
 namespace Tomboy.PrivateNotes
 {
@@ -113,6 +118,13 @@ namespace Tomboy.PrivateNotes
 			editAddressesItem.Activated += OnEditAddressesActivated;
 			editAddressesItem.Show();
 			AddPluginMenuItem(editAddressesItem);
+
+			Gtk.ImageMenuItem syncWithAndroid = new Gtk.ImageMenuItem(
+				Catalog.GetString("Sync all with Android device"));
+			syncWithAndroid.Image = Icons.PhoneIcon;
+			syncWithAndroid.Activated += OnSyncAndroidActivated;
+			syncWithAndroid.Show();
+			AddPluginMenuItem(syncWithAndroid);
 
 			Communicator.Instance.OnLiveEditingStateChanged += EditingStateChanged;
 		}
@@ -230,6 +242,25 @@ namespace Tomboy.PrivateNotes
 			GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
 		}
 
+		/// <summary>
+		/// show qr code that sets up the android sync settings to sync with the same location as this tomboy instance
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		void OnSyncAndroidActivated(object sender, EventArgs args)
+		{
+			Uri serverUri = new Uri(Convert.ToString(Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERPATH)));
+			string serverUser = (string)Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERUSER);
+			string serverPass = (string)Preferences.Get(AddinPreferences.SYNC_PRIVATENOTES_SERVERPASS);
+			var builder = new UriBuilder(serverUri);
+			builder.UserName = serverUser;
+			builder.Password = serverPass;
+			String fullUri = builder.Uri.ToString();
+
+			String link = AddinPreferences.NOTESYNCCONFIG_URL_PREFIX + fullUri;
+			GtkUtil.ShowQrCode("Scan on Android", "Install 'PrivateNotes' from Google Play store, then scan this code with a QR code reader.", link);
+		}
+
 		void OnEditAddressesActivated(object sender, EventArgs args)
 		{
 			String filePath = Communicator.Instance.AddressProvider.AddressFile;
@@ -343,9 +374,13 @@ namespace Tomboy.PrivateNotes
 			NoteShare share = sp.GetNoteShare(Note.Id);
 			if (share != null)
 			{
-				String target = share.shareTarget;
-				Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
-				clipboard.Text = AddinPreferences.NOTESHARE_URL_PREFIX + target;
+				TaggedValue<String, int>[] values = new TaggedValue<String, int>[]
+				                                    	{
+				                                    		new TaggedValue<string, int>("Copy to clipboard", 0),
+															new TaggedValue<String, int>("Show QR code for PrivateNotes on Android", 1)
+				                                    	};
+				MultiButtonCopySelector selector = new MultiButtonCopySelector("What do you want to do?",
+					new List<object>(values), OnCopyActionSelected, (Gtk.Window)Note.Window.Toplevel);
 			}
 			else
 			{
@@ -355,6 +390,33 @@ namespace Tomboy.PrivateNotes
 				md.Destroy();
 			}
 		}
+
+		/// <summary>
+		/// user clicked on of the copy share link options
+		/// </summary>
+		/// <param name="ok"></param>
+		/// <param name="resultObj"></param>
+		void OnCopyActionSelected(bool ok, Object resultObj)
+		{
+			var t = resultObj as TaggedValue<String, int>;
+			if (ok && t != null)
+			{
+				ShareProvider sp = SecureSharingFactory.Get().GetShareProvider();
+				NoteShare share = sp.GetNoteShare(Note.Id);
+				String target = share.shareTarget;
+				if (t.Tag == 0)
+				{
+					Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
+					clipboard.Text = AddinPreferences.NOTESHARE_URL_PREFIX + target;
+				}
+				else
+				{
+					GtkUtil.ShowQrCode("QrCode for transfer to PrivateNotes for Android", null, AddinPreferences.NOTESHARE_URL_PREFIX + target);
+				}
+			}
+		}
+
+		
 
 		/// <summary>
 		/// callback for when the user wants to import a note and has already entered a url for this

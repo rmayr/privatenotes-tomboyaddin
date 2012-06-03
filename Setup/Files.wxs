@@ -51,6 +51,7 @@
 						<File Source="..\bin\Debug\Infinote.dll" Name="Infinote.dll" Id="Infinote.dll"  Vital="yes"/>
 						<File Source="..\bin\Debug\PrivateNotesOtr.dll" Name="PrivateNotesOtr.dll" Id="PrivateNotesOtr.dll"  Vital="yes"/>
 						<File Source="..\bin\Debug\XmppOtrLibrary.dll" Name="XmppOtrLibrary.dll" Id="XmppOtrLibrary.dll"  Vital="yes"/>
+						<File Source="..\bin\Debug\zxing.dll" Name="zxing.dll" Id="zxing.dll"  Vital="yes"/>
 						<!-- privatenotes -->
 						<File Source="..\bin\Debug\Underline.dll" Name="Underline.dll" Id="Underline.dll" Vital="yes" />
 						<File Source="..\bin\Debug\WebSyncServiceAddin.dll" Name="WebSyncServiceAddin.dll" Id="WebSyncServiceAddin.dll" Vital="yes" />

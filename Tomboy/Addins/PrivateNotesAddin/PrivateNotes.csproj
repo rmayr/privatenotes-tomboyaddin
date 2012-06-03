@@ -80,14 +80,19 @@
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
     <Reference Include="XmppOtrLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\XmppOtrLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="zxing">
+      <HintPath>libs\zxing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="gui\MultiButtonCopySelector.cs" />
     <Compile Include="gui\LiveEditingInfoWindow.cs" />
     <Compile Include="gui\MultiButtonPartnerSelector.cs" />
     <Compile Include="gui\MultiButtonSelector.cs" />
