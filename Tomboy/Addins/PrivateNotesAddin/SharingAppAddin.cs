@@ -25,42 +25,7 @@ namespace Tomboy.PrivateNotes
 		/// <returns>true if imported</returns>
 		public override bool ImportShare(String info)
 		{
-			return ImportShareFromShareUrl(info);
-		}
-
-		/// <summary>
-		/// same as ImportShare, just static for use by internal PrivateNotes gui for example
-		/// </summary>
-		/// <param name="info"></param>
-		/// <returns></returns>
-		public static bool ImportShareFromShareUrl(String info)
-		{
-			String errorMessage = "";
-			bool success = false;
-			if (info.StartsWith(AddinPreferences.NOTESHARE_URL_PREFIX))
-			{
-				String url = info.Substring(AddinPreferences.NOTESHARE_URL_PREFIX.Length);
-				Logger.Info("we should import {0}", url);
-				try
-				{
-					success = SecureSharingFactory.Get().GetShareProvider().ImportShare(url);
-				}
-				catch (Exception _e)
-				{
-					Logger.Warn("importing failed with exception {0} msg: {1}", _e.GetType().Name, _e.Message);
-					errorMessage = _e.Message;
-				}
-			}
-			else
-			{
-				Logger.Warn("we should import {0}, which isnt a valid share-url,"
-				+ "they look like this: {1}SOMETHING", info, AddinPreferences.NOTESHARE_URL_PREFIX);
-			}
-			GtkUtil.ShowHintWindow("Sharing",
-									success
-										? "Share successfully imported. Synchronize now to get access to the note."
-										: "Importing share failed with error:\n" + errorMessage + "\nFix this problem if you can or try again later.");
-			return success;
+			return ShareNoteAddin.ImportShareFromShareUrl(info);
 		}
 
 		/// <summary>
@@ -109,7 +74,6 @@ namespace Tomboy.PrivateNotes
 		/// Return true if the addin is initialized
 		/// </summary>
 		public override bool Initialized { get { return initialized; }}
-
 	}
 #endif
 }

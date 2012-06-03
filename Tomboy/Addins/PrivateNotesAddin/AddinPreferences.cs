@@ -83,7 +83,12 @@ namespace Tomboy.PrivateNotes
 
 			container.PackStart(new Gtk.Label());
 			container.PackStart(btnGpg);
+#if !NOSHARES
 			container.PackStart(btnRegister);
+#else
+			// show user that he can't use share links
+			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("<span color=\"red\">This is the noshare version, it cannot register for share links.</span>")));
+#endif
 
 			ShowAll();
 		}

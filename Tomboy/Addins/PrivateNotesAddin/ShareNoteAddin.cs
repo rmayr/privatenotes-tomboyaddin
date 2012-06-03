@@ -4,7 +4,10 @@
 //      Paul Klingelhuber <s1010455009@students.fh-hagenberg.at>
 // 
 
+using System.Diagnostics;
 using System.Drawing;
+using Gdk;
+using Gtk;
 using Infinote;
 using PrivateNotes;
 using PrivateNotes.Infinote;
@@ -16,6 +19,9 @@ using Tomboy.PrivateNotes.Adress;
 using com.google.zxing;
 using com.google.zxing.common;
 using com.google.zxing.qrcode;
+using Key = Gdk.Key;
+using Object = System.Object;
+using Window = Gtk.Window;
 
 namespace Tomboy.PrivateNotes
 {
@@ -28,11 +34,11 @@ namespace Tomboy.PrivateNotes
 	/// </summary>
 	public class ShareNoteAddin : NoteAddin
 	{
-		private Gtk.MenuItem shareItem;
-		private Gtk.MenuItem unshareItem;
-		private Gtk.MenuItem importSharedNoteItem;
-		private Gtk.MenuItem copyShareLinkItem;
-		private Gtk.MenuItem liveItem;
+		private MenuItem shareItem;
+		private MenuItem unshareItem;
+		private MenuItem importSharedNoteItem;
+		private MenuItem copyShareLinkItem;
+		private MenuItem liveItem;
 
 		private bool? isLiveEditing = false;
 
@@ -61,39 +67,39 @@ namespace Tomboy.PrivateNotes
 		public override void OnNoteOpened()
 		{
 			// Add the menu item when the window is created
-			shareItem = new Gtk.MenuItem(
+			shareItem = new MenuItem(
 				Catalog.GetString("Share Note"));
 			shareItem.Activated += OnShareItemActivated;
 			shareItem.AddAccelerator("activate", Window.AccelGroup,
-				(uint)Gdk.Key.r, Gdk.ModifierType.ControlMask,
-				Gtk.AccelFlags.Visible);
+				(uint)Key.r, ModifierType.ControlMask,
+				AccelFlags.Visible);
 			shareItem.Show();
 			AddPluginMenuItem(shareItem);
       
-      unshareItem = new Gtk.MenuItem(
+      unshareItem = new MenuItem(
 				Catalog.GetString("Unshare Note"));
 			unshareItem.Activated += OnUnshareItemActivated;
 			unshareItem.AddAccelerator("activate", Window.AccelGroup,
-				(uint)Gdk.Key.u, Gdk.ModifierType.ControlMask,
-				Gtk.AccelFlags.Visible);
+				(uint)Key.u, ModifierType.ControlMask,
+				AccelFlags.Visible);
 			unshareItem.Show();
 			AddPluginMenuItem(unshareItem);
 
-			importSharedNoteItem = new Gtk.MenuItem(
+			importSharedNoteItem = new MenuItem(
 				Catalog.GetString("Import shared Note"));
 			importSharedNoteItem.Activated += OnImportActivated;
 			importSharedNoteItem.AddAccelerator("activate", Window.AccelGroup,
-				(uint)Gdk.Key.i, Gdk.ModifierType.ControlMask,
-				Gtk.AccelFlags.Visible);
+				(uint)Key.i, ModifierType.ControlMask,
+				AccelFlags.Visible);
 			importSharedNoteItem.Show();
 			AddPluginMenuItem(importSharedNoteItem);
 
-			copyShareLinkItem = new Gtk.MenuItem(
+			copyShareLinkItem = new MenuItem(
 				Catalog.GetString("Copy share-link"));
 			copyShareLinkItem.Activated += OnCopyShareLink;
 			copyShareLinkItem.AddAccelerator("activate", Window.AccelGroup,
-				(uint)Gdk.Key.s, Gdk.ModifierType.ControlMask,
-				Gtk.AccelFlags.Visible);
+				(uint)Key.s, ModifierType.ControlMask,
+				AccelFlags.Visible);
 			copyShareLinkItem.Show();
 			AddPluginMenuItem(copyShareLinkItem);
 
@@ -103,23 +109,23 @@ namespace Tomboy.PrivateNotes
 
 			CheckUnshareOption();
 
-			liveItem = new Gtk.MenuItem(
+			liveItem = new MenuItem(
 				Catalog.GetString("Live Note Editing"));
 			liveItem.Activated += OnLiveItemActivated;
 			liveItem.AddAccelerator("live", Window.AccelGroup,
-				(uint)Gdk.Key.l, Gdk.ModifierType.ControlMask,
-				Gtk.AccelFlags.Visible);
+				(uint)Key.l, ModifierType.ControlMask,
+				AccelFlags.Visible);
 			liveItem.Show();
 			AddPluginMenuItem(liveItem);
 			CheckLiveEditingStatus();
 
-			Gtk.MenuItem editAddressesItem = new Gtk.MenuItem(
+			MenuItem editAddressesItem = new MenuItem(
 				Catalog.GetString("Edit Cooperation Addresses"));
 			editAddressesItem.Activated += OnEditAddressesActivated;
 			editAddressesItem.Show();
 			AddPluginMenuItem(editAddressesItem);
 
-			Gtk.ImageMenuItem syncWithAndroid = new Gtk.ImageMenuItem(
+			ImageMenuItem syncWithAndroid = new ImageMenuItem(
 				Catalog.GetString("Sync all with Android device"));
 			syncWithAndroid.Image = Icons.PhoneIcon;
 			syncWithAndroid.Activated += OnSyncAndroidActivated;
@@ -192,7 +198,7 @@ namespace Tomboy.PrivateNotes
 		void OnShareItemActivated(object sender, EventArgs args)
 		{
 			Logger.Info("menu item clicked!");
-			List<String> people = new List<String>();
+			List<string> people = new List<string>();
 
 			AddressBook ab = AddressBookFactory.Instance().GetDefault();
 			// maybe we shouldn't do this every time
@@ -202,7 +208,7 @@ namespace Tomboy.PrivateNotes
 			// get a list of people with whom it is already shared
 			ShareProvider sp = SecureSharingFactory.Get().GetShareProvider();
 			NoteShare share = sp.GetNoteShare(Note.Id);
-			List<String> alreadySharedWith = new List<string>();
+			List<string> alreadySharedWith = new List<string>();
 			if (share != null)
 			{
 				foreach (String id in share.sharedWith)
@@ -238,7 +244,7 @@ namespace Tomboy.PrivateNotes
 				message = Catalog.GetString("Note is no longer shared.");
 			}
 			// DUMMY PARENT
-			Gtk.Widget wid = new Gtk.Label();
+			Widget wid = new Label();
 			GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
 		}
 
@@ -266,7 +272,7 @@ namespace Tomboy.PrivateNotes
 			String filePath = Communicator.Instance.AddressProvider.AddressFile;
 			try
 			{
-				System.Diagnostics.Process.Start(filePath);
+				Process.Start(filePath);
 			}
 			catch (Exception e)
 			{
@@ -280,7 +286,7 @@ namespace Tomboy.PrivateNotes
 			if (!isLiveEditing.HasValue)
 			{
 				// null, so no communicator there, show info
-				Gtk.Widget wid = new Gtk.Label();
+				Widget wid = new Label();
 				GtkUtil.ShowHintWindow(wid, Catalog.GetString("Xmpp Configuration Error"), Catalog.GetString("Please go to sync preferences and configure Xmppp User+Password correctly to use this feature."));
 			}
 			else if (!isLiveEditing.Value)
@@ -292,7 +298,7 @@ namespace Tomboy.PrivateNotes
 					// show a list for the user to select with whom to co-edit
 					List<object> tempList = new List<object>();
 					tempList.AddRange(possible.ToArray());
-					new MultiButtonPartnerSelector("Select cooperation-partner:", tempList, OnSelectEditPartner, (Gtk.Window)Note.Window.Toplevel);
+					new MultiButtonPartnerSelector("Select cooperation-partner:", tempList, OnSelectEditPartner, (Window)Note.Window.Toplevel);
 				}
 				else
 				{
@@ -314,7 +320,7 @@ namespace Tomboy.PrivateNotes
 				XmppEntry partner = resultObj as XmppEntry;
 				if (partner != null)
 				{
-					List<String> onlinePartners = Communicator.Instance.GetOnlinePartnerIds();
+					List<string> onlinePartners = Communicator.Instance.GetOnlinePartnerIds();
 					bool online = onlinePartners.Contains(partner.XmppId);
 					if (online)
 					{
@@ -336,7 +342,7 @@ namespace Tomboy.PrivateNotes
 			bool communicatorAvailable = Communicator.Instance.IsConfigured();
 			if (!communicatorAvailable)
 			{
-				((Gtk.Label)liveItem.Child).Text =
+				((Label)liveItem.Child).Text =
 						Catalog.GetString("Live Editing");
 				isLiveEditing = null;
 			}
@@ -346,7 +352,7 @@ namespace Tomboy.PrivateNotes
 				isLiveEditing = Communicator.Instance.IsInLiveEditMode(Note.Id);
 				if (before != isLiveEditing)
 				{
-					((Gtk.Label) liveItem.Child).Text =
+					((Label) liveItem.Child).Text =
 						Catalog.GetString(isLiveEditing.Value ? "Commit Live Note Editing" : "Live Note Editing");
 				}
 			}
@@ -374,18 +380,18 @@ namespace Tomboy.PrivateNotes
 			NoteShare share = sp.GetNoteShare(Note.Id);
 			if (share != null)
 			{
-				TaggedValue<String, int>[] values = new TaggedValue<String, int>[]
+				TaggedValue<string, int>[] values = new TaggedValue<string, int>[]
 				                                    	{
 				                                    		new TaggedValue<string, int>("Copy to clipboard", 0),
-															new TaggedValue<String, int>("Show QR code for PrivateNotes on Android", 1)
+															new TaggedValue<string, int>("Show QR code for PrivateNotes on Android", 1)
 				                                    	};
 				MultiButtonCopySelector selector = new MultiButtonCopySelector("What do you want to do?",
-					new List<object>(values), OnCopyActionSelected, (Gtk.Window)Note.Window.Toplevel);
+					new List<object>(values), OnCopyActionSelected, (Window)Note.Window.Toplevel);
 			}
 			else
 			{
-				Gtk.MessageDialog md = new Gtk.MessageDialog(null, Gtk.DialogFlags.Modal, Gtk.MessageType.Info,
-					Gtk.ButtonsType.Ok, Catalog.GetString("Not shared yet. Click on 'Share Note' and select with whom you want to share first"));
+				MessageDialog md = new MessageDialog(null, DialogFlags.Modal, MessageType.Info,
+					ButtonsType.Ok, Catalog.GetString("Not shared yet. Click on 'Share Note' and select with whom you want to share first"));
 				md.Run();
 				md.Destroy();
 			}
@@ -398,7 +404,7 @@ namespace Tomboy.PrivateNotes
 		/// <param name="resultObj"></param>
 		void OnCopyActionSelected(bool ok, Object resultObj)
 		{
-			var t = resultObj as TaggedValue<String, int>;
+			var t = resultObj as TaggedValue<string, int>;
 			if (ok && t != null)
 			{
 				ShareProvider sp = SecureSharingFactory.Get().GetShareProvider();
@@ -406,7 +412,7 @@ namespace Tomboy.PrivateNotes
 				String target = share.shareTarget;
 				if (t.Tag == 0)
 				{
-					Gtk.Clipboard clipboard = Gtk.Clipboard.Get(Gdk.Atom.Intern("CLIPBOARD", false));
+					Clipboard clipboard = Clipboard.Get(Atom.Intern("CLIPBOARD", false));
 					clipboard.Text = AddinPreferences.NOTESHARE_URL_PREFIX + target;
 				}
 				else
@@ -428,7 +434,7 @@ namespace Tomboy.PrivateNotes
 			if (ok && !String.IsNullOrEmpty(sharepath))
 			{
 				Logger.Info("sharepath add request: {0}", sharepath);
-			    SharingAppAddin.ImportShareFromShareUrl(sharepath);
+			    ImportShareFromShareUrl(sharepath);
 			}
 			else
 			{
@@ -468,7 +474,7 @@ namespace Tomboy.PrivateNotes
 					message += "\n" + error;
 				}
 				// DUMMY PARENT
-				Gtk.Widget wid = new Gtk.Label();
+				Widget wid = new Label();
 				GtkUtil.ShowHintWindow(wid, Catalog.GetString("Sharing"), message);
 			}
 			else
@@ -477,6 +483,40 @@ namespace Tomboy.PrivateNotes
 			}
 		}
 
+		/// <summary>
+		/// same as ImportShare, just static for use by internal PrivateNotes gui for example
+		/// </summary>
+		/// <param name="info"></param>
+		/// <returns></returns>
+		public static bool ImportShareFromShareUrl(String info)
+		{
+			String errorMessage = "";
+			bool success = false;
+			if (info.StartsWith(AddinPreferences.NOTESHARE_URL_PREFIX))
+			{
+				String url = info.Substring(AddinPreferences.NOTESHARE_URL_PREFIX.Length);
+				Logger.Info("we should import {0}", url);
+				try
+				{
+					success = SecureSharingFactory.Get().GetShareProvider().ImportShare(url);
+				}
+				catch (Exception _e)
+				{
+					Logger.Warn("importing failed with exception {0} msg: {1}", _e.GetType().Name, _e.Message);
+					errorMessage = _e.Message;
+				}
+			}
+			else
+			{
+				Logger.Warn("we should import {0}, which isnt a valid share-url,"
+				            + "they look like this: {1}SOMETHING", info, AddinPreferences.NOTESHARE_URL_PREFIX);
+			}
+			GtkUtil.ShowHintWindow("Sharing",
+			                       success
+			                       	? "Share successfully imported. Synchronize now to get access to the note."
+			                       	: "Importing share failed with error:\n" + errorMessage + "\nFix this problem if you can or try again later.");
+			return success;
+		}
 	}
 
 }
