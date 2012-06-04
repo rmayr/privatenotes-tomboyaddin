@@ -279,7 +279,7 @@ namespace PrivateNotes.Infinote
 				tr.Namespaces = false;
 				testDoc.Load(tr);
 			}
-			catch (XmlException e)
+			catch (XmlException)
 			{
 				// this is not valid xml currently!
 				// so we simply skip this update

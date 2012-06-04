@@ -368,7 +368,7 @@ namespace Tomboy.PrivateNotes
 				Logger.Warn("could not create qr " + e.Message);
 				return new Gdk.Image(Gdk.ImageType.Normal, Gdk.Visual.Best, size, size);
 			}
-			Gdk.Image bmp = new Gdk.Image(Gdk.ImageType.Normal, Gdk.Visual.Best, size, size);
+			Gdk.Image bmp = new Gdk.Image(Gdk.ImageType.Normal, Gdk.Visual.System, size, size);
 
 			for (int y = 0; y < matrix.Height; ++y)
 			{
@@ -548,8 +548,8 @@ namespace Tomboy.PrivateNotes
 				box.BorderWidth = (uint)box.Spacing;
 				box.Add(lbl);
 			}
-			Gtk.Image image = new Gtk.Image();
-			image.SetFromImage(bitmap, null);
+
+			Gtk.Image image = new Gtk.Image(bitmap, null);
 			box.Add(image);
 			window.Add(box);
 
