@@ -126,8 +126,18 @@ namespace Tomboy.PrivateNotes.Crypto
 			fout.Write(_content, 0, _content.Length);
 			fout.Close();
 
+			
+			//after gpg is started, we have to send the pw:
+			Action<StreamWriter> writePw = new Action<StreamWriter>(delegate(StreamWriter sw)
+				{
+					sw.Write(Util.FromBytes(_key));
+					sw.Flush();
+					sw.Close();
+				});
 			// --yes is for confirming overwriting a possibly already existant file
-			InvokeGpg("--batch --yes --symmetric --personal-cipher-preferences AES --passphrase " + Util.FromBytes(_key) + " --output \"" + _filename + "\" \"" + tempFileName + '"');
+			//InvokeGpg("--batch --yes --symmetric --personal-cipher-preferences AES --passphrase " + Util.FromBytes(_key) + " --output \"" + _filename + "\" \"" + tempFileName + '"');
+			// passphrase-fd 0 means file descriptor 0 which is stdin
+			InvokeGpg("--batch --yes --symmetric --personal-cipher-preferences AES --passphrase-fd 0 --output \"" + _filename + "\" \"" + tempFileName + '"', writePw);
 
 			File.Delete(tempFileName);
 
@@ -160,7 +170,16 @@ namespace Tomboy.PrivateNotes.Crypto
 			String tempfile = Path.Combine(tempDir, _filename + ".dec");
 			File.Delete(tempfile);
 
-			InvokeGpg("--batch -d --passphrase " + Util.FromBytes(_key) + " --output \"" + tempfile + "\" \"" + _filename + "\"");
+			//after gpg is started, we have to send the pw:
+			Action<StreamWriter> writePw = new Action<StreamWriter>(delegate(StreamWriter sw)
+				{
+					sw.Write(Util.FromBytes(_key));
+					sw.Flush();
+					sw.Close();
+				});
+			//InvokeGpg("--batch -d --passphrase " + Util.FromBytes(_key) + " --output \"" + tempfile + "\" \"" + _filename + "\"");
+			// passphrase-fd 0 means file descriptor 0 which is stdin
+			InvokeGpg("--batch -d --passphrase-fd " + "0" + " --output \"" + tempfile + "\" \"" + _filename + "\"", writePw);
 
 			byte[] buffer = readFile(tempfile, out _wasOk);
 
@@ -349,7 +368,20 @@ namespace Tomboy.PrivateNotes.Crypto
 			return buffer;
 		}
 
-		private static String InvokeGpg(String _arguments) {
+		private static String InvokeGpg(String _arguments)
+		{
+			return InvokeGpg(_arguments, null);
+		}
+
+		/// <summary>
+		/// Invokes GPG and allows to execute some action as soon
+		/// as it is started (can be used for example for writing
+		/// arguments to its input via a file descriptor)
+		/// </summary>
+		/// <param name="_arguments"></param>
+		/// <param name="afterStart">action to invoke after gpg is started, may be null</param>
+		/// <returns></returns>
+		private static String InvokeGpg(String _arguments, Action<StreamWriter> afterStart) {
 			Statistics.Instance.StartCrypto();
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = gpgExe;
@@ -358,7 +390,15 @@ namespace Tomboy.PrivateNotes.Crypto
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.RedirectStandardOutput = true;
 			proc.StartInfo.RedirectStandardError = true;
+			if (afterStart != null)
+			{
+				proc.StartInfo.RedirectStandardInput = true;
+			}
 			proc.Start();
+			if (afterStart != null)
+			{
+				afterStart(proc.StandardInput);
+			}
 			String data = proc.StandardOutput.ReadToEnd();
 			String errdata = proc.StandardError.ReadToEnd();
 			proc.WaitForExit();
