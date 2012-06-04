@@ -7,8 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Text;
 using System.IO;
 using System.Net;
@@ -19,8 +17,6 @@ using Pango;
 using com.google.zxing;
 using com.google.zxing.common;
 using com.google.zxing.qrcode;
-using Color = System.Drawing.Color;
-using Image = System.Drawing.Image;
 
 namespace Tomboy.PrivateNotes
 {
@@ -357,7 +353,7 @@ namespace Tomboy.PrivateNotes
             }
         }
 
-		public static Bitmap CreateQrCode(String link)
+		public static Gdk.Image CreateQrCode(String link)
 		{
 			QRCodeWriter writer = new QRCodeWriter();
 			ByteMatrix matrix;
@@ -370,25 +366,24 @@ namespace Tomboy.PrivateNotes
 			catch (Exception e)
 			{
 				Logger.Warn("could not create qr " + e.Message);
-				return new Bitmap(10, 10);
+				return new Gdk.Image(Gdk.ImageType.Normal, Gdk.Visual.Best, size, size);
 			}
-
-			Bitmap bmp = new Bitmap(size, size);
+			Gdk.Image bmp = new Gdk.Image(Gdk.ImageType.Normal, Gdk.Visual.Best, size, size);
 
 			for (int y = 0; y < matrix.Height; ++y)
 			{
 				for (int x = 0; x < matrix.Width; ++x)
 				{
-					Color pixelColor = bmp.GetPixel(x, y);
+					uint pixelColor = bmp.GetPixel(x, y);
 
 					//Find the colour of the dot
 					if (matrix.get_Renamed(x, y) == -1)
 					{
-						bmp.SetPixel(x, y, Color.White);
+						bmp.PutPixel(x, y, 0xFFFFFF);
 					}
 					else
 					{
-						bmp.SetPixel(x, y, Color.Black);
+						bmp.PutPixel(x, y, 0x000000);
 					}
 				}
 			}
@@ -544,7 +539,7 @@ namespace Tomboy.PrivateNotes
 		/// <param name="link">the data to encode in the qr code</param>
 		public static void ShowQrCode(String title, String text, String link)
 		{
-			Bitmap bitmap = Util.CreateQrCode(link);
+			Gdk.Image bitmap = Util.CreateQrCode(link);
 			Gtk.Window window = new Gtk.Window(Catalog.GetString(title));
 			Gtk.VBox box = new VBox(false, 5);
 			if (text != null)
@@ -553,10 +548,10 @@ namespace Tomboy.PrivateNotes
 				box.BorderWidth = (uint)box.Spacing;
 				box.Add(lbl);
 			}
-			Gtk.Image image = new Gtk.Image(GtkUtil.ImageToPixbuf(bitmap));
+			Gtk.Image image = new Gtk.Image();
+			image.SetFromImage(bitmap, null);
 			box.Add(image);
 			window.Add(box);
-			
 
 			if (oldQrWindow != null)
 			{
@@ -582,22 +577,6 @@ namespace Tomboy.PrivateNotes
 			var l = new Gtk.Label();
 			l.Markup = _markup;
 			return l;
-		}
-
-		/// <summary>
-		/// converts a .net image to a Gdk Pixbuf for displaying in a GTK gui
-		/// </summary>
-		/// <param name="image"></param>
-		/// <returns></returns>
-		public static Gdk.Pixbuf ImageToPixbuf(Image image)
-		{
-			using (MemoryStream stream = new MemoryStream())
-			{
-				image.Save(stream, ImageFormat.Bmp);
-				stream.Position = 0;
-				Gdk.Pixbuf pixbuf = new Gdk.Pixbuf(stream);
-				return pixbuf;
-			}
 		}
 
 #region infoWindow

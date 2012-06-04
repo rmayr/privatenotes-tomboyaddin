@@ -5,7 +5,6 @@
 // 
 
 using System.Diagnostics;
-using System.Drawing;
 using Gdk;
 using Gtk;
 using Infinote;
