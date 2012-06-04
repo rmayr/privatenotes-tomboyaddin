@@ -29,6 +29,7 @@ CSFILES = \
 	$(srcdir)/ShareProvider.cs										\
 	$(srcdir)/ShareSync.cs												\
 	$(srcdir)/SharingAppAddin.cs									\
+	$(srcdir)/Statistics.cs												\
 	$(srcdir)/Util.cs															\
 	$(srcdir)/WebDAVClient.cs											\
 	$(srcdir)/WebDAVInterface.cs									\
