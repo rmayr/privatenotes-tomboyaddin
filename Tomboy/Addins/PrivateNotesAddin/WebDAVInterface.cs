@@ -134,10 +134,18 @@ namespace Tomboy.PrivateNotes
 		public bool UploadFile(String path)
 		{
 			Statistics.Instance.StartCommunication();
-			Logger.Debug("uploading file {0}", path);
+			Logger.Info("uploading file {0}", path);
 			client.Upload(path, Path.GetFileName(path));
 			autoReset.WaitOne();
-			CheckException("error while uploading file " + path);
+			String uploadErrorMsg = "error while uploading file " + path;
+			if (CheckException(uploadErrorMsg, false) != null)
+			{
+				// error occurred, try again
+				Statistics.Instance.StartCommunication();
+				client.Upload(path, Path.GetFileName(path));
+				autoReset.WaitOne();
+			}
+			CheckException(uploadErrorMsg);
 			Console.WriteLine("STATUS for upload=" + lastStatusCode);
 			// TODO return true/false depending on statuscode
 			return true;

@@ -925,7 +925,12 @@ namespace Tomboy.Sync
 			private void AdjustPermissions(string path)
 			{
 #if !WIN32
-				Mono.Unix.Native.Syscall.chmod(path, Mono.Unix.Native.FilePermissions.ACCESSPERMS);
+				// additional run-time check, this makes the linux build of the addin
+				// also work on windows (would crash otherwise)
+				if (!Util.IsWindows())
+				{
+					Mono.Unix.Native.Syscall.chmod(path, Mono.Unix.Native.FilePermissions.ACCESSPERMS);
+				}
 #endif
 			}
 

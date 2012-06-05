@@ -195,14 +195,8 @@ namespace Tomboy.PrivateNotes
       AsyncCallback callback = new AsyncCallback(FinishList);
 
       byte[] data = Encoding.UTF8.GetBytes(propfind.ToString());
-			/* could not fix this error... (http on linux didn't work, only https)
-      Logger.Info("first data bytes: {0} {1} {2}", String.Format("{0:X}", data[0]), String.Format("{0:X}", data[1]), String.Format("{0:X}", data[2]));
-      if (data[0] == 0xef && data[1] == 0xbb && data[2] == 0xbf)
-      {
-        Logger.Warn(">>>> ERROR?! PLEASE TRY REMOVING THIS!");
-      }
-			**/
 
+	  Logger.Debug("Listing dir dir: " + remoteFilePath);
       HTTPRequest(listUri, "PROPFIND", headers, data, null, callback, remoteFilePath);
     }
 
@@ -255,7 +249,7 @@ namespace Tomboy.PrivateNotes
       {
         // new error handler
         lastError = _e;
-        Logger.Warn("Exception: " + _e.Message + "\n" + _e.StackTrace + "\n----------------");
+        Logger.Warn("FinishList Exception: " + _e.Message + "\n" + _e.StackTrace + "\n----------------");
         if (ListComplete != null)
         {
           ListComplete(null, EXCEPTION_RESPONSE_CODE);
@@ -547,6 +541,7 @@ namespace Tomboy.PrivateNotes
     /// <param name="state"></param>
     void HTTPRequest(Uri uri, string requestMethod, IDictionary<string, string> headers, byte[] content, string uploadFilePath, AsyncCallback callback, object state)
     {
+      Logger.Debug("making " + requestMethod +  " request");
       httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(uri);
 
       //httpWebRequest.SendChunked = true;
@@ -586,11 +581,10 @@ namespace Tomboy.PrivateNotes
         httpWebRequest.Credentials = networkCredential;
         // Send authentication along with first request.
 
-        /// XXX WTF somehow if this is active, it doesn't work on linux?!
-#if WIN32
+        // this was thought to not work on linux, as it turned out now
+        // without it, it doesn't work on linux *confused*
         httpWebRequest.PreAuthenticate = true;
-#endif
-        /// END WTF
+
       }
       httpWebRequest.Method = requestMethod;
 
@@ -621,7 +615,8 @@ namespace Tomboy.PrivateNotes
         else
         {
           // ...or a reference to the file to be added as content.
-          httpWebRequest.ContentLength = new FileInfo(uploadFilePath).Length;
+          //httpWebRequest.ContentLength = new FileInfo(uploadFilePath).Length;
+          httpWebRequest.SendChunked = true;
           asyncState.uploadFilePath = uploadFilePath;
         }
 
@@ -630,7 +625,6 @@ namespace Tomboy.PrivateNotes
       }
       else
       {
-
         // Begin async communications
         httpWebRequest.BeginGetResponse(callback, state);
       }
@@ -676,9 +670,8 @@ namespace Tomboy.PrivateNotes
       }
 
       // Done, invoke user callback
-      Logger.Debug("beginning get response");
-      request.BeginGetResponse(state.userCallback, state.userState);
-    } catch (Exception e) {
+        request.BeginGetResponse(state.userCallback, state.userState);
+      } catch (Exception e) {
       Logger.Warn("exception occured in async callback: {0} stack: {1}", e.Message, e.StackTrace);
       lastError = e;
       RequestState state = (RequestState)result.AsyncState;
