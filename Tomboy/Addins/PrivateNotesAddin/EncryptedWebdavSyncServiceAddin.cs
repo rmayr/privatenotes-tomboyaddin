@@ -193,7 +193,14 @@ namespace Tomboy.Sync
 
 			LinkButton btn = new Gtk.LinkButton(AddinPreferences.PROJECT_HELP,
 									Catalog.GetString("Need Help?"));
-			btn.Clicked += delegate(object sender, EventArgs e) { System.Diagnostics.Process.Start(AddinPreferences.PROJECT_HELP); };
+			// open link manually on click event on windows (because link buttons don't work there somehow
+			btn.Clicked += delegate(object sender, EventArgs e)
+				{
+					if (Util.IsWindows())
+					{
+						System.Diagnostics.Process.Start(AddinPreferences.PROJECT_HELP);
+					}
+				};
 			c2.PackStart(btn, false, false, 0);
 			container.PackStart(c2);
 

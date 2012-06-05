@@ -60,9 +60,13 @@ namespace Tomboy.PrivateNotes
 			container.PackStart(GtkUtil.newMarkupLabel(Catalog.GetString("For more information please visit:")));
 			Gtk.LinkButton btn = new Gtk.LinkButton(PROJECT_URL,
 													PROJECT_URL);
-			// manually catch this event, because linkbutton doesn't work somehow...
+			// manually catch this event, because linkbutton doesn't work on windows
 			btn.Clicked += delegate(object sender, EventArgs e)
-				{ System.Diagnostics.Process.Start(PROJECT_URL); };
+				{ if (Util.IsWindows())
+					{
+						System.Diagnostics.Process.Start(PROJECT_URL);
+					}
+				};
 			container.PackStart(btn);
 
 			container.PackStart(new Gtk.Label(Catalog.GetString("If you need any help setting up PrivateNotes go to:")));
